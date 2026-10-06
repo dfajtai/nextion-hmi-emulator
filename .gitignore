@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+output/
+*.egg-info/
+.DS_Store
+# machine-local Claude Code settings
+.claude/settings.local.json
+
+# sample HMI is kept out of the repo until its licensing/size is decided
+sample/*.HMI
+# early experiment leftovers
+/emulator/
+/flow.html
+/flow.mmd
+/pages.json
