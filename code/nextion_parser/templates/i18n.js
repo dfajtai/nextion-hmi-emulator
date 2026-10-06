@@ -1,0 +1,228 @@
+/* GUI strings of the emulator (Hungarian / English) + tiny helpers.
+ *
+ *   t(key, vars)   -> localized string; {name} placeholders are replaced from vars
+ *                     (a var may itself be a localized object {hu, en})
+ *   loc(value)     -> text of a plain string or of a {hu, en} object in the current language
+ *   setLang(l)     -> switch the current language ("hu" | "en")
+ *
+ * Add new text here (both languages) and use data-i / data-ih / data-it / data-ip attributes in the HTML.
+ */
+const I18N = {
+  hu: {
+    "app.title": "Nextion emulátor – {project}",
+    "lang.title": "a felület nyelve",
+    "hdr.mode": "Mód", "mode.simple": "Egyszerű", "mode.expert": "Expert",
+    "hdr.page": "Oldal", "hdr.page.title": "az aktuális oldal; másik oldalt kiválasztva odaugrik",
+    "hdr.reset": "Újraindítás", "hdr.help": "? Súgó", "hdr.help.title": "a szimulátor használati súgója (új lapon)",
+    "hdr.reports": "Riportok ▾",
+    "rep.coverage": "Lefedettségi riport", "rep.unused": "Nem használt erőforrások", "rep.navigation": "Navigációs ábra", "rep.summary": "Összefoglaló",
+
+    "cap.badge.step": "FELIRAT", "cap.badge.aux": "LÉPÉS", "cap.badge.info": "ÁLLAPOT",
+    "cap.stepn": "lépés {n} / {N}",
+    "cap.hist": "▾ Előzmények", "cap.hist.open": "▴ Becsuk", "cap.hist.title": "az eddigi feliratok és hibák listája",
+    "cap.hint": "Válassz forgatókönyvet, és lépkedj végig rajta (vagy játszd le automatikusan).",
+    "cap.noscn": "Nincs forgatókönyv – a Forgatókönyvek blokkban tölts be egyet (.json / .csv), vagy rögzíts egyet expert módban.",
+    "cap.warn.title": "kattints a részletekhez", "cap.warn": "⚠ {n} hiba – {msg}",
+    "cap.start": "Kiinduló állapot – {page}", "cap.end": "Vége.",
+    "cap.recstart": "Rögzítés: {page} (tiszta állapotból)",
+    "cap.loaded": "{n} forgatókönyv betöltve.",
+    "cap.csvcreated": "CSV forgatókönyv létrehozva: {name} – {desc}",
+    "cap.scn": "{name} – {desc}",
+
+    "warn.loaderr": "Betöltési hiba: {x}", "warn.nosteps": "{f}: nincs \"steps\" lista",
+    "warn.csvempty": "Üres vagy érvénytelen CSV: {name}", "warn.csvunknown": "Ismeretlen CSV-oszlopok (kihagyva): {cols}",
+    "warn.scn": "Forgatókönyv: {msg}", "warn.unknown": "ismeretlen utasítás: {line}",
+
+    "scn.title": "Forgatókönyvek",
+    "scn.load": "⭱ Forgatókönyv / CSV betöltése…", "scn.load.title": "JSON forgatókönyv vagy CSV betöltése (húzással is)",
+    "scn.hint": "vagy húzd ide a .json / .csv fájlt",
+    "scn.folder": "📁 Mappa megnyitása…", "scn.folder.title": "a forgatókönyvek mappájának betallózása (az összes .json betöltődik)",
+    "scn.hint.basic": "vagy húzd ide a .json fájlokat",
+    "cap.noscn.basic": "Nincs betöltött forgatókönyv – a Forgatókönyvek blokkban nyisd meg a scenarios mappát.",
+    "scn.first": "vissza az elejére", "scn.prev": "előző lépés", "scn.play": "automatikus lejátszás", "scn.pause": "szünet",
+    "scn.next": "következő lépés", "scn.stop": "leállítás",
+    "scn.edit": "✎ Szerkesztés a rögzítőben", "scn.edit.title": "a kiválasztott forgatókönyv betöltése a rögzítőbe szerkesztésre",
+    "scn.stepno": "Lépés: {k} / {n}",
+
+    "rec.title": "Rögzítő (makró)", "rec.badge": "● rögzít",
+    "rec.f1": "1. Rögzítés", "rec.f2": "2. Szerkesztés", "rec.f3": "3. Mentés",
+    "rec.start": "● Rögzítés indítása", "rec.start2": "● Új rögzítés indítása", "rec.stop": "■ Rögzítés leállítása",
+    "rec.append": "➕ Folytatás a végétől", "rec.append.title": "a meglévő lépések lejátszása, majd a rögzítés folytatása a végétől",
+    "rec.discard": "Törlés",
+    "rec.state.on": "rögzít… {n} lépés", "rec.state.items": "{n} elem",
+    "rec.editbanner": "✎ Szerkesztés alatt: {name} ({id}.json) – a Mentés felülírja a listabeli forgatókönyvet.",
+    "rec.hint0": "Indítsd el a rögzítést, majd használd a kijelzőt (kattintás, érték-beállítás, oldalugrás, MCU-parancs).",
+    "rec.hint1": "Rögzít… A kijelzőn végzett műveletek bekerülnek a listába. Ha kész vagy, nyomd meg a ■ gombot.",
+    "rec.hint2": "Szerkeszd a listát: felirat, késleltetés (⏱), sorrend (▲▼), törlés (✕), a lépés JSON-ja (✎); a ➕ gombbal a végétől tovább rögzíthetsz. Ha kész, mentsd el.",
+    "rec.hint3": "Mentve – a forgatókönyv megjelent a Forgatókönyvek listában is.",
+    "rec.page": "Indulóoldal", "rec.page.title": "ezen az oldalon, tiszta állapotból indul a rögzítés",
+    "rec.name.ph": "név", "rec.desc.ph": "leírás (opcionális)",
+    "rec.real": "valós idő rögzítése késleltetésként",
+    "rec.delay": "+ Késleltetés", "rec.sec": "mp", "rec.cap.ph": "felirat (opcionális)", "rec.delay.add": "Hozzáad",
+    "rec.say.ph": "önálló felirat-lépés", "rec.say.btn": "Felirat lépés",
+    "rec.save": "Mentés (letöltés + lista)",
+    "rec.info.started": "A rögzítés a(z) {page} oldalról indult, tiszta állapotból – az első kattintás ezen az oldalon történjen.",
+    "rec.info.append": "A rögzítés a lista végéről folytatódik (az állapot a végpontra állt be).",
+    "rec.info.saved": "Mentve: {id}.json (a listában is elérhető). Tedd a scenarios mappába, hogy a következő generálásba bekerüljön.",
+    "rec.defname": "Rögzített {time}", "rec.defsave": "Rögzítés",
+    "rec.row.edit": "a lépés szerkesztése (JSON)", "rec.row.up": "feljebb", "rec.row.down": "lejjebb", "rec.row.del": "lépés törlése",
+    "rec.row.delay": "késleltetés (mp)", "rec.row.capstep": "(felirat-lépés)",
+
+    "desc.set": "Beállítás: {x}", "desc.ramp": "Változás: {v} {a} → {b}", "desc.click": "Gombnyomás: {n}", "desc.goto": "Ugrás: {p}",
+    "desc.cmd": "MCU-parancs: {c}", "desc.wave": "Nyers adatsor: {r}", "desc.wait": "Várakozás {s} s", "desc.repeat": "Ismétlés ×{n}", "desc.step": "lépés",
+
+    "disp.title": "Kijelző vezérlés", "disp.screen": "Képernyő", "disp.w": "szélesség (px)", "disp.h": "magasság (px)",
+    "disp.reset": "↺ Alap méret", "disp.reset.title": "képernyőméret és nagyítás visszaállítása a projekt felbontására",
+    "disp.zoom": "Nagyítás", "disp.fit": "illeszkedő", "disp.hitbox": "hitbox-ok (komponens-keretek)",
+    "disp.idle": "üresjárati visszaugrás",
+    "disp.idle.title": "A HMI időzítői tétlenség után (pl. 30 mp) visszaugranak a főoldalra. Alapból tiltva, hogy az emulátor ne ugráljon.",
+
+    "vars.title": "Aktuális oldal változói", "glob.title": "Globális változók", "log.title": "Soros kimenet / napló",
+    "rx.ph": "MCU-parancs (Nextion utasítás, pl. page pageStat1 vagy pageMainAuto.charge_level.val=40)", "rx.send": "Küld",
+    "log.mcu": "MCU → kijelző: {v}",
+    "card.toggle": "kattints a ki-/becsukáshoz",
+
+    "step.title": "Lépés szerkesztése (JSON)",
+    "step.hint": "Lépéstípusok: set, ramp, wait, say, click, goto, cmd, wave, repeat – lásd a súgót.",
+    "step.cancel": "Mégse", "step.ok": "Alkalmaz", "step.err": "Hiba: {m}",
+    "step.notobj": "a lépés egy JSON objektum kell legyen", "step.empty": "üres lépés",
+
+    "csv.title": "CSV import – ", "csv.mode": "Mód", "csv.mode.stats": "Statisztika (értékekből)", "csv.mode.series": "Idősor (soronként értékek)",
+    "csv.name": "Forgatókönyv neve", "csv.col": "Érték oszlop", "csv.grp": "Csoport oszlop", "csv.none": "(nincs)",
+    "csv.targets": "Cél-változók (a profilból; átírhatók):",
+    "pf.page": "Oldal", "pf.path": "Út gombnyomással (vesszővel, opc.)", "pf.quantity": "Egyedszám", "pf.mean": "Átlag", "pf.sd": "Szórás",
+    "pf.cv": "CV (%)", "pf.group": "Csoport neve", "pf.wave": "Waveform (oldal.obj)", "pf.waveclick": "Waveformra váltó gomb",
+    "pf.wait": "Csoportonkénti várakozás (ms)",
+    "sr.wait": "Alap várakozás sorok között (ms)", "sr.page": "Kezdőoldal",
+    "sr.hint": "A fejléc: teljes hivatkozás (<code>oldal.obj.attr</code>), változó-címke vagy egyedi név; speciális: <code>t_ms</code>, <code>wait_ms</code>, <code>say</code>, <code>goto</code>, <code>cmd</code>.",
+    "csv.cancel": "Mégse", "csv.json": "JSON letöltése", "csv.ok": "Létrehozás",
+    "csv.rows": "{n} sor, elválasztó: {d}", "csv.tab": "tab", "csv.warn": " – figyelmeztetés: {w}", "csv.err": "Hiba: {m}",
+    "csv.needtarget": "adj meg legalább egy cél-változót (átlag, szórás, CV vagy egyedszám)",
+
+    "tip.below": "+{n} alatta", "type.unknown": "típus {t}",
+    "type.0": "waveform", "type.1": "csúszka", "type.54": "szám", "type.56": "jelölőnégyzet", "type.57": "rádiógomb", "type.59": "tizedes szám",
+    "type.98": "gomb", "type.106": "folyamatjelző", "type.109": "hotspot", "type.112": "kép", "type.116": "szöveg",
+
+    "core.unknownTarget": "? ismeretlen cél: {ref}", "core.unknownStatement": "? ismeretlen utasítás: {line}", "core.unknownPage": "page: ismeretlen oldal {page}",
+    "core.timerBlocked": "(időzítő-ugrás letiltva: {page})", "core.error": "Hiba ({where}): {msg}", "core.scenario": "Forgatókönyv: {msg}",
+    "core.scnWhere": "forgatókönyv", "core.expr": "kifejezés: {s}", "core.emptyExpr": "üres kifejezés: {s}",
+    "core.tooManySteps": "túl sok lépés (végtelen ciklus?)", "core.repeatDepth": "túl mély repeat",
+    "core.unknownRef": "ismeretlen hivatkozás: {ref}", "core.noComponent": "nincs ilyen komponens az aktuális oldalon ({page}): {name}",
+    "core.unknownScnPage": "ismeretlen oldal: {page}", "core.unknownWave": "ismeretlen waveform: {ref}",
+  },
+  en: {
+    "app.title": "Nextion emulator – {project}",
+    "lang.title": "interface language",
+    "hdr.mode": "Mode", "mode.simple": "Simple", "mode.expert": "Expert",
+    "hdr.page": "Page", "hdr.page.title": "the current page; selecting another one jumps there",
+    "hdr.reset": "Restart", "hdr.help": "? Help", "hdr.help.title": "usage help of the simulator (opens in a new tab)",
+    "hdr.reports": "Reports ▾",
+    "rep.coverage": "Coverage report", "rep.unused": "Unused resources", "rep.navigation": "Navigation diagram", "rep.summary": "Summary",
+
+    "cap.badge.step": "CAPTION", "cap.badge.aux": "STEP", "cap.badge.info": "STATUS",
+    "cap.stepn": "step {n} / {N}",
+    "cap.hist": "▾ History", "cap.hist.open": "▴ Collapse", "cap.hist.title": "list of the captions and errors so far",
+    "cap.hint": "Pick a scenario and step through it (or play it automatically).",
+    "cap.noscn": "No scenario – load one in the Scenarios block (.json / .csv), or record one in expert mode.",
+    "cap.warn.title": "click for details", "cap.warn": "⚠ {n} error(s) – {msg}",
+    "cap.start": "Initial state – {page}", "cap.end": "The end.",
+    "cap.recstart": "Recording: {page} (from a clean state)",
+    "cap.loaded": "{n} scenario(s) loaded.",
+    "cap.csvcreated": "CSV scenario created: {name} – {desc}",
+    "cap.scn": "{name} – {desc}",
+
+    "warn.loaderr": "Load error: {x}", "warn.nosteps": "{f}: no \"steps\" list",
+    "warn.csvempty": "Empty or invalid CSV: {name}", "warn.csvunknown": "Unknown CSV columns (skipped): {cols}",
+    "warn.scn": "Scenario: {msg}", "warn.unknown": "unknown statement: {line}",
+
+    "scn.title": "Scenarios",
+    "scn.load": "⭱ Load scenario / CSV…", "scn.load.title": "Load a JSON scenario or a CSV (drag & drop works too)",
+    "scn.hint": "or drop a .json / .csv file here",
+    "scn.folder": "📁 Open folder…", "scn.folder.title": "browse the scenarios folder (every .json in it is loaded)",
+    "scn.hint.basic": "or drop .json files here",
+    "cap.noscn.basic": "No scenario loaded – open the scenarios folder in the Scenarios block.",
+    "scn.first": "back to the start", "scn.prev": "previous step", "scn.play": "play automatically", "scn.pause": "pause",
+    "scn.next": "next step", "scn.stop": "stop",
+    "scn.edit": "✎ Edit in the recorder", "scn.edit.title": "load the selected scenario into the recorder for editing",
+    "scn.stepno": "Step: {k} / {n}",
+
+    "rec.title": "Recorder (macro)", "rec.badge": "● recording",
+    "rec.f1": "1. Record", "rec.f2": "2. Edit", "rec.f3": "3. Save",
+    "rec.start": "● Start recording", "rec.start2": "● Start a new recording", "rec.stop": "■ Stop recording",
+    "rec.append": "➕ Continue from the end", "rec.append.title": "play the existing steps, then continue recording from the end",
+    "rec.discard": "Clear",
+    "rec.state.on": "recording… {n} steps", "rec.state.items": "{n} items",
+    "rec.editbanner": "✎ Editing: {name} ({id}.json) – Save overwrites the scenario in the list.",
+    "rec.hint0": "Start recording, then use the display (click, set a value, jump to a page, send an MCU command).",
+    "rec.hint1": "Recording… Actions on the display are added to the list. Press ■ when you are done.",
+    "rec.hint2": "Edit the list: caption, delay (⏱), order (▲▼), delete (✕), the step's JSON (✎); with ➕ you can keep recording from the end. Save when you are done.",
+    "rec.hint3": "Saved – the scenario also appears in the Scenarios list.",
+    "rec.page": "Start page", "rec.page.title": "recording starts on this page, from a clean state",
+    "rec.name.ph": "name", "rec.desc.ph": "description (optional)",
+    "rec.real": "record real time as delays",
+    "rec.delay": "+ Delay", "rec.sec": "s", "rec.cap.ph": "caption (optional)", "rec.delay.add": "Add",
+    "rec.say.ph": "stand-alone caption step", "rec.say.btn": "Caption step",
+    "rec.save": "Save (download + list)",
+    "rec.info.started": "Recording started on page {page}, from a clean state – make your first click on this page.",
+    "rec.info.append": "Recording continues from the end of the list (the state is set to the end point).",
+    "rec.info.saved": "Saved: {id}.json (also available in the list). Put it into the scenarios folder to include it in the next generation.",
+    "rec.defname": "Recorded {time}", "rec.defsave": "Recording",
+    "rec.row.edit": "edit the step (JSON)", "rec.row.up": "move up", "rec.row.down": "move down", "rec.row.del": "delete step",
+    "rec.row.delay": "delay (s)", "rec.row.capstep": "(caption step)",
+
+    "desc.set": "Set: {x}", "desc.ramp": "Change: {v} {a} → {b}", "desc.click": "Button press: {n}", "desc.goto": "Jump: {p}",
+    "desc.cmd": "MCU command: {c}", "desc.wave": "Raw data: {r}", "desc.wait": "Wait {s} s", "desc.repeat": "Repeat ×{n}", "desc.step": "step",
+
+    "disp.title": "Display controls", "disp.screen": "Screen", "disp.w": "width (px)", "disp.h": "height (px)",
+    "disp.reset": "↺ Default size", "disp.reset.title": "reset the screen size and zoom to the project resolution",
+    "disp.zoom": "Zoom", "disp.fit": "fit", "disp.hitbox": "hitboxes (component outlines)",
+    "disp.idle": "idle return jump",
+    "disp.idle.title": "The HMI timers jump back to the main page after inactivity (e.g. 30 s). Disabled by default so that the emulator does not jump around.",
+
+    "vars.title": "Current page variables", "glob.title": "Global variables", "log.title": "Serial output / log",
+    "rx.ph": "MCU command (Nextion instruction, e.g. page pageStat1 or pageMainAuto.charge_level.val=40)", "rx.send": "Send",
+    "log.mcu": "MCU → display: {v}",
+    "card.toggle": "click to expand / collapse",
+
+    "step.title": "Edit step (JSON)",
+    "step.hint": "Step types: set, ramp, wait, say, click, goto, cmd, wave, repeat – see the help.",
+    "step.cancel": "Cancel", "step.ok": "Apply", "step.err": "Error: {m}",
+    "step.notobj": "a step must be a JSON object", "step.empty": "empty step",
+
+    "csv.title": "CSV import – ", "csv.mode": "Mode", "csv.mode.stats": "Statistics (from values)", "csv.mode.series": "Time series (values per row)",
+    "csv.name": "Scenario name", "csv.col": "Value column", "csv.grp": "Group column", "csv.none": "(none)",
+    "csv.targets": "Target variables (from the profile; editable):",
+    "pf.page": "Page", "pf.path": "Path by button presses (comma-separated, optional)", "pf.quantity": "Count", "pf.mean": "Mean", "pf.sd": "SD",
+    "pf.cv": "CV (%)", "pf.group": "Group name", "pf.wave": "Waveform (page.obj)", "pf.waveclick": "Button that switches to the waveform",
+    "pf.wait": "Wait per group (ms)",
+    "sr.wait": "Default wait between rows (ms)", "sr.page": "Start page",
+    "sr.hint": "Header: a full reference (<code>page.obj.attr</code>), a variable label or a unique name; special: <code>t_ms</code>, <code>wait_ms</code>, <code>say</code>, <code>goto</code>, <code>cmd</code>.",
+    "csv.cancel": "Cancel", "csv.json": "Download JSON", "csv.ok": "Create",
+    "csv.rows": "{n} rows, delimiter: {d}", "csv.tab": "tab", "csv.warn": " – warning: {w}", "csv.err": "Error: {m}",
+    "csv.needtarget": "enter at least one target variable (mean, SD, CV or count)",
+
+    "tip.below": "+{n} below", "type.unknown": "type {t}",
+    "type.0": "waveform", "type.1": "slider", "type.54": "number", "type.56": "checkbox", "type.57": "radio button", "type.59": "decimal number",
+    "type.98": "button", "type.106": "progress bar", "type.109": "hotspot", "type.112": "picture", "type.116": "text",
+
+    "core.unknownTarget": "? unknown target: {ref}", "core.unknownStatement": "? unknown statement: {line}", "core.unknownPage": "page: unknown page {page}",
+    "core.timerBlocked": "(timer jump blocked: {page})", "core.error": "Error ({where}): {msg}", "core.scenario": "Scenario: {msg}",
+    "core.scnWhere": "scenario", "core.expr": "expression: {s}", "core.emptyExpr": "empty expression: {s}",
+    "core.tooManySteps": "too many steps (infinite loop?)", "core.repeatDepth": "repeat nested too deeply",
+    "core.unknownRef": "unknown reference: {ref}", "core.noComponent": "no such component on the current page ({page}): {name}",
+    "core.unknownScnPage": "unknown page: {page}", "core.unknownWave": "unknown waveform: {ref}",
+  },
+};
+let LANG = "hu";
+function setLang(l) { LANG = I18N[l] ? l : "hu"; }
+function loc(v) {
+  if (v === undefined || v === null) return "";
+  if (typeof v === "string") return v;
+  if (typeof v === "object") return v[LANG] || v.en || v.hu || Object.values(v).find(x => typeof x === "string") || "";
+  return String(v);
+}
+function t(key, vars) {
+  const s = (I18N[LANG] && I18N[LANG][key]) || I18N.en[key] || key;
+  return s.replace(/\{(\w+)\}/g, (m, n) => (vars && vars[n] !== undefined ? loc(vars[n]) : m));
+}
+if (typeof module !== "undefined") module.exports = { I18N, t, loc, setLang, getLang: () => LANG };
