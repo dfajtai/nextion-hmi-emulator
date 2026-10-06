@@ -30,9 +30,9 @@ installs `code/requirements.txt`, activates it and runs the tool inside it. Outp
 | `discover FILE` | simulation input variables found by static analysis | `discover/variables.discovered.json` |
 | `portable FILE` | **basic** variant for end users (trainer cells): simple mode only (cannot be switched to expert), no built-in scenarios, no reports/help, empty `scenarios/` folder next to `index.html` | `<out>/index.html`, `data.js`, `*.js`, `img/`, `scenarios/` |
 | `serve [DIR]` | local server for a generated folder (default port 8765, opens the browser): the scenarios folder is shared – recordings saved in the expert emulator appear in the basic emulator automatically | – |
-| `all FILE` | everything above + the portable package + a launcher `index.html` (the emulator is generated last so that it can link the reports) | all of the above |
+| `all FILE` | everything above + the portable package + a launcher `index.html` (stamped with the source HMI's name, date and hash) (the emulator is generated last so that it can link the reports) | all of the above |
 
-Options: `-o DIR` (output folder), `--scenarios DIR` (scenarios + `variables.json`; default `<hmi folder>/scenarios`),
+Options: `--lenient` (do not fail on scenarios that no longer match the HMI: by default the tool still generates everything but exits with code 4, so a CI job notices), `-o DIR` (output folder), `--scenarios DIR` (scenarios + `variables.json`; default `<hmi folder>/scenarios`),
 and for `emulator` / `all`: `--start PAGE`, `--screen WxH` (e.g. `800x480`), `--zoom Z|fit`, `--lang hu|en`
 (default GUI language, the user can switch at run time).
 

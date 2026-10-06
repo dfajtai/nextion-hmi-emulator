@@ -527,3 +527,21 @@ def test_resources_block_agrees_with_unused_report(project):
     assert rs["images_available"] == ua["images_total"] and rs["images_unused"] == ua["images_unused"]
     assert rs["images_used"] + rs["images_unused"] + rs["images_uncertain"] == ua["images_total"]
     assert "(oldal)" not in json.dumps(unused.analyze(project))
+
+
+def test_broken_scenario_gives_exit_code_but_still_generates(tmp_path, capsys):
+    scn = tmp_path / "scn"
+    scn.mkdir()
+    (scn / "bad.json").write_text('{"name":"bad","steps":[{"click":"doesNotExist"},{"goto":"noSuchPage"}]}', encoding="utf-8")
+    out = tmp_path / "o"
+    assert main(["emulator", str(SAMPLE), "-o", str(out), "--scenarios", str(scn)]) == 4
+    assert "bad.json" in capsys.readouterr().err
+    assert (out / "index.html").is_file()                               # generated anyway
+    assert main(["emulator", str(SAMPLE), "-o", str(out), "--scenarios", str(scn), "--lenient"]) == 0
+
+
+def test_launcher_stamps_the_source_hmi(tmp_path):
+    out = tmp_path / "o"
+    assert main(["all", str(SAMPLE), "-o", str(out), "--scenarios", str(SCN)]) == 0
+    idx = (out / "index.html").read_text(encoding="utf-8")
+    assert SAMPLE.name in idx and "sha256" in idx and "Generated" in idx

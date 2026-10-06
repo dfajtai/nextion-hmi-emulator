@@ -4,7 +4,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from . import coverage, discover, emulator, hmi, serve, summary, unused
+from . import coverage, discover, emulator, hmi, scenario, serve, summary, unused
 
 
 def _out(args, hmi_path: Path, sub: str) -> Path:
@@ -26,6 +26,8 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("hmi", help="path of the .HMI file")
         p.add_argument("-o", "--output", help="output folder (default: output/<file name>/...)")
         if name in ("emulator", "coverage", "all", "discover", "portable"):
+            p.add_argument("--lenient", action="store_true",
+                           help="exit with 0 even if some scenarios do not match the HMI (default: exit code 4, everything is still generated)")
             p.add_argument("--scenarios", metavar="DIR",
                            help="folder of scenarios (JSON) and variables.json (default: <hmi folder>/scenarios, if it exists)")
         if name in ("emulator", "all", "portable"):
@@ -56,6 +58,9 @@ def main(argv: list[str] | None = None) -> int:
     sdir = sdir if sdir.is_dir() else None
     if sdir:
         print(f"  scenario folder: {sdir}")
+    broken = []
+    if sdir and args.cmd in ("emulator", "portable", "coverage", "all"):
+        broken = [x for x in scenario.load_dir(project, sdir) if x.issues]
     sub = (lambda n: Path(args.output) / n) if args.output and args.cmd == "all" else (lambda n: _out(args, path, n))
     if args.cmd in ("summary", "all"):
         for f in summary.write_all(project, sub("summary")):
@@ -104,9 +109,14 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "all":
         root = Path(args.output) if args.output else Path("output") / path.stem
         print("  ", emulator.write_scripts(root))
-        print("  ", emulator.write_launcher(Path(args.output) if args.output else Path("output") / path.stem, project.name))
+        print("  ", emulator.write_launcher(root, project.name, path))
     for w in project.warnings:
         print("  ! " + w)
+    for x in broken:
+        print(f"  ! scenario {x.source}: " + "; ".join(x.issues[:3]) + (" ..." if len(x.issues) > 3 else ""), file=sys.stderr)
+    if broken and not args.lenient:
+        print(f"Error: {len(broken)} scenario(s) do not match this HMI (exit code 4; use --lenient to ignore)", file=sys.stderr)
+        return 4
     return 0
 
 
