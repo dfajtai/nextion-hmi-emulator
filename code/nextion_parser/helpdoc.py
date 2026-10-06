@@ -110,7 +110,7 @@ Az emulátor <b>nem a valódi kijelző</b>: a betűtípusok rendszerfontok, az i
 <h2 id="lejatszo">Forgatókönyvek lejátszása</h2>
 <p>A forgatókönyv lépések sora (gombnyomás, érték-beállítás, várakozás…), amit az emulátor az MCU nevében „végrehajt”. A <b>Forgatókönyvek</b> panelen:</p>
 <table><tr><th>Vezérlő</th><th>Mit csinál</th></tr>
-<tr><td>{b("⏮ Elölről")}</td><td>Vissza az elejére (a forgatókönyv indulóállapotára), leállítja a lejátszást.</td></tr>
+<tr><td>{b("↺ Elölről")}</td><td>Vissza az elejére (a forgatókönyv indulóállapotára), leállítja a lejátszást.</td></tr>
 <tr><td>{b("◀ Előző")}</td><td>Előző lépés: az elejétől újrajátssza az állapotot, ezért mindig pontos.</td></tr>
 <tr><td>{b("▶ Lejátszás / ⏸ Szünet")}</td><td>Egyetlen gomb: indítja az automatikus lejátszást, lejátszás közben szünetelteti, szünet után folytatja (ha közben kézzel nem módosítottál semmit). A lejátszás a forgatókönyv saját állapotából indul, nem az aktuális oldalról.</td></tr>
 <tr><td>{b("Következő ▶")}</td><td>Következő lépés. A várakozás átugorható (az időzítők szimulált idővel ketyegnek). Ha még fut az előző lépés animációja, azonnal befejezi.</td></tr>
@@ -292,7 +292,7 @@ The emulator is <b>not the real display</b>: fonts are system fonts, timing is a
 <h2 id="player">Playing scenarios</h2>
 <p>A scenario is a list of steps (button press, set a value, wait…) that the emulator "executes" on behalf of the MCU. In the <b>Scenarios</b> panel:</p>
 <table><tr><th>Control</th><th>What it does</th></tr>
-<tr><td>{b("⏮ From start")}</td><td>Back to the start (the scenario's initial state); stops the playback.</td></tr>
+<tr><td>{b("↺ From start")}</td><td>Back to the start (the scenario's initial state); stops the playback.</td></tr>
 <tr><td>{b("◀ Previous")}</td><td>Previous step: replays the state from the start, so it is always exact.</td></tr>
 <tr><td>{b("▶ Play / ⏸ Pause")}</td><td>One button: starts the automatic playback, pauses it while playing, and resumes after a pause (if you did not change anything by hand meanwhile). Playback starts from the scenario's own state, not from the current page.</td></tr>
 <tr><td>{b("Next ▶")}</td><td>Next step. Waits are skipped (timers tick in simulated time). If the animation of the previous step is still running it is finished immediately.</td></tr>
