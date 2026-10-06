@@ -114,7 +114,7 @@ Az emulátor <b>nem a valódi kijelző</b>: a betűtípusok rendszerfontok, az i
 <tr><td>{b("◀ Előző")}</td><td>Előző lépés: az elejétől újrajátssza az állapotot, ezért mindig pontos.</td></tr>
 <tr><td>{b("▶ Lejátszás / ⏸ Szünet")}</td><td>Egyetlen gomb: indítja az automatikus lejátszást, lejátszás közben szünetelteti, szünet után folytatja (ha közben kézzel nem módosítottál semmit). A lejátszás a forgatókönyv saját állapotából indul, nem az aktuális oldalról.</td></tr>
 <tr><td>{b("Következő ▶")}</td><td>Következő lépés. A várakozás átugorható (az időzítők szimulált idővel ketyegnek). Ha még fut az előző lépés animációja, azonnal befejezi.</td></tr>
-<tr><td>Tempó: 1× 2× 4×</td><td>Az automatikus lejátszás sebessége a forgatókönyv saját várakozásaival.</td></tr>
+<tr><td>Tempó: 0.5× 1× 2× 4×</td><td>Az automatikus lejátszás sebessége a forgatókönyv saját várakozásaival.</td></tr>
 <tr><td>Tempó: Egyenletes szünet</td><td>Minden lépés után ugyanannyi másodpercet vár (megadható); a forgatókönyv saját várakozás-lépéseit figyelmen kívül hagyja. Bemutatóhoz kényelmes, egyenletes ritmus.</td></tr>
 <tr><td>Kattintás a kijelzőre</td><td>Ha lejátszás közben beleklikkelsz a kijelzőbe, a lejátszás megáll, és átveheted az irányítást.</td></tr>
 <tr><td>Lépéslista</td><td>A lépésekre kattintva az adott lépésig újrajátssza az állapotot.</td></tr></table>
@@ -296,7 +296,7 @@ The emulator is <b>not the real display</b>: fonts are system fonts, timing is a
 <tr><td>{b("◀ Previous")}</td><td>Previous step: replays the state from the start, so it is always exact.</td></tr>
 <tr><td>{b("▶ Play / ⏸ Pause")}</td><td>One button: starts the automatic playback, pauses it while playing, and resumes after a pause (if you did not change anything by hand meanwhile). Playback starts from the scenario's own state, not from the current page.</td></tr>
 <tr><td>{b("Next ▶")}</td><td>Next step. Waits are skipped (timers tick in simulated time). If the animation of the previous step is still running it is finished immediately.</td></tr>
-<tr><td>Pace: 1× 2× 4×</td><td>Speed of the automatic playback, using the scenario's own waits.</td></tr>
+<tr><td>Pace: 0.5× 1× 2× 4×</td><td>Speed of the automatic playback, using the scenario's own waits.</td></tr>
 <tr><td>Pace: Even pause</td><td>Waits the same number of seconds after every step (adjustable) and ignores the scenario's own wait steps. Handy for presentations with a steady rhythm.</td></tr>
 <tr><td>Click on the display</td><td>If you click the display during playback, the playback stops and you take over.</td></tr>
 <tr><td>Step list</td><td>Click a step to replay the state up to that step.</td></tr></table>
