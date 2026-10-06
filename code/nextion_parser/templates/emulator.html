@@ -101,6 +101,10 @@ body.mode-expert .simple-only{display:none!important}
 #outline li{padding:4px 8px;border-left:3px solid var(--line);cursor:pointer;font-size:13px}
 #outline li.cur{border-color:var(--acc);background:rgba(125,125,125,.12);font-weight:600}
 #outline li.done{color:var(--mut)}
+#transport{display:flex;gap:6px;margin:8px 0}
+#transport button{flex:1;padding:9px 6px;font-size:13px;white-space:nowrap}
+#transport #play{flex:1.7;font-size:15px}
+#pacerow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
 #recsteps{max-height:260px;overflow:auto;margin:6px 0;padding:0;list-style:none;font-size:12px;counter-reset:st}
 #recsteps li{display:grid;grid-template-columns:30px 1fr auto;gap:2px 8px;align-items:center;padding:6px 6px 6px 0;margin:0 0 6px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--k,#94a3b8);border-radius:6px}
 #recsteps li .ic{grid-row:1/3;text-align:center;font-size:16px;line-height:1;color:var(--k,#94a3b8)}
@@ -152,9 +156,9 @@ body.drag{outline:3px dashed var(--acc);outline-offset:-8px}
 <aside>
 <div class="card" id="scncard"><h2 data-i="scn.title">Scenarios</h2>
 <div class="row" id="loadrow"><button id="loadbtn" data-i="scn.load" data-it="scn.load.title">Load scenario / CSV…</button><button id="folderbtn" hidden data-i="scn.folder" data-it="scn.folder.title">Open folder…</button><input type="file" id="scnfile" accept=".json,.csv,.txt,application/json,text/csv" multiple hidden><span class="note" id="loadhint"></span></div>
-<div class="row" id="playrow"><select id="scn"></select>
-<button id="first" data-it="scn.first">⏮</button><button id="prev" data-it="scn.prev">◀</button><button id="play" data-it="scn.play">▶</button><button id="pause" data-it="scn.pause">⏸</button><button id="next" data-it="scn.next">▶|</button><button id="stop" data-it="scn.stop" class="expert">⏹</button>
-<select id="speed"><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select></div>
+<div class="row" id="playrow"><select id="scn"></select></div>
+<div class="transport" id="transport"><button id="first" data-i="scn.btn.first" data-it="scn.first">⏮ From start</button><button id="prev" data-i="scn.btn.prev" data-it="scn.prev">◀ Previous</button><button id="play" class="primary" data-it="scn.play">▶ Play</button><button id="next" data-i="scn.btn.next" data-it="scn.next">Next ▶</button></div>
+<div class="row" id="pacerow"><label><span data-i="scn.pace">Pace</span> <select id="speed" data-it="scn.pace.title"><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option><option value="fixed" data-i="scn.pace.fixed">Even pause</option></select></label><label id="fixwrap" hidden data-it="scn.pace.fixed.title"><input id="fixsec" type="number" min="0.5" step="0.5" value="2" style="width:64px"> <span data-i="rec.sec">s</span></label></div>
 <div class="row expert"><button id="scnedit" data-i="scn.edit" data-it="scn.edit.title">✎ Edit in the recorder</button></div>
 <div id="scndesc" class="note"></div><div id="stepno" class="note"></div><ol id="outline"></ol></div>
 <div class="card expert" id="reccard"><h2><span data-i="rec.title">Recorder (macro)</span> <span id="recbadge"></span></h2>
@@ -334,6 +338,7 @@ function render(){
 }
 const scr=$('screen');
 scr.addEventListener('mousedown',e=>{
+  if(play.state==='play')pauseScn();                 // touching the display takes over: the playback stops
   const el=document.elementsFromPoint(e.clientX,e.clientY).find(x=>x.classList&&x.classList.contains('hit'));
   if(!el)return;
   pressed=el.dataset.n;markDirty();render();recPush({click:pressed});nx.fire(pressed,'down');
@@ -540,14 +545,16 @@ function playTop(){   // automatic, real-time playback: one top-level step = ele
   if(play.k>=play.scn.steps.length){play.state='stop';setCaption({key:'cap.end'},null,'info');return;}
   const st=play.scn.steps[play.k];stepCap(st,play.k+1);
   const prims=nx.expandSteps([st]);let i=0;
+  const fixed=$('speed').value==='fixed',fixMs=Math.max(300,(+$('fixsec').value||2)*1000);   // even pace: the same pause after every step
+  const adv=()=>{if(play.state!=='play')return;play.k++;markOutline();warn();playTop();};
   const run=()=>{
     if(play.state!=='play')return;
-    if(i>=prims.length){play.k++;markOutline();warn();playTop();return;}
+    if(i>=prims.length){if(fixed&&!silentStep(st))play.t=setTimeout(adv,fixMs);else adv();return;}
     const p=prims[i++],sp=+$('speed').value||1;
     if(p.click){showClick(p.click,900/sp);                         // the highlight stays until the click, then disappears
       play.t=setTimeout(()=>{if(play.state!=='play')return;clearFx();showClick(p.click,350,true);nx.applyStep(p);play.t=setTimeout(run,300/sp);},550/sp);return;}
     const r=nx.applyStep(p);
-    play.t=setTimeout(run,Math.max(0,r.wait)/sp);
+    play.t=setTimeout(run,(fixed&&st.wait!==undefined?0:Math.max(0,r.wait))/sp);
   };
   run();
 }
@@ -587,7 +594,7 @@ function refreshScnSelect(selectId){
   const sel=$('scn');const keep=selectId||sel.value;sel.innerHTML='';
   (DATA.scenarios||[]).forEach(sc=>{const o=document.createElement('option');o.value=sc.id;o.textContent=loc(sc.name);sel.appendChild(o);});
   const has=(DATA.scenarios||[]).length>0;
-  ['playrow','scndesc','stepno','outline'].forEach(id=>{const e=$(id);if(e)e.style.display=has?'':'none';});
+  ['playrow','transport','pacerow','scndesc','stepno','outline'].forEach(id=>{const e=$(id);if(e)e.style.display=has?'':'none';});
   document.querySelectorAll('#scncard .row.expert').forEach(e=>e.style.display=has?'':'none');
   $('loadhint').textContent=t(has?(DATA.portable?'scn.hint.basic':'scn.hint'):(DATA.portable?'cap.noscn.basic':'cap.noscn'));
   if(keep)sel.value=keep;
@@ -820,8 +827,14 @@ $('recpage').value=DATA.start;$('goto').value=DATA.start;
 $('sw').value=DATA.screen.w;$('sh').value=DATA.screen.h;
 if(DATA.zoom)$('zoom').value=String(DATA.zoom);
 $('scn').onchange=selectScn;
-$('play').onclick=playScn;$('pause').onclick=pauseScn;$('stop').onclick=stopScn;
-$('next').onclick=stepForward;$('prev').onclick=prevStep;$('first').onclick=()=>{pauseScn();gotoStep(0);};
+$('play').onclick=()=>{if(play.state==='play')pauseScn();else playScn();};   // one start/pause toggle
+$('next').onclick=stepForward;$('prev').onclick=prevStep;$('first').onclick=stopScn;
+function updTransport(){
+  const k=play.state==='play'?'pause':(play.state==='pause'&&!play.dirty?'resume':'play'),b=$('play'),sig=k+LANG;
+  if(b.dataset.sig!==sig){b.dataset.sig=sig;b.textContent=t('scn.btn.'+k);}
+  $('fixwrap').hidden=$('speed').value!=='fixed';
+}
+setInterval(updTransport,150);
 $('loadbtn').onclick=()=>$('scnfile').click();
 $('scnfile').onchange=e=>{loadFiles([...e.target.files]);e.target.value='';};
 ['dragenter','dragover'].forEach(ev=>document.addEventListener(ev,e=>{e.preventDefault();document.body.classList.add('drag');}));

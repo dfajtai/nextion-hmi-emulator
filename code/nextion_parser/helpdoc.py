@@ -110,15 +110,15 @@ Az emulátor <b>nem a valódi kijelző</b>: a betűtípusok rendszerfontok, az i
 <h2 id="lejatszo">Forgatókönyvek lejátszása</h2>
 <p>A forgatókönyv lépések sora (gombnyomás, érték-beállítás, várakozás…), amit az emulátor az MCU nevében „végrehajt”. A <b>Forgatókönyvek</b> panelen:</p>
 <table><tr><th>Vezérlő</th><th>Mit csinál</th></tr>
-<tr><td>{b("⏮")}</td><td>Vissza az elejére (a forgatókönyv indulóállapotára).</td></tr>
-<tr><td>{b("◀")}</td><td>Előző lépés: az elejétől újrajátssza az állapotot, ezért mindig pontos.</td></tr>
-<tr><td>{b("▶")}</td><td>Automatikus lejátszás a lépések közti várakozásokkal. A lejátszás a forgatókönyv saját állapotából indul, nem az aktuális oldalról.</td></tr>
-<tr><td>{b("⏸")}</td><td>Szünet; a ▶ folytatja (ha közben kézzel nem módosítottál semmit).</td></tr>
-<tr><td>{b("▶|")}</td><td>Következő lépés. A várakozás átugorható (az időzítők szimulált idővel ketyegnek). Ha még fut az előző lépés animációja, azonnal befejezi.</td></tr>
-<tr><td>{b("⏹")} (expert)</td><td>Leállítás és vissza az elejére.</td></tr>
-<tr><td>1× 2× 4×</td><td>Az automatikus lejátszás sebessége.</td></tr>
+<tr><td>{b("⏮ Elölről")}</td><td>Vissza az elejére (a forgatókönyv indulóállapotára), leállítja a lejátszást.</td></tr>
+<tr><td>{b("◀ Előző")}</td><td>Előző lépés: az elejétől újrajátssza az állapotot, ezért mindig pontos.</td></tr>
+<tr><td>{b("▶ Lejátszás / ⏸ Szünet")}</td><td>Egyetlen gomb: indítja az automatikus lejátszást, lejátszás közben szünetelteti, szünet után folytatja (ha közben kézzel nem módosítottál semmit). A lejátszás a forgatókönyv saját állapotából indul, nem az aktuális oldalról.</td></tr>
+<tr><td>{b("Következő ▶")}</td><td>Következő lépés. A várakozás átugorható (az időzítők szimulált idővel ketyegnek). Ha még fut az előző lépés animációja, azonnal befejezi.</td></tr>
+<tr><td>Tempó: 1× 2× 4×</td><td>Az automatikus lejátszás sebessége a forgatókönyv saját várakozásaival.</td></tr>
+<tr><td>Tempó: Egyenletes szünet</td><td>Minden lépés után ugyanannyi másodpercet vár (megadható); a forgatókönyv saját várakozás-lépéseit figyelmen kívül hagyja. Bemutatóhoz kényelmes, egyenletes ritmus.</td></tr>
+<tr><td>Kattintás a kijelzőre</td><td>Ha lejátszás közben beleklikkelsz a kijelzőbe, a lejátszás megáll, és átveheted az irányítást.</td></tr>
 <tr><td>Lépéslista</td><td>A lépésekre kattintva az adott lépésig újrajátssza az állapotot.</td></tr></table>
-<p><b>Kiinduló állapot:</b> a lejátszás (▶) és az első léptetés (▶|) <u>előbb ~1 másodpercig a forgatókönyv induló oldalát mutatja</u> („Kiinduló állapot – oldal” felirattal), és csak utána jön az első kiemelés és kattintás – így látszik, melyik oldalon történik az első gombnyomás.</p>
+<p><b>Kiinduló állapot:</b> a lejátszás (▶ Lejátszás) és az első léptetés (Következő ▶) <u>előbb ~1 másodpercig a forgatókönyv induló oldalát mutatja</u> („Kiinduló állapot – oldal” felirattal), és csak utána jön az első kiemelés és kattintás – így látszik, melyik oldalon történik az első gombnyomás.</p>
 <p><b>Kattintás-jelzés:</b> gombnyomás-lépésnél a gombot előbb magenta keret és hullám jelzi a még látható oldalon, ~0,5 s múlva történik meg a kattintás, és a keret eltűnik.</p>
 <div class="note">Ha kézzel módosítasz valamit (kattintás, érték, oldalugrás, újraindítás), a következő lejátszás vagy léptetés előtt az emulátor <b>újraszinkronizál</b>: az eddigi lépéseket újrajátssza, így a forgatókönyv sosem a rossz oldalon próbál kattintani.</div>
 
@@ -292,15 +292,15 @@ The emulator is <b>not the real display</b>: fonts are system fonts, timing is a
 <h2 id="player">Playing scenarios</h2>
 <p>A scenario is a list of steps (button press, set a value, wait…) that the emulator "executes" on behalf of the MCU. In the <b>Scenarios</b> panel:</p>
 <table><tr><th>Control</th><th>What it does</th></tr>
-<tr><td>{b("⏮")}</td><td>Back to the start (the scenario's initial state).</td></tr>
-<tr><td>{b("◀")}</td><td>Previous step: replays the state from the start, so it is always exact.</td></tr>
-<tr><td>{b("▶")}</td><td>Automatic playback with the waits between steps. Playback starts from the scenario's own state, not from the current page.</td></tr>
-<tr><td>{b("⏸")}</td><td>Pause; ▶ resumes (if you did not change anything by hand meanwhile).</td></tr>
-<tr><td>{b("▶|")}</td><td>Next step. Waits are skipped (timers tick in simulated time). If the animation of the previous step is still running it is finished immediately.</td></tr>
-<tr><td>{b("⏹")} (expert)</td><td>Stop and go back to the start.</td></tr>
-<tr><td>1× 2× 4×</td><td>Speed of the automatic playback.</td></tr>
+<tr><td>{b("⏮ From start")}</td><td>Back to the start (the scenario's initial state); stops the playback.</td></tr>
+<tr><td>{b("◀ Previous")}</td><td>Previous step: replays the state from the start, so it is always exact.</td></tr>
+<tr><td>{b("▶ Play / ⏸ Pause")}</td><td>One button: starts the automatic playback, pauses it while playing, and resumes after a pause (if you did not change anything by hand meanwhile). Playback starts from the scenario's own state, not from the current page.</td></tr>
+<tr><td>{b("Next ▶")}</td><td>Next step. Waits are skipped (timers tick in simulated time). If the animation of the previous step is still running it is finished immediately.</td></tr>
+<tr><td>Pace: 1× 2× 4×</td><td>Speed of the automatic playback, using the scenario's own waits.</td></tr>
+<tr><td>Pace: Even pause</td><td>Waits the same number of seconds after every step (adjustable) and ignores the scenario's own wait steps. Handy for presentations with a steady rhythm.</td></tr>
+<tr><td>Click on the display</td><td>If you click the display during playback, the playback stops and you take over.</td></tr>
 <tr><td>Step list</td><td>Click a step to replay the state up to that step.</td></tr></table>
-<p><b>Initial state:</b> playback (▶) and the first step (▶|) <u>first show the scenario's start page for ~1 second</u> (captioned "Initial state – page") and only then come the first highlight and click – so you can see on which page the first press happens.</p>
+<p><b>Initial state:</b> playback (▶ Play) and the first step (Next ▶) <u>first show the scenario's start page for ~1 second</u> (captioned "Initial state – page") and only then come the first highlight and click – so you can see on which page the first press happens.</p>
 <p><b>Click marker:</b> for a button-press step the button is first marked by a magenta frame and ripple on the still-visible page, the click happens ~0.5 s later, and the frame disappears.</p>
 <div class="note">If you change something by hand (click, value, page jump, restart), the emulator <b>re-synchronizes</b> before the next playback or step: it replays the steps so far, so a scenario never tries to click on the wrong page.</div>
 

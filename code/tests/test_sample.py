@@ -377,12 +377,12 @@ def test_gui_dictionaries_are_complete(project, tmp_path):
     used = set(re.findall(r'data-i(?:h|t|p)?="([\w.]+)"', html))
     used |= set(re.findall(r"\bt\('([\w.]+)'", js)) | set(re.findall(r"key:'([\w.]+)'", js))
     used |= set(re.findall(r"""data-i\w*="([\w.]+)\"""", html))
-    prefixes = {"cap.badge.": ("step", "aux", "info"), "rec.hint": ("0", "1", "2", "3"),
+    prefixes = {"cap.badge.": ("step", "aux", "info"), "scn.btn.": ("play", "pause", "resume"), "rec.hint": ("0", "1", "2", "3"),
                 "rep.": ("coverage", "unused", "navigation", "summary")}
     for p, suffixes in prefixes.items():
         for suf in suffixes:
             used.add(p + suf)
-    used -= {"cap.badge.", "rec.hint", "rep.", "type."}      # prefixes of dynamically built keys (their concrete keys are checked above/below)
+    used -= {"cap.badge.", "scn.btn.", "rec.hint", "rep.", "type."}      # prefixes of dynamically built keys (their concrete keys are checked above/below)
     used |= {f"type.{n}" for n in (0, 1, 54, 56, 57, 59, 98, 106, 109, 112, 116)}
     missing = sorted(k for k in used if k not in hu)
     assert not missing, missing

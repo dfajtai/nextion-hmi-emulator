@@ -56,8 +56,9 @@ Full usage is described in `help.html`; a short overview:
 
 ### Scenario player
 
-A scenario is a list of steps executed on behalf of the MCU (see the format below). Controls: ⏮ back to start, ◀ previous step,
-▶ play (1×/2×/4×), ⏸ pause, ▶| next step, ⏹ stop (expert), step list (click to jump). Playback always starts from the
+A scenario is a list of steps executed on behalf of the MCU (see the format below). Controls: **⏮ From start**, **◀ Previous**, one **▶ Play / ⏸ Pause** toggle, **Next ▶**, a step list (click to jump) and a pace selector
+(1×/2×/4×, or **Even pause**: the same N seconds after every step, the scenario's own waits are ignored). Clicking the display during
+playback stops it. Playback always starts from the
 scenario's own initial state; the initial page is shown for about a second before the first click. A button press is
 announced with a magenta frame (the button name is shown in expert mode only) before the click happens. If you changed
 something by hand, the emulator re-synchronizes by replaying the steps so far.
