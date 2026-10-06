@@ -19,7 +19,7 @@ from collections import Counter, defaultdict
 from importlib import resources
 from pathlib import Path
 
-from . import discover, emulator, scenario
+from . import discover, emulator, scenario, unused
 from .codeutil import statements as _statements
 from .hmi import TYPE_NAMES, Project
 from .i18n import loc
@@ -154,6 +154,9 @@ def static_components(project: Project) -> dict:
 
 
 def static_resources(project: Project) -> dict:
+    """Resource facts. Used/unused counts come from the unused-resources analysis so both reports always agree
+    (it also counts page backgrounds and references assigned in code, not only the components' own pic/font attributes)."""
+    ua = unused.analyze(project)
     pic_refs: dict[int, list] = defaultdict(list)
     font_refs: dict[int, int] = Counter()
     for p in project.pages:
@@ -185,9 +188,14 @@ def static_resources(project: Project) -> dict:
     return {
         "image_dim_checked": chk, "image_dim_mismatch": mism,
         "image_dim_percent": round(100 * (chk - bad_dim) / chk, 1) if chk else 100.0,
-        "images_available": len(project.images), "images_referenced": len(pic_refs),
+        "images_available": len(project.images),
+        "images_used": sum(1 for x in ua["images"] if x["status"] == "used"),
+        "images_unused": sum(1 for x in ua["images"] if x["status"] == "unused"),
+        "images_uncertain": sum(1 for x in ua["images"] if x["status"] == "uncertain"),
+        "unused_tft_bytes": ua["summary"]["images_unused_tft_bytes"],
+        "fonts_used": sum(1 for x in ua["fonts"] if x["status"] == "used"),
         "images_missing": {str(k): v for k, v in miss_pic.items()},
-        "fonts_available": len(project.fonts), "fonts_referenced": len(font_refs),
+        "fonts_available": len(project.fonts),
         "fonts_missing": {str(k): v for k, v in miss_font.items()},
         "fonts_note": "The .zi fonts cannot be rendered; the emulator uses a system font and takes the glyph height from the .zi header. "
                       "Font and image ids are positions in the main.HMI resource list.",
@@ -377,13 +385,29 @@ code{{font:12px ui-monospace,monospace}}details{{margin:6px 0}}summary{{cursor:p
             h.append(f"<tr><td><code>{_e(k)}</code></td><td>{v['count']}</td><td>{ex}</td></tr>")
         h.append("</table></details>")
 
-    h.append("<h2>4. Resources</h2>")
-    h.append(f"<p>Images: {rs['images_available']} available, {rs['images_referenced']} referenced. "
-             f"Fonts: {rs['fonts_available']} available, {rs['fonts_referenced']} referenced.</p>")
-    for label, key in (("Missing images", "images_missing"), ("Missing fonts", "fonts_missing")):
-        h.append(f"<p>{label}: <code>{_e(rs[key] or 'none')}</code></p>")
-    h.append(f"<p>Size check of the image mapping: {rs['image_dim_percent']}% match ({rs['image_dim_checked']} references)."
-             + ("" if not rs["image_dim_mismatch"] else " Mismatches: <code>" + _e("; ".join(rs["image_dim_mismatch"][:10])) + "</code>") + "</p>")
+    h.append("<h2>4. Resources (images and fonts)</h2>")
+    h.append("<p class='note'>A Nextion project embeds pictures and fonts. For the emulator to look right it must find every "
+             "picture and font that the display uses. This section answers three questions.</p>")
+    h.append("<h3>4.1 Are all used pictures and fonts present?</h3><table><tr><th></th><th>In the file</th><th>Used</th>"
+             "<th>Used but missing</th></tr>")
+    h.append(f"<tr><td>Images</td><td>{rs['images_available']}</td><td>{rs['images_used']}</td>"
+             f"<td>{len(rs['images_missing'])}</td></tr>")
+    h.append(f"<tr><td>Fonts</td><td>{rs['fonts_available']}</td><td>{rs['fonts_used']}</td>"
+             f"<td>{len(rs['fonts_missing'])}</td></tr></table>")
+    h.append("<p>" + ("Nothing is missing: every referenced picture and font exists in the file."
+                      if not rs["images_missing"] and not rs["fonts_missing"]
+                      else "Missing: <code>" + _e(f"images {rs['images_missing']}, fonts {rs['fonts_missing']}") + "</code>") + "</p>")
+    h.append(f"<p class='note'>\"Used\" is counted exactly as in the Unused resources report: component pictures, page backgrounds and "
+             f"pictures assigned in code. The other {rs['images_unused']} image(s) "
+             f"({rs['images_uncertain']} uncertain) are never shown – they only take space ({rs['unused_tft_bytes']:,} bytes in the display file) – "
+             "see that report for the list.</p>")
+    h.append("<h3>4.2 Is the picture-id mapping trustworthy?</h3>")
+    h.append("<p class='note'>The file stores only a number for each picture. We map it to the right image by its position in the resource list. "
+             "As a cross-check, a picture component should have about the size of its image.</p>")
+    h.append(f"<p><b>{rs['image_dim_percent']}%</b> of {rs['image_dim_checked']} checked references match in size (±2 px)."
+             + (" A few differences are normal: the designer may stretch or crop an image. " +
+                "Different here: <code>" + _e("; ".join(rs["image_dim_mismatch"][:10])) + "</code>" if rs["image_dim_mismatch"] else "") + "</p>")
+    h.append("<h3>4.3 Fonts</h3>")
     h.append(f"<p class='note'>{_e(rs['fonts_note'])}</p>")
 
     h.append("<h2>5. Runtime smoke test (Node)</h2>")

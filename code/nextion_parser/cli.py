@@ -102,6 +102,8 @@ def main(argv: list[str] | None = None) -> int:
             print(f"Error: {e}", file=sys.stderr)
             return 2
     if args.cmd == "all":
+        root = Path(args.output) if args.output else Path("output") / path.stem
+        print("  ", emulator.write_scripts(root))
         print("  ", emulator.write_launcher(Path(args.output) if args.output else Path("output") / path.stem, project.name))
     for w in project.warnings:
         print("  ! " + w)

@@ -62,7 +62,7 @@ def _scan(project: Project) -> dict:
                     img[v].append(f"{p.name}.{c.name}.{k}" if c.type != 121 else f"{p.name} (page background)")
             if "font" in c.attrs and c.type in (54, 59, 98, 116):
                 fnt[c.attrs["font"]].append(f"{p.name}.{c.name}")
-        for cname, code in [("(oldal)", p.code)] + [(c.name, c.code) for c in p.comps]:
+        for cname, code in [("(page)", p.code)] + [(c.name, c.code) for c in p.comps]:
             for ev, lines in code.items():
                 where = f"{p.name}.{cname}.{ev}"
                 for s in codeutil.statements(lines):

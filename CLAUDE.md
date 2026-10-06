@@ -13,6 +13,7 @@ Standard library only; `node` is optional (smoke test, some tests). User-facing 
 - `code/nextion_parser/emulator.py` – generator; copies `templates/` (`emulator.html`, `nextion_core.js` interpreter, `nextion_tools.js` CSV/stats, `i18n.js` GUI dictionaries) and writes `data.js`.
 - `portable` command = basic variant: `DATA.portable`, locked to simple mode, no built-in scenarios, empty `scenarios/` folder, no help/reports.
 - `serve.py` – stdlib server with `api/scenarios` (GET list / POST save); copied into portable packages as `start.py`. The emulator syncs with it only over http(s) (`syncServer`); `file://` must keep working.
+- `update_scenarios.py` – standalone; bundles `scenarios/*.json` into `scenarios.js` (`window.NX_SCENARIOS`) that every emulator page loads, so no server is needed. Generated into `<out>/scripts/` and into portable packages.
 - `all` writes `<out>/index.html` (launcher), `emulator/`, `portable/` and the reports.
 - `code/tests/fixtures/scenarios/` – scenarios used only by tests; `sample/scenarios/` holds only `variables.json` and `csv_profiles.json`.
 

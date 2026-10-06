@@ -464,7 +464,9 @@ def test_all_writes_launcher_and_portable(tmp_path):
     idx = (out / "index.html").read_text(encoding="utf-8")
     for href in ("emulator/index.html", "portable/index.html", "coverage/coverage.html"):
         assert href in idx
-    assert (out / "portable" / "start.py").is_file()
+    assert (out / "portable" / "start.py").is_file() and (out / "portable" / "update_scenarios.py").is_file()
+    assert (out / "scripts" / "update_scenarios.py").is_file() and (out / "scenarios").is_dir()
+    assert (out / "emulator" / "scenarios.js").is_file() and (out / "portable" / "scenarios.js").is_file()
 
 
 def test_serve_api_lists_and_saves_scenarios(tmp_path):
@@ -500,3 +502,28 @@ def test_serve_api_lists_and_saves_scenarios(tmp_path):
 def test_emulator_has_server_sync(project, tmp_path):
     html = gen(project, tmp_path)
     assert "api/scenarios" in html and "syncServer" in html and "rec.info.saved.server" in html
+
+
+def test_update_scenarios_script_bundles_json(tmp_path):
+    root = tmp_path / "o"
+    (root / "emulator").mkdir(parents=True)
+    (root / "emulator" / "index.html").write_text("x")
+    (root / "emulator" / "data.js").write_text("x")
+    emulator.write_scripts(root)
+    (root / "scenarios" / "a.json").write_text('{"name":"A","steps":[{"say":"hi"}]}', encoding="utf-8")
+    (root / "scenarios" / "bad.json").write_text("{oops", encoding="utf-8")
+    (root / "scenarios" / "variables.json").write_text("[]", encoding="utf-8")
+    r = subprocess.run(["python3", str(root / "scripts" / "update_scenarios.py")], capture_output=True, text=True)
+    assert r.returncode == 1 and "bad.json" in r.stdout                       # invalid file reported, others still written
+    js = (root / "emulator" / "scenarios.js").read_text(encoding="utf-8")
+    assert js.startswith("window.NX_SCENARIOS=") and '"a.json"' in js and "variables.json" not in js
+    for f in ("update_scenarios.bat", "update_scenarios.sh"):
+        assert (root / "scripts" / f).is_file()
+
+
+def test_resources_block_agrees_with_unused_report(project):
+    ua = unused.analyze(project)["summary"]
+    rs = coverage.static_resources(project)
+    assert rs["images_available"] == ua["images_total"] and rs["images_unused"] == ua["images_unused"]
+    assert rs["images_used"] + rs["images_unused"] + rs["images_uncertain"] == ua["images_total"]
+    assert "(oldal)" not in json.dumps(unused.analyze(project))

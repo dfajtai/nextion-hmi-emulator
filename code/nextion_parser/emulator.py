@@ -99,10 +99,14 @@ def generate(project: Project, out_dir: str | Path, start: str | None = None,
         sc = out / "scenarios"
         sc.mkdir(exist_ok=True)
         (sc / "README.txt").write_text(PORTABLE_README, encoding="utf-8")
+        add_updater(out)
         (out / "start.py").write_text(resources.files("nextion_parser").joinpath("serve.py").read_text(encoding="utf-8"),
                                       encoding="utf-8")
     else:
         helpdoc.write(out, project, data)
+    sj = out / "scenarios.js"
+    if not sj.exists():
+        sj.write_text("window.NX_SCENARIOS=[];\n", encoding="utf-8")
     (out / "index.html").write_text(
         tpl.joinpath("emulator.html").read_text(encoding="utf-8").replace("__PROJECT__", project.name), encoding="utf-8")
     return out / "index.html"
@@ -130,10 +134,33 @@ body{{font:16px/1.5 system-ui,sans-serif;max-width:720px;margin:40px auto;paddin
 @media(prefers-color-scheme:dark){{body{{color:#e5e7eb;background:#111827}}a{{color:#93c5fd}}code{{background:#1f2937}}}}
 h1{{font-size:22px}}li{{margin:8px 0}}li span,p{{color:#6b7280;font-size:14px}}code{{background:#e5e7eb;padding:1px 5px;border-radius:4px}}
 </style></head><body><h1>{project_name}</h1><ul>{rows}</ul>
-<p>Scenarios recorded in the expert emulator are saved to a folder and loaded by the basic emulator automatically when
-this folder is served: <code>./code/setup_and_run.sh serve output/{project_name}</code> (it opens this page).
-Opened directly from disk (<code>file://</code>) everything works too, but saving downloads a file and the basic emulator
-needs <em>Open folder…</em>.</p></body></html>"""
+<p><b>Without a server</b> (just open the pages): put scenario <code>.json</code> files into the <code>scenarios/</code> folder, then
+run <code>scripts/update_scenarios.bat</code> (Windows) or <code>scripts/update_scenarios.sh</code> (Linux/macOS; needs Python 3).
+It refreshes <code>scenarios.js</code> in the emulator folders – reload the page and the scenarios are there.<br>
+<b>With the helper server</b>: <code>./code/setup_and_run.sh serve output/{project_name}</code> – recordings made in the expert
+emulator are saved into <code>scenarios/</code> and appear in the basic emulator automatically.</p></body></html>"""
     out = root / "index.html"
     out.write_text(html, encoding="utf-8")
     return out
+
+
+def add_updater(folder: Path) -> None:
+    """Copy update_scenarios.py + double-click wrappers into `folder`."""
+    folder = Path(folder)
+    folder.mkdir(parents=True, exist_ok=True)
+    src = resources.files("nextion_parser").joinpath("update_scenarios.py").read_text(encoding="utf-8")
+    (folder / "update_scenarios.py").write_text(src, encoding="utf-8")
+    (folder / "update_scenarios.bat").write_bytes(
+        b'@echo off\r\npy -3 "%~dp0update_scenarios.py" || python "%~dp0update_scenarios.py"\r\npause\r\n')
+    sh = folder / "update_scenarios.sh"
+    sh.write_text('#!/bin/sh\ncd "$(dirname "$0")" && python3 update_scenarios.py\n', encoding="utf-8")
+    sh.chmod(0o755)
+
+
+def write_scripts(root: str | Path) -> Path:
+    """<root>/scripts/ (scenario updater for the whole output folder) and the shared <root>/scenarios/ folder."""
+    root = Path(root)
+    add_updater(root / "scripts")
+    (root / "scenarios").mkdir(exist_ok=True)
+    (root / "scenarios" / "README.txt").write_text(PORTABLE_README, encoding="utf-8")
+    return root / "scripts"

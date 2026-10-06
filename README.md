@@ -97,6 +97,8 @@ after inactivity; the emulator blocks this by default so it does not jump around
 with an empty `scenarios/` folder. Record scenarios in the expert emulator, save the `.json` files into that folder, and in the basic
 emulator press **Open folder…** (Chromium-based browsers) or **Load scenario…** / drag & drop the files. A static page cannot list a
 folder by itself, so without a server the folder has to be selected once per session.
+Without a server: put the `.json` files into `scenarios/` and run `scripts/update_scenarios.bat` / `.sh` (Python 3) – it rewrites
+`scenarios.js`, which the emulator pages load from disk (a portable package carries its own copy next to `index.html`).
 With `serve` (or `python3 start.py --open` inside a portable package, which needs only Python) the scenarios folder is read
 automatically (re-checked every 3 s in the basic emulator) and the expert recorder writes into it directly.
 

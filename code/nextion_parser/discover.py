@@ -94,7 +94,7 @@ def _usage(project: Project) -> dict:
                 thresholds[q].add((_FLIP[m.group("op")], int(m.group("n"))))
 
     for p in project.pages:
-        for cname, code in [("(oldal)", p.code)] + [(c.name, c.code) for c in p.comps]:
+        for cname, code in [("(page)", p.code)] + [(c.name, c.code) for c in p.comps]:
             for ev, lines in code.items():
                 where = f"{p.name}.{cname}.{ev}"
                 for s in _statements(lines):
