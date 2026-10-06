@@ -103,8 +103,8 @@ body.mode-expert .simple-only{display:none!important}
 #outline li.done{color:var(--mut)}
 #scn{width:100%;padding:6px 8px;font-size:14px}
 #transport{display:flex;gap:6px;margin:8px 0}
-#transport button{flex:1;padding:9px 6px;font-size:13px;white-space:nowrap}
-#transport #play{flex:1.7;font-size:15px}
+#transport button{flex:1 1 0;min-width:0;padding:9px 6px;font-size:13px;white-space:nowrap;line-height:1.3}   /* equal basis: the label change (Play/Pause) must not resize the buttons */
+#transport #play{flex:1.7 1 0;font-size:15px}
 #pacerow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
 #recsteps{max-height:260px;overflow:auto;margin:6px 0;padding:0;list-style:none;font-size:12px;counter-reset:st}
 #recsteps li{display:grid;grid-template-columns:30px 1fr auto;gap:2px 8px;align-items:center;padding:6px 6px 6px 0;margin:0 0 6px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--k,#94a3b8);border-radius:6px}
@@ -834,6 +834,8 @@ function updTransport(){
   const k=play.state==='play'?'pause':(play.state==='pause'&&!play.dirty?'resume':'play'),b=$('play'),sig=k+LANG;
   if(b.dataset.sig!==sig){b.dataset.sig=sig;b.textContent=t('scn.btn.'+k);}
   $('fixwrap').hidden=$('speed').value!=='fixed';
+  const n=play.scn?play.scn.steps.length:0;
+  $('prev').disabled=!play.scn||play.k<=0;$('next').disabled=!play.scn||play.k>=n;   // nothing before the start / after the end
 }
 setInterval(updTransport,150);
 $('loadbtn').onclick=()=>$('scnfile').click();
