@@ -1,0 +1,226 @@
+{
+  "pageMainAuto.charge_level.val": {
+    "label": {
+      "hu": "Töltöttség",
+      "en": "Charge level"
+    },
+    "unit": {
+      "hu": "%",
+      "en": "%"
+    },
+    "min": 0,
+    "max": 100,
+    "group": {
+      "hu": "Akku",
+      "en": "Battery"
+    },
+    "presets": {
+      "3": 3,
+      "15": 15,
+      "35": 35,
+      "55": 55,
+      "75": 75,
+      "100": 100
+    },
+    "description": {
+      "hu": "Az MCU küldi; az ikont az if(charge_level>80/60/40/20/5) lánc választja.",
+      "en": "Sent by the MCU; the icon is chosen by the if(charge_level>80/60/40/20/5) chain."
+    }
+  },
+  "pageMainAuto.charging.val": {
+    "label": {
+      "hu": "Töltés alatt",
+      "en": "Charging"
+    },
+    "min": 0,
+    "max": 1,
+    "group": {
+      "hu": "Akku",
+      "en": "Battery"
+    },
+    "presets": {
+      "nem": 0,
+      "igen": 1
+    }
+  },
+  "pageMainAuto.weight.val": {
+    "label": {
+      "hu": "Súly",
+      "en": "Weight"
+    },
+    "unit": {
+      "hu": "g",
+      "en": "g"
+    },
+    "group": {
+      "hu": "Mérés",
+      "en": "Measurement"
+    },
+    "presets": {
+      "0": 0,
+      "250": 250,
+      "1520": 1520,
+      "3000": 3000
+    }
+  },
+  "pageMainAuto.imp.val": {
+    "label": {
+      "hu": "Impedancia",
+      "en": "Impedance"
+    },
+    "unit": {
+      "hu": "Ω",
+      "en": "Ω"
+    },
+    "group": {
+      "hu": "Mérés",
+      "en": "Measurement"
+    },
+    "presets": {
+      "0": 0,
+      "480": 480,
+      "650": 650
+    }
+  },
+  "pageMainAuto.house.txt": {
+    "label": {
+      "hu": "Ház",
+      "en": "House"
+    },
+    "group": {
+      "hu": "Csoport",
+      "en": "Group"
+    },
+    "initial": "house1"
+  },
+  "pageMainAuto.group.txt": {
+    "label": {
+      "hu": "Csoport",
+      "en": "Group"
+    },
+    "group": {
+      "hu": "Csoport",
+      "en": "Group"
+    },
+    "initial": "group1"
+  },
+  "pageMainAuto.lang.val": {
+    "label": {
+      "hu": "Nyelv (0=HU, 1=EN)",
+      "en": "Language (0=HU, 1=EN)"
+    },
+    "min": 0,
+    "max": 1,
+    "group": {
+      "hu": "Beállítások",
+      "en": "Settings"
+    },
+    "presets": {
+      "HU": 0,
+      "EN": 1
+    },
+    "description": {
+      "hu": "A főoldal betöltésekor az EEPROM-ból töltődik vissza; váltáshoz a Beállítások oldal nyilai (bhr/bhl) valók, ezek írják az EEPROM-ot is.",
+      "en": "Reloaded from the EEPROM when the main page loads; use the arrows (bhr/bhl) on the Settings page to switch – they also write the EEPROM."
+    }
+  },
+  "pageMainAuto.individual.val": {
+    "label": {
+      "hu": "Egyedi mód",
+      "en": "Individual mode"
+    },
+    "min": 0,
+    "max": 1,
+    "group": {
+      "hu": "Beállítások",
+      "en": "Settings"
+    },
+    "presets": {
+      "csoportos": 0,
+      "egyedi": 1
+    }
+  },
+  "pageMainAuto.sleep_sec.val": {
+    "label": {
+      "hu": "Alvási idő",
+      "en": "Sleep time"
+    },
+    "unit": {
+      "hu": "mp",
+      "en": "s"
+    },
+    "min": 0,
+    "max": 120,
+    "group": {
+      "hu": "Beállítások",
+      "en": "Settings"
+    }
+  },
+  "pageStat1.xquantity.val": {
+    "label": {
+      "hu": "Egyedszám",
+      "en": "Count"
+    },
+    "unit": {
+      "hu": "db",
+      "en": "pcs"
+    },
+    "group": {
+      "hu": "Statisztika",
+      "en": "Statistics"
+    }
+  },
+  "pageStat1.xmean.val": {
+    "label": {
+      "hu": "Átlag",
+      "en": "Mean"
+    },
+    "unit": {
+      "hu": "g",
+      "en": "g"
+    },
+    "group": {
+      "hu": "Statisztika",
+      "en": "Statistics"
+    }
+  },
+  "pageStat1.xsd.val": {
+    "label": {
+      "hu": "Szórás",
+      "en": "SD"
+    },
+    "unit": {
+      "hu": "g",
+      "en": "g"
+    },
+    "group": {
+      "hu": "Statisztika",
+      "en": "Statistics"
+    }
+  },
+  "pageStat1.xcv.val": {
+    "label": {
+      "hu": "CV",
+      "en": "CV"
+    },
+    "unit": {
+      "hu": "%",
+      "en": "%"
+    },
+    "group": {
+      "hu": "Statisztika",
+      "en": "Statistics"
+    }
+  },
+  "pageStat1.t6.txt": {
+    "label": {
+      "hu": "Csoport neve",
+      "en": "Group name"
+    },
+    "group": {
+      "hu": "Statisztika",
+      "en": "Statistics"
+    },
+    "initial": "Name"
+  }
+}
