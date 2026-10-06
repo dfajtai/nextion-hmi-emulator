@@ -29,7 +29,8 @@ installs `code/requirements.txt`, activates it and runs the tool inside it. Outp
 | `unused FILE` | unused images / fonts / pages / components | `unused/unused.html`, `unused.csv`, `unused.json`, `img/` |
 | `discover FILE` | simulation input variables found by static analysis | `discover/variables.discovered.json` |
 | `portable FILE` | **basic** variant for end users (trainer cells): simple mode only (cannot be switched to expert), no built-in scenarios, no reports/help, empty `scenarios/` folder next to `index.html` | `<out>/index.html`, `data.js`, `*.js`, `img/`, `scenarios/` |
-| `all FILE` | everything above (the emulator is generated last so that it can link the reports) | all of the above |
+| `serve [DIR]` | local server for a generated folder (default port 8765, opens the browser): the scenarios folder is shared – recordings saved in the expert emulator appear in the basic emulator automatically | – |
+| `all FILE` | everything above + the portable package + a launcher `index.html` (the emulator is generated last so that it can link the reports) | all of the above |
 
 Options: `-o DIR` (output folder), `--scenarios DIR` (scenarios + `variables.json`; default `<hmi folder>/scenarios`),
 and for `emulator` / `all`: `--start PAGE`, `--screen WxH` (e.g. `800x480`), `--zoom Z|fit`, `--lang hu|en`
@@ -95,7 +96,9 @@ after inactivity; the emulator blocks this by default so it does not jump around
 `portable FILE -o DIR` writes a self-contained folder (copy it anywhere, open `index.html`). It is locked to simple mode and ships
 with an empty `scenarios/` folder. Record scenarios in the expert emulator, save the `.json` files into that folder, and in the basic
 emulator press **Open folder…** (Chromium-based browsers) or **Load scenario…** / drag & drop the files. A static page cannot list a
-folder by itself, so the folder has to be selected once per session.
+folder by itself, so without a server the folder has to be selected once per session.
+With `serve` (or `python3 start.py --open` inside a portable package, which needs only Python) the scenarios folder is read
+automatically (re-checked every 3 s in the basic emulator) and the expert recorder writes into it directly.
 
 ## Scenarios
 

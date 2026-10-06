@@ -456,3 +456,47 @@ def test_portable_locked_to_simple_mode_in_js(project, tmp_path):
     # the mode selector is hidden and the expert mode cannot be requested through the URL
     assert "$('mode').closest('label').hidden=true" in html
     assert "setMode(DATA.portable?'simple'" in html
+
+
+def test_all_writes_launcher_and_portable(tmp_path):
+    out = tmp_path / "o"
+    assert main(["all", str(SAMPLE), "-o", str(out), "--scenarios", str(SCN)]) == 0
+    idx = (out / "index.html").read_text(encoding="utf-8")
+    for href in ("emulator/index.html", "portable/index.html", "coverage/coverage.html"):
+        assert href in idx
+    assert (out / "portable" / "start.py").is_file()
+
+
+def test_serve_api_lists_and_saves_scenarios(tmp_path):
+    import threading
+    import urllib.request
+    from functools import partial
+    from http.server import ThreadingHTTPServer
+
+    from nextion_parser import serve
+    root = tmp_path / "r"
+    (root / "scenarios").mkdir(parents=True)
+    (root / "scenarios" / "a.json").write_text('{"name":"A","steps":[]}', encoding="utf-8")
+    (root / "scenarios" / "variables.json").write_text("[]", encoding="utf-8")
+    (root / "index.html").write_text("hi", encoding="utf-8")
+    serve.Handler.scenarios = root / "scenarios"
+    srv = ThreadingHTTPServer(("127.0.0.1", 0), partial(serve.Handler, directory=str(root)))
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    base = f"http://127.0.0.1:{srv.server_address[1]}"
+    try:
+        items = json.load(urllib.request.urlopen(base + "/emulator/api/scenarios"))
+        assert [i["name"] for i in items] == ["a.json"]                  # reserved files are not listed
+        req = urllib.request.Request(base + "/portable/api/scenarios/b.json", data=b'{"steps":[]}', method="POST")
+        assert urllib.request.urlopen(req).status == 200
+        assert (root / "scenarios" / "b.json").is_file()
+        bad = urllib.request.Request(base + "/api/scenarios/..%2Fevil.json", data=b"{}", method="POST")
+        with pytest.raises(urllib.error.HTTPError):
+            urllib.request.urlopen(bad)
+        assert urllib.request.urlopen(base + "/index.html").read() == b"hi"
+    finally:
+        srv.shutdown()
+
+
+def test_emulator_has_server_sync(project, tmp_path):
+    html = gen(project, tmp_path)
+    assert "api/scenarios" in html and "syncServer" in html and "rec.info.saved.server" in html

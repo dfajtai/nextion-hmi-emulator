@@ -29,8 +29,10 @@ PORTABLE_README = """Scenarios folder / Forgatókönyvek mappája
 ==========================================
 EN: Put the scenario .json files recorded in the expert emulator here. In index.html press "Open folder..."
     and choose this folder (or drag the files onto the page). Files other than .json are ignored.
+    Optional: run `python3 start.py --open` in the package folder - then the scenarios of this folder load automatically.
 HU: Az expert emulátorban rögzített forgatókönyv .json fájlokat ide másold. Az index.html-ben a
     "Mappa megnyitása..." gombbal válaszd ki ezt a mappát (vagy húzd a fájlokat az oldalra).
+    Opcionális: `python3 start.py --open` a csomag mappájában - ekkor a mappa forgatókönyvei automatikusan betöltődnek.
 """
 
 
@@ -97,8 +99,41 @@ def generate(project: Project, out_dir: str | Path, start: str | None = None,
         sc = out / "scenarios"
         sc.mkdir(exist_ok=True)
         (sc / "README.txt").write_text(PORTABLE_README, encoding="utf-8")
+        (out / "start.py").write_text(resources.files("nextion_parser").joinpath("serve.py").read_text(encoding="utf-8"),
+                                      encoding="utf-8")
     else:
         helpdoc.write(out, project, data)
     (out / "index.html").write_text(
         tpl.joinpath("emulator.html").read_text(encoding="utf-8").replace("__PROJECT__", project.name), encoding="utf-8")
     return out / "index.html"
+
+
+LAUNCHER_LINKS = [
+    ("Emulator (expert)", "emulator/index.html", "full emulator: macro recorder, variables, CSV, reports"),
+    ("Emulator (basic, portable)", "portable/index.html", "simple mode only, scenarios from the scenarios/ folder"),
+    ("Coverage report", "coverage/coverage.html", ""),
+    ("Unused resources", "unused/unused.html", ""),
+    ("Navigation diagram", "summary/navigation.html", ""),
+    ("Summary", "summary/summary.html", ""),
+]
+
+
+def write_launcher(root: str | Path, project_name: str) -> Path:
+    """Write <root>/index.html: one page linking every generated part (the files must exist)."""
+    root = Path(root)
+    rows = "".join(
+        f'<li><a href="{href}">{title}</a>' + (f" <span>{note}</span>" if note else "") + "</li>"
+        for title, href, note in LAUNCHER_LINKS if (root / href).is_file())
+    html = f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{project_name}</title><style>
+body{{font:16px/1.5 system-ui,sans-serif;max-width:720px;margin:40px auto;padding:0 16px;color:#111827;background:#f9fafb}}
+@media(prefers-color-scheme:dark){{body{{color:#e5e7eb;background:#111827}}a{{color:#93c5fd}}code{{background:#1f2937}}}}
+h1{{font-size:22px}}li{{margin:8px 0}}li span,p{{color:#6b7280;font-size:14px}}code{{background:#e5e7eb;padding:1px 5px;border-radius:4px}}
+</style></head><body><h1>{project_name}</h1><ul>{rows}</ul>
+<p>Scenarios recorded in the expert emulator are saved to a folder and loaded by the basic emulator automatically when
+this folder is served: <code>./code/setup_and_run.sh serve output/{project_name}</code> (it opens this page).
+Opened directly from disk (<code>file://</code>) everything works too, but saving downloads a file and the basic emulator
+needs <em>Open folder…</em>.</p></body></html>"""
+    out = root / "index.html"
+    out.write_text(html, encoding="utf-8")
+    return out

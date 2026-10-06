@@ -4,7 +4,7 @@ import argparse
 import sys
 from pathlib import Path
 
-from . import coverage, discover, emulator, hmi, summary, unused
+from . import coverage, discover, emulator, hmi, serve, summary, unused
 
 
 def _out(args, hmi_path: Path, sub: str) -> Path:
@@ -34,7 +34,15 @@ def main(argv: list[str] | None = None) -> int:
             p.add_argument("--zoom", metavar="Z|fit", help="initial zoom: a number or 'fit' (default: fit)")
             p.add_argument("--lang", choices=("hu", "en"), default="hu",
                            help="default GUI language of the emulator and help (the user can switch at run time; default: hu)")
+    sp = sub.add_parser("serve", help="serve a generated folder; scenarios of its scenarios/ folder load and save automatically")
+    sp.add_argument("root", nargs="?", default=".", help="folder to serve, e.g. output/<name> (default: current)")
+    sp.add_argument("--scenarios", metavar="DIR", help="shared scenarios folder (default: <root>/scenarios)")
+    sp.add_argument("--port", type=int, default=8765)
+    sp.add_argument("--no-open", action="store_true", help="do not open the browser")
     args = ap.parse_args(argv)
+    if args.cmd == "serve":
+        serve.run(Path(args.root), Path(args.scenarios) if args.scenarios else None, args.port, not args.no_open)
+        return 0
 
     path = Path(args.hmi)
     if not path.is_file():
@@ -81,6 +89,11 @@ def main(argv: list[str] | None = None) -> int:
         except ValueError as e:
             print(f"Error: {e}", file=sys.stderr)
             return 2
+    if args.cmd == "all":
+        out = sub("portable")
+        emulator.generate(project, out, args.start, emulator.parse_size(args.screen) if args.screen else None,
+                          args.zoom, sdir, args.lang, portable=True)
+        print("  ", out / "index.html")
     if args.cmd in ("emulator", "all"):
         try:
             screen = emulator.parse_size(args.screen) if args.screen else None
@@ -88,6 +101,8 @@ def main(argv: list[str] | None = None) -> int:
         except ValueError as e:
             print(f"Error: {e}", file=sys.stderr)
             return 2
+    if args.cmd == "all":
+        print("  ", emulator.write_launcher(Path(args.output) if args.output else Path("output") / path.stem, project.name))
     for w in project.warnings:
         print("  ! " + w)
     return 0

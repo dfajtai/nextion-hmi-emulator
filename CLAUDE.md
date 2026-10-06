@@ -12,6 +12,8 @@ Standard library only; `node` is optional (smoke test, some tests). User-facing 
 - `code/nextion_parser/hmi.py` – `.HMI` reader (format notes in its docstring). Resource ids (`pic`, `font`, `page N`) are positions in the `main.HMI` lists.
 - `code/nextion_parser/emulator.py` – generator; copies `templates/` (`emulator.html`, `nextion_core.js` interpreter, `nextion_tools.js` CSV/stats, `i18n.js` GUI dictionaries) and writes `data.js`.
 - `portable` command = basic variant: `DATA.portable`, locked to simple mode, no built-in scenarios, empty `scenarios/` folder, no help/reports.
+- `serve.py` – stdlib server with `api/scenarios` (GET list / POST save); copied into portable packages as `start.py`. The emulator syncs with it only over http(s) (`syncServer`); `file://` must keep working.
+- `all` writes `<out>/index.html` (launcher), `emulator/`, `portable/` and the reports.
 - `code/tests/fixtures/scenarios/` – scenarios used only by tests; `sample/scenarios/` holds only `variables.json` and `csv_profiles.json`.
 
 ## Conventions

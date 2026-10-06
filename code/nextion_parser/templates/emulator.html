@@ -708,7 +708,14 @@ function recSave(){
     description:(keep&&typedDesc===loc(rec.editOrig.description))?rec.editOrig.description:typedDesc,
     page:rec.page,steps:JSON.parse(JSON.stringify(rec.steps))};
   addScenarioObj(sc);rec.saved=true;if(keep)rec.editName=typedName;renderRec();
-  download(sc.id+'.json',JSON.stringify({name:sc.name,description:sc.description,page:sc.page,steps:sc.steps},null,2));
+  const body=JSON.stringify({name:sc.name,description:sc.description,page:sc.page,steps:sc.steps},null,2);
+  if(DATA.server){   // served by `nextion_parser serve`: write straight into the scenarios folder
+    fetch('api/scenarios/'+encodeURIComponent(sc.id)+'.json',{method:'POST',body}).then(r=>{
+      if(!r.ok)throw new Error(r.status);$('recinfo').textContent=t('rec.info.saved.server',{id:sc.id});
+    }).catch(()=>{download(sc.id+'.json',body);$('recinfo').textContent=t('rec.info.saved',{id:sc.id});});
+    return;
+  }
+  download(sc.id+'.json',body);
   $('recinfo').textContent=t('rec.info.saved',{id:sc.id});
 }
 $('recstart').onclick=()=>rec.on?recStop():recStart();$('recdiscard').onclick=recDiscard;$('recsave').onclick=recSave;
@@ -855,6 +862,20 @@ function applyLang(l){
   if(cap.open)renderHist();else $('capexp').textContent=histLabel();
 }
 $('lang').onchange=e=>applyLang(e.target.value);
+// ---------- scenario folder sync (only when served by `nextion_parser serve`) ----------
+const srvSeen={};
+async function syncServer(first){
+  if(!/^https?:$/.test(location.protocol))return;
+  try{
+    const r=await fetch('api/scenarios',{cache:'no-store'});if(!r.ok)return;
+    const items=await r.json();DATA.server=true;let ch=false;
+    items.forEach(it=>{
+      const key=JSON.stringify(it.data);if(srvSeen[it.name]===key)return;srvSeen[it.name]=key;
+      const d=it.data;ch=addScenarios(Array.isArray(d)?d:(d.scenarios||[d]),it.name)>0||ch;
+    });
+    if(ch){const had=$('scn').value;refreshScnSelect();if(first||!had)selectScn();}
+  }catch(e){/* no server: file:// or static hosting */}
+}
 // ---------- go ----------
 applyStatic();buildReportsMenu();
 refreshScnSelect();
@@ -864,6 +885,7 @@ setMode(DATA.portable?'simple':(q.get('mode')||((DATA.scenarios||[]).length?'sim
 if(q.get('scn')){$('scn').value=q.get('scn');}
 selectScn();
 $('capexp').textContent=histLabel();
+syncServer(true).then(()=>{if(DATA.server){window.addEventListener('focus',()=>syncServer(false));if(DATA.portable)setInterval(()=>{if(!document.hidden)syncServer(false);},3000);}});
 if(q.has('autoplay'))playScn();
 </script>
 </body></html>
