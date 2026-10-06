@@ -1,0 +1,66 @@
+{
+  "name": {
+    "hu": "Nyelvváltás angolra",
+    "en": "Switching the language to English"
+  },
+  "description": {
+    "hu": "A nyelv a Beállítások oldal nyilaival váltható (az érték az EEPROM-ba is íródik); utána az oldalak angol feliratokkal töltődnek be.",
+    "en": "The language is changed with the arrows on the Settings page (the value is also written to the EEPROM); afterwards the pages load with English captions."
+  },
+  "page": "pageMainAuto",
+  "steps": [
+    {
+      "say": {
+        "hu": "Magyar felület",
+        "en": "Hungarian interface"
+      },
+      "wait": 1800
+    },
+    {
+      "say": {
+        "hu": "Menü → Beállítások",
+        "en": "Menu → Settings"
+      },
+      "click": "bmenu"
+    },
+    {
+      "wait": 1000
+    },
+    {
+      "click": "bsettings"
+    },
+    {
+      "wait": 1800
+    },
+    {
+      "say": {
+        "hu": "Nyelv: következő (magyar → angol)",
+        "en": "Language: next (Hungarian → English)"
+      },
+      "click": "bhr"
+    },
+    {
+      "wait": 2200
+    },
+    {
+      "say": {
+        "hu": "Vissza a menübe – már angolul",
+        "en": "Back to the menu – now in English"
+      },
+      "click": "breturn"
+    },
+    {
+      "wait": 2000
+    },
+    {
+      "say": {
+        "hu": "Vissza a főoldalra – angol feliratok",
+        "en": "Back to the main page – English captions"
+      },
+      "click": "breturn"
+    },
+    {
+      "wait": 2800
+    }
+  ]
+}

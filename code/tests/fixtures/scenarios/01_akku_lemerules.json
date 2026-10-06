@@ -1,0 +1,51 @@
+{
+  "name": {
+    "hu": "Akku lemerülése",
+    "en": "Battery discharge"
+  },
+  "description": {
+    "hu": "Az MCU fokozatosan csökkenő töltöttséget jelent (nem tölt); az ikon és a % szám követi.",
+    "en": "The MCU reports a gradually decreasing charge level (not charging); the icon and the % value follow it."
+  },
+  "page": "pageMainAuto",
+  "steps": [
+    {
+      "say": {
+        "hu": "Teli akku, nem tölt",
+        "en": "Full battery, not charging"
+      },
+      "set": {
+        "pageMainAuto.charging.val": 0,
+        "pageMainAuto.charge_level.val": 100
+      }
+    },
+    {
+      "wait": 1500
+    },
+    {
+      "say": {
+        "hu": "Lemerülés 100% → 0%",
+        "en": "Discharge 100% → 0%"
+      },
+      "ramp": {
+        "ref": "pageMainAuto.charge_level.val",
+        "from": 100,
+        "to": 0,
+        "step": 10,
+        "every": 900
+      }
+    },
+    {
+      "say": {
+        "hu": "Kritikusan alacsony (3%)",
+        "en": "Critically low (3%)"
+      },
+      "set": {
+        "pageMainAuto.charge_level.val": 3
+      }
+    },
+    {
+      "wait": 2000
+    }
+  ]
+}

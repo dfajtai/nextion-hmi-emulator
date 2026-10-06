@@ -1,0 +1,67 @@
+{
+  "name": {
+    "hu": "Csoport statisztika + nyers adatok",
+    "en": "Group statistics + raw data"
+  },
+  "description": {
+    "hu": "Statisztikai értékek és a waveform nyers adatsor feltöltése a statisztika oldalakra.",
+    "en": "Filling the statistics pages with statistical values and the raw waveform data series."
+  },
+  "page": "pageMainAuto",
+  "steps": [
+    {
+      "say": {
+        "hu": "Menü → Statisztika",
+        "en": "Menu → Statistics"
+      },
+      "click": "bmenu"
+    },
+    {
+      "wait": 1200
+    },
+    {
+      "click": "bstat"
+    },
+    {
+      "wait": 1000
+    },
+    {
+      "say": {
+        "hu": "Az MCU feltölti a csoport statisztikát",
+        "en": "The MCU uploads the group statistics"
+      },
+      "set": {
+        "pageStat1.t6.txt": "house1/group1",
+        "pageStat1.xquantity.val": 12,
+        "pageStat1.xmean.val": 1520,
+        "pageStat1.xsd.val": 48,
+        "pageStat1.xcv.val": 3
+      }
+    },
+    {
+      "wait": 2500
+    },
+    {
+      "say": {
+        "hu": "Következő oldal: eloszlás (nyers adatsor)",
+        "en": "Next page: distribution (raw data series)"
+      },
+      "click": "bhr"
+    },
+    {
+      "wave": {
+        "ref": "pageStat2.s0",
+        "ch": 0,
+        "fn": "sine",
+        "n": 400,
+        "min": 40,
+        "max": 210,
+        "periods": 2,
+        "noise": 0.15
+      }
+    },
+    {
+      "wait": 4000
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "name": {
+    "hu": "Súlykalibráció (3 fázis)",
+    "en": "Weight calibration (3 phases)"
+  },
+  "description": {
+    "hu": "Menü → Kalibráció → súly: a kijelző üzen az MCU-nak, az MCU lépteti tovább az oldalakat.",
+    "en": "Menu → Calibration → weight: the display messages the MCU, the MCU advances the pages."
+  },
+  "page": "pageMainAuto",
+  "steps": [
+    {
+      "say": {
+        "hu": "Menü → Kalibráció",
+        "en": "Menu → Calibration"
+      },
+      "click": "bmenu"
+    },
+    {
+      "wait": 1000
+    },
+    {
+      "click": "bcalibration"
+    },
+    {
+      "wait": 1200
+    },
+    {
+      "say": {
+        "hu": "Súlykalibráció kiválasztása",
+        "en": "Select weight calibration"
+      },
+      "click": "b0"
+    },
+    {
+      "wait": 1800
+    },
+    {
+      "say": {
+        "hu": "1. fázis: a felhasználó megnyomja a gombot (#CALHX,PHASE1 az MCU-nak)",
+        "en": "Phase 1: the user presses the button (#CALHX,PHASE1 to the MCU)"
+      },
+      "click": "bCalWeight"
+    },
+    {
+      "wait": 2200
+    },
+    {
+      "say": {
+        "hu": "Az MCU: következő lépés (2. fázis)",
+        "en": "The MCU: next step (phase 2)"
+      },
+      "cmd": "page pageCalWeight2"
+    },
+    {
+      "wait": 2000
+    },
+    {
+      "say": {
+        "hu": "2. fázis indul",
+        "en": "Phase 2 starts"
+      },
+      "click": "bCalWeight"
+    },
+    {
+      "wait": 2200
+    },
+    {
+      "say": {
+        "hu": "Az MCU: 3. fázis",
+        "en": "The MCU: phase 3"
+      },
+      "cmd": "page pageCalWeight3"
+    },
+    {
+      "wait": 2000
+    },
+    {
+      "click": "bCalWeight"
+    },
+    {
+      "wait": 2200
+    },
+    {
+      "say": {
+        "hu": "Az MCU: kalibráció kész",
+        "en": "The MCU: calibration done"
+      },
+      "cmd": "page pageCalWeight4"
+    },
+    {
+      "wait": 2500
+    },
+    {
+      "say": {
+        "hu": "Vissza a kalibráció menübe",
+        "en": "Back to the calibration menu"
+      },
+      "click": "bCalWeight"
+    },
+    {
+      "wait": 1500
+    }
+  ]
+}

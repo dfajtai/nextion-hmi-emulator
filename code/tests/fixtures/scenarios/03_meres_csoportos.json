@@ -1,0 +1,54 @@
+{
+  "name": {
+    "hu": "Mérés (csoportos mód)",
+    "en": "Measurement (group mode)"
+  },
+  "description": {
+    "hu": "START → a kijelző elküldi a #START üzenetet az MCU-nak, majd az MCU eredményt küld.",
+    "en": "START → the display sends the #START message to the MCU, then the MCU sends the result."
+  },
+  "page": "pageMainAuto",
+  "steps": [
+    {
+      "say": {
+        "hu": "Alaphelyzet: 78% töltöttség, kész a mérésre",
+        "en": "Initial state: 78% charge, ready to measure"
+      },
+      "set": {
+        "pageMainAuto.charge_level.val": 78,
+        "pageMainAuto.charging.val": 0,
+        "pageMainAuto.weight.val": 0,
+        "pageMainAuto.imp.val": 0
+      }
+    },
+    {
+      "wait": 1800
+    },
+    {
+      "say": {
+        "hu": "A felhasználó megnyomja a START gombot (a napló mutatja az MCU-nak küldött üzenetet)",
+        "en": "The user presses START (the log shows the message sent to the MCU)"
+      },
+      "click": "bstart"
+    },
+    {
+      "wait": 2500
+    },
+    {
+      "say": {
+        "hu": "Az MCU visszaküldi a főoldalt és a mérési eredményeket",
+        "en": "The MCU returns to the main page and sends the measurement results"
+      },
+      "cmd": "page pageMainAuto"
+    },
+    {
+      "set": {
+        "pageMainAuto.weight.val": 1520,
+        "pageMainAuto.imp.val": 480
+      }
+    },
+    {
+      "wait": 3000
+    }
+  ]
+}

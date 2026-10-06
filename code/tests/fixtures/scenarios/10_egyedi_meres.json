@@ -1,0 +1,73 @@
+{
+  "name": {
+    "hu": "Egyedi mérés és törlés",
+    "en": "Individual measurement and delete"
+  },
+  "description": {
+    "hu": "Egyedi módban az oldal automatikusan az egyedi nézetre vált; mérés, majd az utolsó adat törlése.",
+    "en": "In individual mode the page switches to the individual view automatically; measure, then delete the last data."
+  },
+  "page": "pageMainAuto",
+  "steps": [
+    {
+      "say": {
+        "hu": "Egyedi mód bekapcsolása; töltés közben 55%",
+        "en": "Individual mode on; 55% while charging"
+      },
+      "set": {
+        "pageMainAuto.individual.val": 1,
+        "pageMainAuto.charge_level.val": 55,
+        "pageMainAuto.charging.val": 1
+      }
+    },
+    {
+      "goto": "pageMainAuto"
+    },
+    {
+      "wait": 2200
+    },
+    {
+      "say": "START",
+      "click": "bstart"
+    },
+    {
+      "wait": 1800
+    },
+    {
+      "say": {
+        "hu": "Az MCU eredménnyel visszaküld az egyedi oldalra",
+        "en": "The MCU returns to the individual page with a result"
+      },
+      "cmd": "page pageIndividual"
+    },
+    {
+      "set": {
+        "pageIndividual.weight.val": 1260,
+        "pageIndividual.imp.val": 470
+      }
+    },
+    {
+      "wait": 2500
+    },
+    {
+      "say": {
+        "hu": "Utolsó mérés törlése – megerősítő oldal",
+        "en": "Delete the last measurement – confirmation page"
+      },
+      "click": "bdel"
+    },
+    {
+      "wait": 2500
+    },
+    {
+      "say": {
+        "hu": "Visszalépés a törlés megerősítéséről",
+        "en": "Back from the delete confirmation"
+      },
+      "click": "breturn"
+    },
+    {
+      "wait": 1500
+    }
+  ]
+}

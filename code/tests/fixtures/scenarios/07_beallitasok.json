@@ -1,0 +1,72 @@
+{
+  "name": {
+    "hu": "Beállítások: nyelv és alvási idő",
+    "en": "Settings: language and sleep time"
+  },
+  "description": {
+    "hu": "A beállítás oldalak végigjárása: nyelvváltás nyilakkal, alvási idő csúszkával.",
+    "en": "Walking through the settings pages: language change with the arrows, sleep time with the slider."
+  },
+  "page": "pageMainAuto",
+  "steps": [
+    {
+      "say": {
+        "hu": "Menü → Beállítások",
+        "en": "Menu → Settings"
+      },
+      "click": "bmenu"
+    },
+    {
+      "wait": 1000
+    },
+    {
+      "click": "bsettings"
+    },
+    {
+      "wait": 1500
+    },
+    {
+      "say": {
+        "hu": "Nyelv: magyar → angol",
+        "en": "Language: Hungarian → English"
+      },
+      "click": "bhr"
+    },
+    {
+      "wait": 1800
+    },
+    {
+      "say": {
+        "hu": "Alvási idő beállítása 60 mp-re (csúszka)",
+        "en": "Set the sleep time to 60 s (slider)"
+      },
+      "set": {
+        "pageSettings.h0.val": 60,
+        "pageSettings.n0.val": 60
+      }
+    },
+    {
+      "wait": 2000
+    },
+    {
+      "say": {
+        "hu": "Vissza magyarra",
+        "en": "Back to Hungarian"
+      },
+      "click": "bhl"
+    },
+    {
+      "wait": 1800
+    },
+    {
+      "say": {
+        "hu": "Következő beállítás oldal",
+        "en": "Next settings page"
+      },
+      "click": "p0"
+    },
+    {
+      "wait": 2500
+    }
+  ]
+}

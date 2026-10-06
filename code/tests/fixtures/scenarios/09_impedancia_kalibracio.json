@@ -1,0 +1,71 @@
+{
+  "name": {
+    "hu": "Impedancia-kalibráció és hiba",
+    "en": "Impedance calibration and error"
+  },
+  "description": {
+    "hu": "Impedancia-kalibráció sikeres ággal, majd egy hibaoldal bemutatása.",
+    "en": "Impedance calibration with the success branch, then showing an error page."
+  },
+  "page": "pageMainAuto",
+  "steps": [
+    {
+      "say": {
+        "hu": "Menü → Kalibráció → impedancia",
+        "en": "Menu → Calibration → impedance"
+      },
+      "click": "bmenu"
+    },
+    {
+      "wait": 900
+    },
+    {
+      "click": "bcalibration"
+    },
+    {
+      "wait": 1200
+    },
+    {
+      "click": "b1"
+    },
+    {
+      "wait": 1800
+    },
+    {
+      "say": {
+        "hu": "Terhelés csatlakoztatva, indul (#CALAD,LOAD)",
+        "en": "Load connected, starting (#CALAD,LOAD)"
+      },
+      "click": "bCalImp"
+    },
+    {
+      "wait": 2200
+    },
+    {
+      "say": {
+        "hu": "Az MCU: sikeres mérés",
+        "en": "The MCU: successful measurement"
+      },
+      "cmd": "page pageCalImp2"
+    },
+    {
+      "wait": 2200
+    },
+    {
+      "click": "bCalImp"
+    },
+    {
+      "wait": 1500
+    },
+    {
+      "say": {
+        "hu": "Hibaág: az MCU hibát jelez",
+        "en": "Error branch: the MCU reports an error"
+      },
+      "cmd": "page pageCalErr"
+    },
+    {
+      "wait": 3000
+    }
+  ]
+}

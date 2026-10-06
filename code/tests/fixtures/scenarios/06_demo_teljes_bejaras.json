@@ -1,0 +1,129 @@
+{
+  "name": {
+    "hu": "Bemutató: teljes bejárás",
+    "en": "Demo: full walkthrough"
+  },
+  "description": {
+    "hu": "Rövid áttekintés: főoldal, mérés, menü, beállítások, statisztika – tesztadatokkal.",
+    "en": "A short overview: main page, measurement, menu, settings, statistics – with test data."
+  },
+  "page": "pageMainAuto",
+  "steps": [
+    {
+      "say": {
+        "hu": "Főoldal: 62%-os akku, nem tölt",
+        "en": "Main page: 62% battery, not charging"
+      },
+      "set": {
+        "pageMainAuto.charge_level.val": 62,
+        "pageMainAuto.charging.val": 0,
+        "pageMainAuto.house.txt": "farm1",
+        "pageMainAuto.group.txt": "A-csoport"
+      }
+    },
+    {
+      "goto": "pageMainAuto"
+    },
+    {
+      "wait": 2000
+    },
+    {
+      "say": {
+        "hu": "Mérés indítása (START)",
+        "en": "Start the measurement (START)"
+      },
+      "click": "bstart"
+    },
+    {
+      "wait": 1800
+    },
+    {
+      "say": {
+        "hu": "Az MCU kész eredményt küld",
+        "en": "The MCU sends a finished result"
+      },
+      "cmd": "page pageMainAuto"
+    },
+    {
+      "set": {
+        "pageMainAuto.weight.val": 1840,
+        "pageMainAuto.imp.val": 512
+      }
+    },
+    {
+      "wait": 2200
+    },
+    {
+      "say": {
+        "hu": "Menü megnyitása",
+        "en": "Open the menu"
+      },
+      "click": "bmenu"
+    },
+    {
+      "wait": 1500
+    },
+    {
+      "say": {
+        "hu": "Beállítások",
+        "en": "Settings"
+      },
+      "click": "bsettings"
+    },
+    {
+      "wait": 2000
+    },
+    {
+      "say": {
+        "hu": "Nyelv: következő (bhr)",
+        "en": "Language: next (bhr)"
+      },
+      "click": "bhr"
+    },
+    {
+      "wait": 1800
+    },
+    {
+      "say": {
+        "hu": "Vissza a menübe",
+        "en": "Back to the menu"
+      },
+      "click": "breturn"
+    },
+    {
+      "wait": 1200
+    },
+    {
+      "say": {
+        "hu": "Statisztika",
+        "en": "Statistics"
+      },
+      "click": "bstat"
+    },
+    {
+      "set": {
+        "pageStat1.t6.txt": "farm1/A-csoport",
+        "pageStat1.xquantity.val": 24,
+        "pageStat1.xmean.val": 1835,
+        "pageStat1.xsd.val": 61,
+        "pageStat1.xcv.val": 3
+      }
+    },
+    {
+      "wait": 3000
+    },
+    {
+      "say": {
+        "hu": "Vissza a főoldalra",
+        "en": "Back to the main page"
+      },
+      "click": "breturn"
+    },
+    {
+      "click": "breturn"
+    },
+    {
+      "wait": 1500
+    }
+  ]
+}

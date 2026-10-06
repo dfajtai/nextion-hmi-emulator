@@ -1,0 +1,19 @@
+{
+ "stats": {
+  "page": "pageStat1",
+  "path": [
+   "bmenu",
+   "bstat"
+  ],
+  "quantity": "pageStat1.xquantity.val",
+  "mean": "pageStat1.xmean.val",
+  "sd": "pageStat1.xsd.val",
+  "cv": "pageStat1.xcv.val",
+  "group": "pageStat1.t6.txt",
+  "wave": {
+   "ref": "pageStat2.s0",
+   "click": "bhr",
+   "points": 400
+  }
+ }
+}

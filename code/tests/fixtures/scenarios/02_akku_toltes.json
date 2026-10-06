@@ -1,0 +1,51 @@
+{
+  "name": {
+    "hu": "Akku töltése",
+    "en": "Battery charging"
+  },
+  "description": {
+    "hu": "Töltés közben a villám-ikonos akkuk jelennek meg, 0%-tól 100%-ig.",
+    "en": "While charging, the battery icons with a lightning bolt are shown, from 0% to 100%."
+  },
+  "page": "pageMainAuto",
+  "steps": [
+    {
+      "say": {
+        "hu": "Lemerült akku csatlakoztatva",
+        "en": "Empty battery connected"
+      },
+      "set": {
+        "pageMainAuto.charge_level.val": 0,
+        "pageMainAuto.charging.val": 1
+      }
+    },
+    {
+      "wait": 1500
+    },
+    {
+      "say": {
+        "hu": "Töltés 0% → 100%",
+        "en": "Charging 0% → 100%"
+      },
+      "ramp": {
+        "ref": "pageMainAuto.charge_level.val",
+        "from": 0,
+        "to": 100,
+        "step": 10,
+        "every": 900
+      }
+    },
+    {
+      "say": {
+        "hu": "Feltöltve, töltő leválasztva",
+        "en": "Fully charged, charger disconnected"
+      },
+      "set": {
+        "pageMainAuto.charging.val": 0
+      }
+    },
+    {
+      "wait": 2000
+    }
+  ]
+}
