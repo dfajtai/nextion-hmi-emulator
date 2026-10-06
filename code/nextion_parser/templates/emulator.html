@@ -101,13 +101,21 @@ body.mode-expert .simple-only{display:none!important}
 #outline li{padding:4px 8px;border-left:3px solid var(--line);cursor:pointer;font-size:13px}
 #outline li.cur{border-color:var(--acc);background:rgba(125,125,125,.12);font-weight:600}
 #outline li.done{color:var(--mut)}
-#recsteps{max-height:220px;overflow:auto;margin:6px 0;padding:0;list-style:none;font-size:12px}
-#recsteps li{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:3px 6px;border-bottom:1px solid var(--line)}
-#recsteps li .d{flex:1 1 130px;min-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#recsteps li input[type=text]{flex:2 1 140px;min-width:100px;padding:1px 6px;font-size:12px}
-#recsteps li input[type=number]{width:62px;padding:1px 4px;font-size:12px}
-#recsteps li.wait{background:rgba(125,125,125,.10)}
-#recsteps button{padding:0 6px;font-size:11px}
+#recsteps{max-height:260px;overflow:auto;margin:6px 0;padding:0;list-style:none;font-size:12px;counter-reset:st}
+#recsteps li{display:grid;grid-template-columns:30px 1fr auto;gap:2px 8px;align-items:center;padding:6px 6px 6px 0;margin:0 0 6px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--k,#94a3b8);border-radius:6px}
+#recsteps li .ic{grid-row:1/3;text-align:center;font-size:16px;line-height:1;color:var(--k,#94a3b8)}
+#recsteps li .act{grid-column:2;font-weight:600;font-size:13px;display:flex;gap:6px;align-items:center;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#recsteps li .act small{font-weight:400;color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+#recsteps li .cap{grid-column:2;display:flex;gap:4px;align-items:center;color:var(--mut)}
+#recsteps li .cap input{flex:1;min-width:0;border:0;border-bottom:1px dashed var(--line);border-radius:0;background:transparent;color:var(--fg);padding:1px 2px;font-size:12px}
+#recsteps li .cap input:focus{outline:0;border-bottom:1px solid var(--acc)}
+#recsteps li .tools{grid-column:3;grid-row:1/3;display:flex;gap:2px;opacity:.45}
+#recsteps li:hover .tools,#recsteps li:focus-within .tools{opacity:1}
+#recsteps li .tools button{border:0;background:transparent;color:var(--fg);padding:2px 5px;font-size:13px;cursor:pointer;border-radius:4px}
+#recsteps li .tools button:hover{background:rgba(125,125,125,.25)}
+#recsteps li input[type=number]{width:60px;padding:1px 4px;font-size:12px}
+#recsteps li.k-click{--k:#2563eb}#recsteps li.k-set{--k:#d97706}#recsteps li.k-goto{--k:#7c3aed}#recsteps li.k-cmd{--k:#0d9488}
+#recsteps li.k-wait{--k:#64748b}#recsteps li.k-say{--k:#db2777}#recsteps li.k-other{--k:#16a34a}
 .recdot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#dc2626;margin-right:6px;animation:bl 1s infinite}
 @keyframes bl{50%{opacity:.25}}
 dialog{border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--fg);max-width:720px;width:92vw;padding:16px}
@@ -607,23 +615,31 @@ function renderRec(){
   const mv=(i,d)=>{const j=i+d;if(j<0||j>=rec.steps.length)return;[rec.steps[i],rec.steps[j]]=[rec.steps[j],rec.steps[i]];renderRec();};
   rec.steps.forEach((st,i)=>{
     const li=document.createElement('li');li.title=JSON.stringify(st);
-    const n=document.createElement('span');n.textContent=(i+1)+'.';li.appendChild(n);
-    if(isDelay(st)){
-      li.className='wait';
-      const ic=document.createElement('span');ic.textContent='⏱';
+    const kind=isDelay(st)?'wait':st.click!==undefined?'click':st.set!==undefined?'set':st.goto!==undefined?'goto':st.cmd!==undefined?'cmd':(Object.keys(st).length===1&&st.say!==undefined)?'say':'other';
+    li.className='k-'+kind;
+    const ICON={wait:'⏱',click:'👆',set:'＝',goto:'➜',cmd:'⌨',say:'💬',other:'▸'};
+    const ic=document.createElement('span');ic.className='ic';ic.textContent=ICON[kind];li.appendChild(ic);
+    const act=document.createElement('div');act.className='act';
+    if(kind==='wait'){
+      const lb=document.createElement('span');lb.textContent=t('rec.row.waitlbl');
       const sec=document.createElement('input');sec.type='number';sec.min='0.1';sec.step='0.5';sec.value=(st.wait/1000);sec.title=t('rec.row.delay');
       sec.onchange=()=>{st.wait=Math.max(100,Math.round((+sec.value||1)*1000));renderRec();};
       const u=document.createElement('span');u.textContent=t('rec.sec');
-      li.append(ic,sec,u);
+      act.append(lb,sec,u);
     }else{
-      const d=document.createElement('span');d.className='d';d.textContent=baseDesc(st);li.appendChild(d);
+      const nn=document.createElement('small');nn.textContent=(i+1);act.appendChild(nn);
+      const d=document.createElement('span');d.textContent=kind==='say'?t('rec.row.capstep'):baseDesc(st);act.appendChild(d);
     }
+    li.appendChild(act);
+    const cp=document.createElement('label');cp.className='cap';cp.append(document.createTextNode('💬'));
     const ci=document.createElement('input');ci.type='text';ci.placeholder=t('rec.cap.ph');ci.value=loc(st.say);
     ci.onchange=()=>{setSay(st,ci.value.trim());if(!Object.keys(st).length)rec.steps.splice(i,1);renderRec();};
-    li.appendChild(ci);
-    const ed=document.createElement('button');ed.textContent='✎';ed.title=t('rec.row.edit');ed.onclick=()=>openStepEdit(i);li.appendChild(ed);
-    [['▲',-1,'rec.row.up'],['▼',1,'rec.row.down']].forEach(([s,dl,tk])=>{const b=document.createElement('button');b.textContent=s;b.title=t(tk);b.onclick=()=>mv(i,dl);li.appendChild(b);});
-    const x=document.createElement('button');x.textContent='✕';x.title=t('rec.row.del');x.onclick=()=>{rec.steps.splice(i,1);renderRec();};li.appendChild(x);
+    cp.appendChild(ci);li.appendChild(cp);
+    const tl=document.createElement('div');tl.className='tools';
+    const ed=document.createElement('button');ed.textContent='✎';ed.title=t('rec.row.edit');ed.onclick=()=>openStepEdit(i);tl.appendChild(ed);
+    [['↑',-1,'rec.row.up'],['↓',1,'rec.row.down']].forEach(([x,dl,tk])=>{const b=document.createElement('button');b.textContent=x;b.title=t(tk);b.onclick=()=>mv(i,dl);tl.appendChild(b);});
+    const x=document.createElement('button');x.textContent='✕';x.title=t('rec.row.del');x.onclick=()=>{rec.steps.splice(i,1);renderRec();};tl.appendChild(x);
+    li.appendChild(tl);
     ol.appendChild(li);
   });
   ol.scrollTop=1e9;
