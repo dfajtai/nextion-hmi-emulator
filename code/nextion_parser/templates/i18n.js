@@ -70,7 +70,7 @@ const I18N = {
     "rec.row.edit": "a lépés szerkesztése (JSON)", "rec.row.up": "feljebb", "rec.row.down": "lejjebb", "rec.row.del": "lépés törlése",
     "rec.row.delay": "késleltetés (mp)", "rec.row.capstep": "(felirat-lépés)",
 
-    "desc.set": "Beállítás: {x}", "desc.ramp": "Változás: {v} {a} → {b}", "desc.click": "Gombnyomás: {n}", "desc.goto": "Ugrás: {p}",
+    "desc.set": "Beállítás: {x}", "desc.ramp": "Változás: {v} {a} → {b}", "desc.click": "Kattintás a „{n}” gombra", "desc.goto": "Ugrás: {p}",
     "desc.cmd": "MCU-parancs: {c}", "desc.wave": "Nyers adatsor: {r}", "desc.wait": "Várakozás {s} s", "desc.repeat": "Ismétlés ×{n}", "desc.step": "lépés",
 
     "disp.title": "Kijelző vezérlés", "disp.screen": "Képernyő", "disp.w": "szélesség (px)", "disp.h": "magasság (px)",
@@ -174,7 +174,7 @@ const I18N = {
     "rec.row.edit": "edit the step (JSON)", "rec.row.up": "move up", "rec.row.down": "move down", "rec.row.del": "delete step",
     "rec.row.delay": "delay (s)", "rec.row.capstep": "(caption step)",
 
-    "desc.set": "Set: {x}", "desc.ramp": "Change: {v} {a} → {b}", "desc.click": "Button press: {n}", "desc.goto": "Jump: {p}",
+    "desc.set": "Set: {x}", "desc.ramp": "Change: {v} {a} → {b}", "desc.click": "Click the “{n}” button", "desc.goto": "Jump: {p}",
     "desc.cmd": "MCU command: {c}", "desc.wave": "Raw data: {r}", "desc.wait": "Wait {s} s", "desc.repeat": "Repeat ×{n}", "desc.step": "step",
 
     "disp.title": "Display controls", "disp.screen": "Screen", "disp.w": "width (px)", "disp.h": "height (px)",

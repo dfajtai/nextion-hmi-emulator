@@ -397,12 +397,20 @@ function clearFx(){fxTimers.forEach(clearTimeout);fxTimers=[];$('fx').innerHTML=
 const play={scn:null,k:0,t:null,state:'stop',dirty:false};
 function markDirty(){play.dirty=true;}   // after a manual intervention (click, value, jump, restart) we re-sync before playing
 function scnById(id){return (DATA.scenarios||[]).find(s=>s.id===id);}
+function btnText(name){   // the text shown on a button (current runtime text, else the static one), not its object name
+  let v=null;
+  try{const o=nx.S()[nx.cur()][name];if(o&&typeof o.txt==='string')v=o.txt;}catch(e){}
+  if(v===null)for(const p of pages){const c=p.comps.find(c=>c.objname===name);if(c){if(typeof c.txt==='string')v=c.txt;break;}}
+  return v&&v.trim()?v.trim():name;
+}
+const silentStep=st=>st.wait!==undefined&&!st.say&&Object.keys(st).length===1;   // a pause without a caption shows nothing
+function stepCap(st,n){if(!silentStep(st))setCaption({st},null,capKind(st),n);}
 function varLabel(ref){const v=(DATA.variables||[]).find(x=>x.ref===ref);return v&&v.label?loc(v.label):ref.split('.').slice(1).join('.');}
 function describe(st){
   if(st.say)return loc(st.say);
   if(st.set)return t('desc.set',{x:Object.entries(st.set).map(([k,v])=>varLabel(k)+' = '+v).join(', ')});
   if(st.ramp)return t('desc.ramp',{v:varLabel(st.ramp.ref),a:st.ramp.from,b:st.ramp.to});
-  if(st.click)return t('desc.click',{n:st.click});
+  if(st.click)return t('desc.click',{n:btnText(st.click)});
   if(st.goto)return t('desc.goto',{p:st.goto});
   if(st.cmd)return t('desc.cmd',{c:Array.isArray(st.cmd)?st.cmd.join('; '):st.cmd});
   if(st.wave)return t('desc.wave',{r:st.wave.ref});
@@ -489,8 +497,8 @@ function gotoStep(k){      // replay the first k steps from the beginning (deter
   nx.startScenario({page:play.scn.page,steps:[]});
   for(let i=0;i<k;i++)runTopSim(play.scn.steps[i]);
   nx.flush();play.k=k;play.dirty=false;markOutline();warn();
-  cap.log=[];for(let i=0;i<k;i++){const st=play.scn.steps[i];cap.log.push({d:{st},kind:capKind(st),n:i+1});}
-  if(k){const st=play.scn.steps[k-1];setCaption({st},null,capKind(st),k);}else setCaption({txt:play.scn.name},null,'info');
+  cap.log=[];for(let i=0;i<k;i++){const st=play.scn.steps[i];if(!silentStep(st))cap.log.push({d:{st},kind:capKind(st),n:i+1});}
+  if(k){let j=k-1;while(j>0&&silentStep(play.scn.steps[j]))j--;stepCap(play.scn.steps[j],j+1);}else setCaption({txt:play.scn.name},null,'info');
   if(cap.open)renderHist();
 }
 const PREROLL=1100;   // ms: at the start of playback the initial state is shown this long before the first action
@@ -518,7 +526,7 @@ function nextStep(){
     }
     done();
   };
-  const begin=()=>{clearFx();setCaption({st},null,capKind(st),play.k+1);go();};
+  const begin=()=>{clearFx();stepCap(st,play.k+1);go();};
   play.pending=()=>{clearTimeout(play.stepT);clearFx();while(i<prims.length)simApply(prims[i++]);done();};
   if(play.k===0){   // before the first step show the configured start page, so one can see where the first click happens
     clearFx();setCaption(startNote(),null,'info');
@@ -530,7 +538,7 @@ function prevStep(){pauseScn();if(play.scn)gotoStep(Math.max(0,play.k-1));}
 function playTop(){   // automatic, real-time playback: one top-level step = elementary steps with delays
   if(play.state!=='play'||!play.scn)return;
   if(play.k>=play.scn.steps.length){play.state='stop';setCaption({key:'cap.end'},null,'info');return;}
-  const st=play.scn.steps[play.k];setCaption({st},null,capKind(st),play.k+1);
+  const st=play.scn.steps[play.k];stepCap(st,play.k+1);
   const prims=nx.expandSteps([st]);let i=0;
   const run=()=>{
     if(play.state!=='play')return;
