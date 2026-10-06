@@ -140,7 +140,7 @@ body.drag{outline:3px dashed var(--acc);outline-offset:-8px}
 <header><h1 id="apptitle">Nextion emulator – __PROJECT__</h1>
 <label><span data-i="hdr.mode">Mode</span> <select id="mode"><option value="simple" data-i="mode.simple">Simple</option><option value="expert" data-i="mode.expert">Expert</option></select></label>
 <label class="adv" data-it="hdr.page.title"><span data-i="hdr.page">Page</span> <select id="goto"></select></label>
-<button id="reset" class="adv" data-i="hdr.reset">Restart</button>
+<button id="reset" data-i="hdr.reset">Restart</button>
 <div id="hright"><select id="lang" data-it="lang.title"><option value="hu">Magyar</option><option value="en">English</option></select>
 <a id="helplink" href="help.html" target="_blank" rel="noopener" data-i="hdr.help" data-it="hdr.help.title">? Help</a>
 <details id="repmenu" class="adv" hidden><summary data-i="hdr.reports">Reports ▾</summary><div class="menubox" id="replist"></div></details></div>
@@ -861,7 +861,7 @@ if(DATA.portable){   // basic variant: locked to simple mode, scenarios come fro
   }
 }
 $('goto').onchange=()=>{markDirty();nx.goto($('goto').value);recPush({goto:$('goto').value});};
-$('reset').onclick=()=>{markDirty();boot();};
+$('reset').onclick=()=>{pauseScn();cancelPending();clearFx();markDirty();boot();};
 $('dbg').onchange=e=>document.body.classList.toggle('dbg',e.target.checked);
 ['sw','sh','zoom'].forEach(id=>$(id).onchange=applySize);
 nx.options.timerPageJumps=$('timerjump').checked;
