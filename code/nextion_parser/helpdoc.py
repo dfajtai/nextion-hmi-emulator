@@ -225,7 +225,7 @@ Az emulátor <b>nem a valódi kijelző</b>: a betűtípusok rendszerfontok, az i
 <tr><td><code>?lang=hu</code> / <code>en</code></td><td>A felület nyelve.</td></tr></table>
 <p>Példa bemutatóhoz: <code>index.html?mode=simple&amp;lang=en&amp;scn=SCENARIO_ID&amp;autoplay</code></p>
 <p><b>Húzd-és-ejtsd:</b> egy <code>.json</code> (forgatókönyv) vagy <code>.csv</code> fájl az ablakra húzva betöltődik, újragenerálás nélkül.</p>
-<p><b>Generálás:</b> <code>./code/setup_and_run.sh emulator FÁJL.HMI --screen 800x480 --zoom fit --lang en</code> (a kapcsolók: <code>--start</code>, <code>--screen</code>, <code>--zoom</code>, <code>--scenarios</code>, <code>--lang</code>); minden riporttal együtt: <code>all</code>.</p>
+<p><b>Generálás:</b> <code>./scripts/run.sh emulator FÁJL.HMI --screen 800x480 --zoom fit --lang en</code> (a kapcsolók: <code>--start</code>, <code>--screen</code>, <code>--zoom</code>, <code>--scenarios</code>, <code>--lang</code>); minden riporttal együtt: <code>all</code>.</p>
 
 <h2 id="hibak">Hibaelhárítás, korlátok</h2>
 <table><tr><th>Jelenség</th><th>Ok / teendő</th></tr>
@@ -407,7 +407,7 @@ The emulator is <b>not the real display</b>: fonts are system fonts, timing is a
 <tr><td><code>?lang=hu</code> / <code>en</code></td><td>GUI language.</td></tr></table>
 <p>Demo example: <code>index.html?mode=simple&amp;lang=en&amp;scn=SCENARIO_ID&amp;autoplay</code></p>
 <p><b>Drag & drop:</b> a <code>.json</code> (scenario) or <code>.csv</code> file dropped on the window is loaded without regenerating.</p>
-<p><b>Generation:</b> <code>./code/setup_and_run.sh emulator FILE.HMI --screen 800x480 --zoom fit --lang en</code> (switches: <code>--start</code>, <code>--screen</code>, <code>--zoom</code>, <code>--scenarios</code>, <code>--lang</code>); everything together with the reports: <code>all</code>.</p>
+<p><b>Generation:</b> <code>./scripts/run.sh emulator FILE.HMI --screen 800x480 --zoom fit --lang en</code> (switches: <code>--start</code>, <code>--screen</code>, <code>--zoom</code>, <code>--scenarios</code>, <code>--lang</code>); everything together with the reports: <code>all</code>.</p>
 
 <h2 id="trouble">Troubleshooting, limitations</h2>
 <table><tr><th>Symptom</th><th>Cause / what to do</th></tr>

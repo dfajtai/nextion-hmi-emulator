@@ -147,7 +147,7 @@ h1{{font-size:22px}}li{{margin:8px 0}}li span,p{{color:#6b7280;font-size:14px}}c
 <p><b>Without a server</b> (just open the pages): put scenario <code>.json</code> files into the <code>scenarios/</code> folder, then
 run <code>scripts/update_scenarios.bat</code> (Windows) or <code>scripts/update_scenarios.sh</code> (Linux/macOS; needs Python 3).
 It refreshes <code>scenarios.js</code> in the emulator folders – reload the page and the scenarios are there.<br>
-<b>With the helper server</b>: <code>./code/setup_and_run.sh serve output/{project_name}</code> – recordings made in the expert
+<b>With the helper server</b>: <code>./scripts/run.sh serve output/{project_name}</code> – recordings made in the expert
 emulator are saved into <code>scenarios/</code> and appear in the basic emulator automatically.</p></body></html>"""
     out = root / "index.html"
     out.write_text(html, encoding="utf-8")

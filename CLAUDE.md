@@ -4,9 +4,9 @@ Python tool (`nextion_parser`) that parses Nextion `.HMI` files and generates su
 Standard library only; `node` is optional (smoke test, some tests). User-facing conversation language: Hungarian; everything in the repo is English.
 
 ## Commands
-- Run: `./code/setup_and_run.sh <summary|emulator|portable|coverage|unused|discover|all> FILE.HMI [-o DIR] [--scenarios DIR] [--lang hu|en]`
-- Tests: `./code/setup_and_run.sh --test` (pytest; needs the sample HMI in `sample/`)
-- Regenerate sample output: `./code/setup_and_run.sh all sample/bioscale_research.HMI` (`output/` is git-ignored)
+- Run: `./scripts/run.sh <summary|emulator|portable|coverage|unused|discover|all> FILE.HMI [-o DIR] [--scenarios DIR] [--lang hu|en]`
+- Tests: `./scripts/run.sh --test` (pytest; HMI-based tests are skipped when `sample/*.HMI` is missing)
+- Regenerate sample output: `./scripts/run.sh all sample/bioscale_research.HMI` (`output/` is git-ignored)
 
 ## Layout
 - `code/nextion_parser/hmi.py` – `.HMI` reader (format notes in its docstring). Resource ids (`pic`, `font`, `page N`) are positions in the `main.HMI` lists.

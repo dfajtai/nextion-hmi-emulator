@@ -11,15 +11,24 @@ coverage report and for part of the test-suite.
 
 ## Quick start
 
+Needs only Python 3.9+. Clone the repo and run – the first run creates the virtual environment by itself:
+
 ```bash
-cd nextion_parser
-./code/setup_and_run.sh all sample/bioscale_research.HMI
-# then open output/bioscale_research/emulator/index.html in a browser
+git clone <repo-url> && cd nextion-hmi-emulator
+./scripts/run.sh all path/to/YOUR.HMI
+# then open output/YOUR/index.html (launcher page) in a browser
 ```
 
-On the first run the script creates a private virtual environment (`.venv`, override with `NEXTION_VENV=/path`),
-installs `code/requirements.txt`, activates it and runs the tool inside it. Output goes to `./output/<file name>/`
-(or to `-o DIR`).
+Windows: drag the `.HMI` file onto `scripts\generate.bat` (it generates everything and opens the launcher page), or use
+`scripts\run.bat all path\to\YOUR.HMI`.
+
+| Script | Purpose |
+|---|---|
+| `scripts/run.sh` / `run.bat` | run any command (sets up the environment first if needed); `--test` runs the tests |
+| `scripts/setup.sh` / `setup.bat` | only create/refresh the venv (`.venv`, override with `NEXTION_VENV=/path`; `PYTHON=python3.12` picks the interpreter) |
+| `scripts/generate.bat` | Windows drag & drop: HMI file → everything + opens the result |
+
+Output goes to `./output/<file name>/` (or to `-o DIR`).
 
 | Command | What it does | Output |
 |---|---|---|
@@ -36,7 +45,7 @@ Options: `--lenient` (do not fail on scenarios that no longer match the HMI: by 
 and for `emulator` / `all`: `--start PAGE`, `--screen WxH` (e.g. `800x480`), `--zoom Z|fit`, `--lang hu|en`
 (default GUI language, the user can switch at run time).
 
-Tests: `./code/setup_and_run.sh --test`.
+Tests: `./scripts/run.sh --test`.
 
 The command line and the reports are in **English**. The emulator GUI and `help.html` are **bilingual (Hungarian / English)**.
 
@@ -158,7 +167,7 @@ observations on the sample file.
 ## Project layout
 
 ```
-code/setup_and_run.sh              venv + dependencies + run
+scripts/                           setup.sh, run.sh (+ .bat): venv, dependencies, run, tests
 code/nextion_parser/hmi.py         .HMI reader
 code/nextion_parser/summary.py     JSON / Mermaid / HTML summaries
 code/nextion_parser/emulator.py    emulator generator (templates/)
