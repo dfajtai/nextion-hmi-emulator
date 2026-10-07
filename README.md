@@ -103,14 +103,21 @@ after inactivity; the emulator blocks this by default so it does not jump around
 
 ### Portable basic package
 
-`portable FILE -o DIR` writes a self-contained folder (copy it anywhere, open `index.html`). It is locked to simple mode and ships
-with an empty `scenarios/` folder. Record scenarios in the expert emulator, save the `.json` files into that folder, and in the basic
-emulator press **Open folder…** (Chromium-based browsers) or **Load scenario…** / drag & drop the files. A static page cannot list a
-folder by itself, so without a server the folder has to be selected once per session.
-Without a server: put the `.json` files into `scenarios/` and run `scripts/update_scenarios.bat` / `.sh` (Python 3) – it rewrites
-`scenarios.js`, which the emulator pages load from disk (a portable package carries its own copy next to `index.html`).
-With `serve` (or `python3 start.py --open` inside a portable package, which needs only Python) the scenarios folder is read
-automatically (re-checked every 3 s in the basic emulator) and the expert recorder writes into it directly.
+`portable FILE -o DIR` writes a self-contained folder (copy it anywhere). It is locked to simple mode and keeps its scenarios in its own
+`scenarios/` folder, which is the single place for them. A static page cannot list a folder by itself, so discovery works through
+`scenarios.js`, a bundle of that folder:
+
+* **Double-click `start.bat` / `start.sh`** (needs Python 3): refreshes `scenarios.js` and opens the emulator from disk. The scenarios
+  in the folder are found automatically.
+* Scenarios recorded in the expert emulator land in the browser's Downloads folder: drag that folder onto `update_scenarios.bat`
+  (or `python3 update_scenarios.py <folder>`); scenario `.json` files are copied into `scenarios/` (unrelated `.json` files are ignored) and
+  the bundle is rebuilt.
+* With `serve` (or `python3 serve.py --open` inside a package) no copying is needed: the expert recorder writes into the
+  folder directly and the basic emulator re-checks it every 3 s.
+* Without Python: **Open folder…** (Chromium-based browsers) or **Load scenario…** / drag & drop in the page.
+
+In a full `all` output the same scenarios folder is `portable/scenarios/`; `scripts/update_scenarios.*` there refreshes both the basic
+and the expert emulator.
 
 ## Scenarios
 

@@ -4,7 +4,7 @@ Besides serving the static files it exposes the scenarios folder to the emulator
   GET  /<any prefix>/api/scenarios            -> [{"name": "x.json", "data": {...}}, ...]
   POST /<any prefix>/api/scenarios/<id>.json  -> writes the file (used by the recorder of the expert mode)
 so recordings made in the expert emulator show up in the basic emulator without any manual file handling.
-This file is also copied next to a portable package as ``start.py``.
+This file is also copied into a portable package as ``serve.py``.
 """
 import argparse
 import json
@@ -67,7 +67,9 @@ class Handler(SimpleHTTPRequestHandler):
 def run(root: Path, scenarios: Path | None = None, port: int = 8765, open_browser: bool = False,
         page: str = "index.html") -> None:
     root = root.resolve()
-    Handler.scenarios = (scenarios or root / "scenarios").resolve()
+    if scenarios is None:                  # an output folder keeps its scenarios inside the portable package
+        scenarios = root / "portable" / "scenarios" if (root / "portable").is_dir() else root / "scenarios"
+    Handler.scenarios = scenarios.resolve()
     srv = ThreadingHTTPServer(("127.0.0.1", port), partial(Handler, directory=str(root)))
     url = f"http://127.0.0.1:{srv.server_address[1]}/{page}"
     print(f"Serving {root}\nScenarios folder: {Handler.scenarios}\nOpen: {url}   (Ctrl+C to stop)")
@@ -82,7 +84,7 @@ def run(root: Path, scenarios: Path | None = None, port: int = 8765, open_browse
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="Serve an emulator folder with a shared, auto-loaded scenarios folder")
     ap.add_argument("root", nargs="?", default=".", help="folder to serve (default: current)")
-    ap.add_argument("--scenarios", help="scenarios folder (default: <root>/scenarios)")
+    ap.add_argument("--scenarios", help="scenarios folder (default: <root>/portable/scenarios, else <root>/scenarios)")
     ap.add_argument("--port", type=int, default=8765)
     ap.add_argument("--open", action="store_true", help="open the page in the browser")
     a = ap.parse_args(argv)

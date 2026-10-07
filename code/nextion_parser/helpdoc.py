@@ -145,7 +145,7 @@ Az emulátor <b>nem a valódi kijelző</b>: a betűtípusok rendszerfontok, az i
 <h3>Feliratok</h3>
 <p>Minden lépéshez (és késleltetéshez) tartozhat <b>felirat</b>: a lista soraiban a „felirat (opcionális)” mezőbe írd. Önálló felirat-lépést a „Felirat lépés” gombbal szúrhatsz be. A felirat a <b>kiválasztott nyelven</b> kerül a lépésbe; kétnyelvű feliratot a ✎ (JSON) szerkesztővel adhatsz meg: <code>"say": {{"hu": "…", "en": "…"}}</code>.</p>
 <h3>Mentés és fájl</h3>
-<p>A letöltött <code>.json</code>-t tedd a <code>scenarios/</code> mappába, hogy a következő generálásba (és az offline csomagba) bekerüljön. A böngészőben a lista csak a lap újratöltéséig tárolja.</p>
+<p>A mentett forgatókönyv letöltődik. Húzd a Letöltések mappát az <code>update_scenarios.bat</code>-ra (vagy tedd a fájlt a hordozható csomag <code>scenarios/</code> mappájába): a script összegyűjti a forgatókönyveket, és a <code>start.bat</code> / <code>start.sh</code> megnyitja az emulátort, ami magától megtalálja őket. A segédszerverrel (<code>serve</code>) a mentés közvetlenül a mappába kerül.</p>
 
 <h2 id="szerkesztes">Makró szerkesztése <span class="tag">expert</span></h2>
 <p>Bármely forgatókönyv (mentett makró, betöltött JSON, vagy a generálással érkezett) szerkeszthető:</p>
@@ -327,7 +327,7 @@ The emulator is <b>not the real display</b>: fonts are system fonts, timing is a
 <h3>Captions</h3>
 <p>Every step (and delay) can have a <b>caption</b>: type it into the "caption (optional)" field in the list rows. A stand-alone caption step can be inserted with the "Caption step" button. The caption is stored <b>in the selected language</b>; for a bilingual caption use the ✎ (JSON) editor: <code>"say": {{"hu": "…", "en": "…"}}</code>.</p>
 <h3>Saving and the file</h3>
-<p>Put the downloaded <code>.json</code> into the <code>scenarios/</code> folder so that it is included in the next generation (and the offline package). In the browser the list is kept only until the page is reloaded.</p>
+<p>The saved scenario is downloaded. Drag the Downloads folder onto <code>update_scenarios.bat</code> (or put the file into the portable package's <code>scenarios/</code> folder): the script collects the scenarios, and <code>start.bat</code> / <code>start.sh</code> opens the emulator, which finds them automatically. With the helper server (<code>serve</code>) saving writes straight into the folder.</p>
 
 <h2 id="editing">Editing a macro <span class="tag">expert</span></h2>
 <p>Any scenario (a saved macro, a loaded JSON, or one that came with the generation) can be edited:</p>

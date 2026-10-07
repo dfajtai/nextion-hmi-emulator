@@ -27,12 +27,14 @@ _SIZE = re.compile(r"^(\d{2,4})[xX×](\d{2,4})$")
 
 PORTABLE_README = """Scenarios folder / Forgatókönyvek mappája
 ==========================================
-EN: Put the scenario .json files recorded in the expert emulator here. In index.html press "Open folder..."
-    and choose this folder (or drag the files onto the page). Files other than .json are ignored.
-    Optional: run `python3 start.py --open` in the package folder - then the scenarios of this folder load automatically.
-HU: Az expert emulátorban rögzített forgatókönyv .json fájlokat ide másold. Az index.html-ben a
-    "Mappa megnyitása..." gombbal válaszd ki ezt a mappát (vagy húzd a fájlokat az oldalra).
-    Opcionális: `python3 start.py --open` a csomag mappájában - ekkor a mappa forgatókönyvei automatikusan betöltődnek.
+EN: Scenario .json files recorded in the expert emulator belong here. Double-click start.bat (Windows) or start.sh
+    (Linux/macOS, needs Python 3): it collects the files and opens the emulator, which finds them automatically.
+    To collect files from another folder (e.g. Downloads) drag that folder onto update_scenarios.bat, or run
+    `python3 update_scenarios.py <folder>`; then reload index.html. Files other than scenario .json are ignored.
+HU: Az expert emulátorban rögzített forgatókönyv .json fájlok ide valók. Kattints duplán a start.bat-ra (Windows) vagy
+    start.sh-ra (Linux/macOS, Python 3 kell): összegyűjti a fájlokat és megnyitja az emulátort, ami magától megtalálja őket.
+    Másik mappából (pl. Letöltések) úgy gyűjthetsz, hogy a mappát ráhúzod az update_scenarios.bat-ra, vagy:
+    `python3 update_scenarios.py <mappa>`; utána töltsd újra az index.html-t.
 """
 
 
@@ -99,8 +101,8 @@ def generate(project: Project, out_dir: str | Path, start: str | None = None,
         sc = out / "scenarios"
         sc.mkdir(exist_ok=True)
         (sc / "README.txt").write_text(PORTABLE_README, encoding="utf-8")
-        add_updater(out)
-        (out / "start.py").write_text(resources.files("nextion_parser").joinpath("serve.py").read_text(encoding="utf-8"),
+        add_updater(out, start_scripts=True)
+        (out / "serve.py").write_text(resources.files("nextion_parser").joinpath("serve.py").read_text(encoding="utf-8"),
                                       encoding="utf-8")
     else:
         helpdoc.write(out, project, data)
@@ -114,7 +116,7 @@ def generate(project: Project, out_dir: str | Path, start: str | None = None,
 
 LAUNCHER_LINKS = [
     ("Emulator (expert)", "emulator/index.html", "full emulator: macro recorder, variables, CSV, reports"),
-    ("Emulator (basic, portable)", "portable/index.html", "simple mode only, scenarios from the scenarios/ folder"),
+    ("Emulator (basic, portable)", "portable/index.html", "simple mode only, scenarios found in its scenarios/ folder"),
     ("Coverage report", "coverage/coverage.html", ""),
     ("Unused resources", "unused/unused.html", ""),
     ("Navigation diagram", "summary/navigation.html", ""),
@@ -144,33 +146,38 @@ body{{font:16px/1.5 system-ui,sans-serif;max-width:720px;margin:40px auto;paddin
 @media(prefers-color-scheme:dark){{body{{color:#e5e7eb;background:#111827}}a{{color:#93c5fd}}code{{background:#1f2937}}}}
 h1{{font-size:22px}}li{{margin:8px 0}}li span,p{{color:#6b7280;font-size:14px}}code{{background:#e5e7eb;padding:1px 5px;border-radius:4px}}
 </style></head><body><h1>{project_name}</h1><ul>{rows}</ul>{stamp}
-<p><b>Without a server</b> (just open the pages): put scenario <code>.json</code> files into the <code>scenarios/</code> folder, then
-run <code>scripts/update_scenarios.bat</code> (Windows) or <code>scripts/update_scenarios.sh</code> (Linux/macOS; needs Python 3).
-It refreshes <code>scenarios.js</code> in the emulator folders – reload the page and the scenarios are there.<br>
+<p><b>Scenarios live in <code>portable/scenarios/</code>.</b> Without a server: put scenario <code>.json</code> files there (or drag a folder, e.g.
+Downloads, onto <code>scripts/update_scenarios.bat</code>), run <code>scripts/update_scenarios.bat</code> / <code>.sh</code> (Python 3) and reload –
+both emulators find them. The <code>portable/</code> folder can be copied anywhere: <code>start.bat</code> / <code>start.sh</code> in it does the same and opens the page.<br>
 <b>With the helper server</b>: <code>./scripts/run.sh serve output/{project_name}</code> – recordings made in the expert
-emulator are saved into <code>scenarios/</code> and appear in the basic emulator automatically.</p></body></html>"""
+emulator are saved into <code>portable/scenarios/</code> and appear in the basic emulator automatically.</p></body></html>"""
     out = root / "index.html"
     out.write_text(html, encoding="utf-8")
     return out
 
 
-def add_updater(folder: Path) -> None:
-    """Copy update_scenarios.py + double-click wrappers into `folder`."""
+def add_updater(folder: Path, start_scripts: bool = False) -> None:
+    """Copy update_scenarios.py + double-click wrappers into `folder` (and, for a package, start.bat/start.sh)."""
     folder = Path(folder)
     folder.mkdir(parents=True, exist_ok=True)
     src = resources.files("nextion_parser").joinpath("update_scenarios.py").read_text(encoding="utf-8")
     (folder / "update_scenarios.py").write_text(src, encoding="utf-8")
     (folder / "update_scenarios.bat").write_bytes(
-        b'@echo off\r\npy -3 "%~dp0update_scenarios.py" || python "%~dp0update_scenarios.py"\r\npause\r\n')
+        b'@echo off\r\npy -3 "%~dp0update_scenarios.py" %* || python "%~dp0update_scenarios.py" %*\r\npause\r\n')
     sh = folder / "update_scenarios.sh"
-    sh.write_text('#!/bin/sh\ncd "$(dirname "$0")" && python3 update_scenarios.py\n', encoding="utf-8")
+    sh.write_text('#!/bin/sh\ncd "$(dirname "$0")" && python3 update_scenarios.py "$@"\n', encoding="utf-8")
     sh.chmod(0o755)
+    if start_scripts:                       # one double-click: refresh scenarios.js, then open the emulator from disk
+        (folder / "start.bat").write_bytes(
+            b'@echo off\r\npy -3 "%~dp0update_scenarios.py" >nul || python "%~dp0update_scenarios.py" >nul\r\nstart "" "%~dp0index.html"\r\n')
+        st = folder / "start.sh"
+        st.write_text('#!/bin/sh\ncd "$(dirname "$0")" && python3 update_scenarios.py >/dev/null\n'
+                      '(xdg-open index.html || open index.html) >/dev/null 2>&1\n', encoding="utf-8")
+        st.chmod(0o755)
 
 
 def write_scripts(root: str | Path) -> Path:
-    """<root>/scripts/ (scenario updater for the whole output folder) and the shared <root>/scenarios/ folder."""
+    """<root>/scripts/: the scenario updater for the whole output folder (it works on <root>/portable/scenarios)."""
     root = Path(root)
     add_updater(root / "scripts")
-    (root / "scenarios").mkdir(exist_ok=True)
-    (root / "scenarios" / "README.txt").write_text(PORTABLE_README, encoding="utf-8")
     return root / "scripts"

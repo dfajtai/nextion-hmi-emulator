@@ -36,9 +36,9 @@ def main(argv: list[str] | None = None) -> int:
             p.add_argument("--zoom", metavar="Z|fit", help="initial zoom: a number or 'fit' (default: fit)")
             p.add_argument("--lang", choices=("hu", "en"), default="hu",
                            help="default GUI language of the emulator and help (the user can switch at run time; default: hu)")
-    sp = sub.add_parser("serve", help="serve a generated folder; scenarios of its scenarios/ folder load and save automatically")
+    sp = sub.add_parser("serve", help="serve a generated folder; scenarios of the portable package load and save automatically")
     sp.add_argument("root", nargs="?", default=".", help="folder to serve, e.g. output/<name> (default: current)")
-    sp.add_argument("--scenarios", metavar="DIR", help="shared scenarios folder (default: <root>/scenarios)")
+    sp.add_argument("--scenarios", metavar="DIR", help="scenarios folder (default: <root>/portable/scenarios, else <root>/scenarios)")
     sp.add_argument("--port", type=int, default=8765)
     sp.add_argument("--no-open", action="store_true", help="do not open the browser")
     args = ap.parse_args(argv)

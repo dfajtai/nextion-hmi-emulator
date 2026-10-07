@@ -464,8 +464,8 @@ def test_all_writes_launcher_and_portable(tmp_path):
     idx = (out / "index.html").read_text(encoding="utf-8")
     for href in ("emulator/index.html", "portable/index.html", "coverage/coverage.html"):
         assert href in idx
-    assert (out / "portable" / "start.py").is_file() and (out / "portable" / "update_scenarios.py").is_file()
-    assert (out / "scripts" / "update_scenarios.py").is_file() and (out / "scenarios").is_dir()
+    assert (out / "portable" / "serve.py").is_file() and (out / "portable" / "start.bat").is_file() and (out / "portable" / "update_scenarios.py").is_file()
+    assert (out / "scripts" / "update_scenarios.py").is_file() and (out / "portable" / "scenarios").is_dir() and not (out / "scenarios").exists()
     assert (out / "emulator" / "scenarios.js").is_file() and (out / "portable" / "scenarios.js").is_file()
 
 
@@ -504,19 +504,28 @@ def test_emulator_has_server_sync(project, tmp_path):
     assert "api/scenarios" in html and "syncServer" in html and "rec.info.saved.server" in html
 
 
-def test_update_scenarios_script_bundles_json(tmp_path):
+def test_update_scenarios_script_bundles_and_imports(tmp_path):
     root = tmp_path / "o"
-    (root / "emulator").mkdir(parents=True)
-    (root / "emulator" / "index.html").write_text("x")
-    (root / "emulator" / "data.js").write_text("x")
+    for d in ("emulator", "portable"):
+        (root / d).mkdir(parents=True)
+        (root / d / "index.html").write_text("x")
+        (root / d / "data.js").write_text("x")
     emulator.write_scripts(root)
-    (root / "scenarios" / "a.json").write_text('{"name":"A","steps":[{"say":"hi"}]}', encoding="utf-8")
-    (root / "scenarios" / "bad.json").write_text("{oops", encoding="utf-8")
-    (root / "scenarios" / "variables.json").write_text("[]", encoding="utf-8")
-    r = subprocess.run(["python3", str(root / "scripts" / "update_scenarios.py")], capture_output=True, text=True)
+    scen = root / "portable" / "scenarios"
+    scen.mkdir()
+    (scen / "a.json").write_text('{"name":"A","steps":[{"say":"hi"}]}', encoding="utf-8")
+    (scen / "bad.json").write_text("{oops", encoding="utf-8")
+    (scen / "variables.json").write_text("[]", encoding="utf-8")
+    dl = tmp_path / "Downloads"                                             # recordings downloaded by the expert emulator
+    dl.mkdir()
+    (dl / "rec1.json").write_text('{"name":"R","steps":[]}', encoding="utf-8")
+    (dl / "other_tool.json").write_text('{"setting": 1}', encoding="utf-8")   # unrelated JSON must not be imported
+    r = subprocess.run(["python3", str(root / "scripts" / "update_scenarios.py"), str(dl)], capture_output=True, text=True)
     assert r.returncode == 1 and "bad.json" in r.stdout                       # invalid file reported, others still written
-    js = (root / "emulator" / "scenarios.js").read_text(encoding="utf-8")
-    assert js.startswith("window.NX_SCENARIOS=") and '"a.json"' in js and "variables.json" not in js
+    assert (scen / "rec1.json").is_file() and not (scen / "other_tool.json").exists()
+    for d in ("emulator", "portable"):
+        js = (root / d / "scenarios.js").read_text(encoding="utf-8")
+        assert js.startswith("window.NX_SCENARIOS=") and '"a.json"' in js and '"rec1.json"' in js and "variables.json" not in js
     for f in ("update_scenarios.bat", "update_scenarios.sh"):
         assert (root / "scripts" / f).is_file()
 
