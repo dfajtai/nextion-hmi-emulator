@@ -1,7 +1,7 @@
 """Discover simulation input variables by static analysis.
 
 From the display code we find which values the code *reads* but never *writes*: these are most likely fed by the
-MCU over the serial line (e.g. ``pageMainAuto.charge_level.val=80``).
+MCU over the serial line (e.g. ``pageA.level.val=80``).
 
 Output: ``variables.discovered.json`` (always regenerated) + an optional hand-edited ``variables.json``
 (label, range, unit, group, presets, ``hidden``) that is overlaid on the discovered data.

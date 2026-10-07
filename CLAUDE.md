@@ -25,6 +25,7 @@ Standard library only; `node` is optional (smoke test, some tests). User-facing 
 ## Conventions
 - Code, comments, docstrings, tests, CLI messages, reports and markdown are English. Only the web GUI (`i18n.js`, `helpdoc.py`) and scenario/variable JSON fields are bilingual.
 - Every GUI string goes into **both** languages of `emulator/assets/i18n.js`; no hard-coded text in the emulator script (a test enforces it). Localized fields are `{"hu":…,"en":…}` or plain text.
+- Nothing generic (front-end assets, help text, docstrings) may name a particular project's pages/components: real names come from the project (`emulator/examples.py` → `DATA.examples`, `{page}`/`{ref}` in i18n texts). A test enforces it.
 - The `.HMI` input is never modified. The emulator must work from `file://` (no fetch, no server).
 - Edit the page in `emulator/assets/ui/`, never the generated `index.html`. Keep handlers/functions intact when editing: tests check for lost functions and dangling handlers.
 - Do not add Claude/Anthropic co-author trailers to commits.

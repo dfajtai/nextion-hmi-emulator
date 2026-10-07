@@ -7,7 +7,7 @@ What counts as a reference:
   * component attribute: ``pic``, ``pic2`` (image), ``font`` (font) - and the ``pic`` background of a page
   * code: literal assignments ``obj.pic=N``, ``obj.pic2=N``, ``obj.font=N``; the commands ``pic x,y,N`` /
     ``picq x,y,w,h,N`` / ``xpic dx,dy,w,h,sx,sy,N``; the font parameter of ``xstr``/``spstr``
-  * a non-literal assignment (e.g. ``pbattery.pic=pic_index.val``) is *uncertain*: the images are then not
+  * a non-literal assignment (e.g. ``obj.pic=pic_index.val``) is *uncertain*: the images are then not
     necessarily unused
 """
 from __future__ import annotations

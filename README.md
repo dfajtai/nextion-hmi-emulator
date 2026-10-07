@@ -160,16 +160,16 @@ Files in the `scenarios/` folder (next to the `.HMI` by default):
 
 ```json
 {
-  "name": {"hu": "Alacsony akku", "en": "Low battery"},
-  "description": "What does the display show at 12 % charge?",
-  "page": "pageMainAuto",
+  "name": {"hu": "Példa", "en": "Example"},
+  "description": "What does the display show when the value is 12?",
+  "page": "pageA",
   "steps": [
-    {"say": {"hu": "Az MCU 12%-ot jelent", "en": "The MCU reports 12 %"}, "set": {"pageMainAuto.charge_level.val": 12}},
+    {"say": {"hu": "Az MCU 12-re állítja", "en": "The MCU sets it to 12"}, "set": {"pageA.level.val": 12}},
     {"wait": 1500},
-    {"say": "START", "click": "bstart"},
-    {"cmd": "page pageMainAuto"},
-    {"ramp": {"ref": "pageMainAuto.charge_level.val", "from": 100, "to": 0, "step": 10, "every": 500}},
-    {"wave": {"ref": "pageStat2.s0", "fn": "sine", "n": 300, "min": 40, "max": 200}}
+    {"say": "START", "click": "btnStart"},
+    {"cmd": "page pageA"},
+    {"ramp": {"ref": "pageA.level.val", "from": 100, "to": 0, "step": 10, "every": 500}},
+    {"wave": {"ref": "pageB.wave0", "fn": "sine", "n": 300, "min": 40, "max": 200}}
   ]
 }
 ```

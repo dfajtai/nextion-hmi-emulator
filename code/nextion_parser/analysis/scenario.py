@@ -3,25 +3,25 @@
 A scenario is a JSON file (or a ``{"scenarios": [...]}`` list):
 
     {
-      "name": {"hu": "Alacsony akku", "en": "Low battery"},     // text or {"hu": ..., "en": ...}
-      "description": "What does the display show at 12 % charge?",
-      "page": "pageMainAuto",                  // optional: start page (default: the project start page)
+      "name": {"hu": "Példa", "en": "Example"},     // text or {"hu": ..., "en": ...}
+      "description": "What does the display show when the value is 12?",
+      "page": "pageA",                  // optional: start page (default: the project start page)
       "steps": [
-        {"say": {"hu": "Az MCU 12%-ot jelent", "en": "The MCU reports 12 %"}},
-        {"set": {"pageMainAuto.charge_level.val": 12, "pageMainAuto.weight.val": 1520}},
+        {"say": {"hu": "Az MCU 12-re állítja", "en": "The MCU sets it to 12"}},
+        {"set": {"pageA.level.val": 12, "pageA.count.val": 1520}},
         {"wait": 1500},
-        {"cmd": "page pageIndividual"},          // raw Nextion instruction, as the MCU would send it
-        {"click": "bstart"},                     // button press on the current page (down + up)
-        {"goto": "pageStat1"},
-        {"ramp": {"ref": "pageMainAuto.charge_level.val", "from": 10, "to": 100, "step": 5, "every": 300}},
-        {"wave": {"ref": "pageStat2.s0", "ch": 0, "fn": "sine", "n": 300, "min": 40, "max": 200, "noise": 0.1}},
+        {"cmd": "page pageB"},          // raw Nextion instruction, as the MCU would send it
+        {"click": "btnStart"},                     // button press on the current page (down + up)
+        {"goto": "pageB"},
+        {"ramp": {"ref": "pageA.level.val", "from": 10, "to": 100, "step": 5, "every": 300}},
+        {"wave": {"ref": "pageB.wave0", "ch": 0, "fn": "sine", "n": 300, "min": 40, "max": 200, "noise": 0.1}},
         {"repeat": 3, "steps": [ ... ]}
       ]
     }
 
 ``variables.json`` (optional, hand-edited) refines the discovered variables:
-``{"pageMainAuto.charge_level.val": {"label": {"hu": "Töltöttség", "en": "Charge level"}, "unit": "%",
-"min": 0, "max": 100, "group": "Battery"}}``.
+``{"pageA.level.val": {"label": {"hu": "Szint", "en": "Level"}, "unit": "%",
+"min": 0, "max": 100, "group": "Inputs"}}``.
 """
 from __future__ import annotations
 

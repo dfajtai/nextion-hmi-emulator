@@ -84,7 +84,7 @@ const I18N = {
     "disp.idle.title": "A HMI időzítői tétlenség után (pl. 30 mp) visszaugranak a főoldalra. Alapból tiltva, hogy az emulátor ne ugráljon.",
 
     "vars.title": "Aktuális oldal változói", "glob.title": "Globális változók", "log.title": "Soros kimenet / napló",
-    "rx.ph": "MCU-parancs (Nextion utasítás, pl. page pageStat1 vagy pageMainAuto.charge_level.val=40)", "rx.send": "Küld",
+    "rx.ph": "MCU-parancs (Nextion utasítás, pl. page {page} vagy {ref}=40)", "rx.send": "Küld",
     "log.mcu": "MCU → kijelző: {v}",
     "card.toggle": "kattints a ki-/becsukáshoz",
 
@@ -192,7 +192,7 @@ const I18N = {
     "disp.idle.title": "The HMI timers jump back to the main page after inactivity (e.g. 30 s). Disabled by default so that the emulator does not jump around.",
 
     "vars.title": "Current page variables", "glob.title": "Global variables", "log.title": "Serial output / log",
-    "rx.ph": "MCU command (Nextion instruction, e.g. page pageStat1 or pageMainAuto.charge_level.val=40)", "rx.send": "Send",
+    "rx.ph": "MCU command (Nextion instruction, e.g. page {page} or {ref}=40)", "rx.send": "Send",
     "log.mcu": "MCU → display: {v}",
     "card.toggle": "click to expand / collapse",
 

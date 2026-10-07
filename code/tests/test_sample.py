@@ -700,3 +700,28 @@ def test_gui_window_builds_and_generates(tmp_path, monkeypatch):
     app.processEvents()
     assert "Failed" in win.w.labelStatus.text() or "Hiba" in win.w.labelStatus.text()
     assert not win.w.btnOpenResult.isEnabled()
+
+
+def test_front_end_and_help_contain_no_project_specific_names(project, tmp_path):
+    """Generic assets must not mention names of one particular project; the help takes its examples from the project."""
+    banned = re.compile(r"pageMainAuto|charge_level|pageStat|bstart|pageIndividual|bioscale|akku|battery", re.I)
+    for f in list((Path(emulator.__file__).parent / "assets").rglob("*")):
+        if f.is_file() and f.suffix in (".js", ".html", ".css"):
+            assert not banned.search(f.read_text(encoding="utf-8")), f
+    for f in Path(emulator.__file__).parents[1].rglob("*.py"):
+        if "tests" not in f.parts:
+            assert not banned.search(f.read_text(encoding="utf-8")), f
+    gen(project, tmp_path)
+    help_html = (tmp_path / "help.html").read_text(encoding="utf-8")
+    ex = json.loads(re.search(r"const DATA=(.*);", (tmp_path / "data.js").read_text(encoding="utf-8")).group(1))["examples"]
+    assert ex["page"] == project.start_page and ex["ref"].endswith(".val") and ex["btn"]
+    assert ex["ref"] in help_html and ex["btn"] in help_html                      # examples come from the project
+
+
+def test_example_picker_has_generic_fallbacks():
+    from nextion_parser.emulator.examples import pick_examples
+    from nextion_parser.parser import Project
+    p = Project.__new__(Project)
+    p.pages = []
+    assert pick_examples(p, {"start": "p1", "variables": []}) == {
+        "page": "p1", "other_page": "p1", "ref": "p1.component.val", "btn": "button", "wave": None}

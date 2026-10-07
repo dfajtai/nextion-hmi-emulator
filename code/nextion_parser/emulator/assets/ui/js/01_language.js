@@ -7,7 +7,7 @@ function applyStatic(){   // static texts from the data-i* attributes
   document.querySelectorAll('[data-i]').forEach(e=>{e.textContent=t(e.dataset.i);});
   document.querySelectorAll('[data-ih]').forEach(e=>{e.innerHTML=t(e.dataset.ih);});
   document.querySelectorAll('[data-it]').forEach(e=>{e.title=t(e.dataset.it);});
-  document.querySelectorAll('[data-ip]').forEach(e=>{e.placeholder=t(e.dataset.ip);});
+  document.querySelectorAll('[data-ip]').forEach(e=>{e.placeholder=t(e.dataset.ip,DATA.examples);});   // {page}/{ref} in the texts: real names from this project
   document.documentElement.lang=LANG;
   document.title=t('app.title',{project:PROJECT});$('apptitle').textContent=document.title;
   $('helplink').href='help.html?lang='+LANG;

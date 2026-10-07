@@ -99,7 +99,7 @@ Az emulátor <b>nem a valódi kijelző</b>: a betűtípusok rendszerfontok, az i
 <h2 id="kijelzo">A kijelző</h2>
 <ul>
 <li><b>Kezelés:</b> a gombokra kattintva a HMI <code>down</code>/<code>up</code> eseményei futnak, mint az eszközön. Oldalváltásnál az új oldal <code>load</code>/<code>loadend</code> kódja is lefut.</li>
-<li><b>Tooltip (expert):</b> az elem fölé víve megjelenik a neve és típusa (pl. <code>bstart</code> · gomb). Átfedő elemeknél a legfelsőt mutatja, a „+N alatta” jelzéssel.</li>
+<li><b>Tooltip (expert):</b> az elem fölé víve megjelenik a neve és típusa (pl. <code>{c['ex_btn']}</code> · gomb). Átfedő elemeknél a legfelsőt mutatja, a „+N alatta” jelzéssel.</li>
 <li><b>Oldal</b> lista (a fejlécben, expert): mindig az aktuális oldalt mutatja; másikat választva odaugrik. <b>Újraindítás</b>: a projekt indulóoldalára, tiszta állapotból.</li>
 <li><b>Kijelző vezérlés</b> blokk (expert, alapból összecsukva) – minden kijelzőbeállítás egy helyen:
 <ul><li><b>Képernyő W×H</b> és <b>Nagyítás</b>: az emulált vászon mérete és a nagyítás („illeszkedő” = a szabad helyhez igazodik, ablakátméretezéskor újraszámol). {b("↺ Alap méret")} visszaállítja a projekt felbontását és az illeszkedő nagyítást.</li>
@@ -162,32 +162,31 @@ Az emulátor <b>nem a valódi kijelző</b>: a betűtípusok rendszerfontok, az i
 <p>Egy <b>érték-oszlopból</b> (opcionálisan <b>csoport-oszlop</b> szerint) kiszámolja az egyedszámot, az átlagot, a <b>mintaszórást</b> (n−1) és a CV-t, beírja a cél-változókba, és a nyers értékeket <b>waveformként</b> is felrajzolja. A cél-változók és az oda vezető navigáció a <code>scenarios/csv_profiles.json</code> profilból jönnek, az ablakban átírhatók. Az <code>xfloat</code> komponens tizedesjegyeihez automatikusan skáláz; a kijelzőn látható pontosságot a komponens tizedesjegyei korlátozzák.</p>
 <h3>Idősor (soronként értékek)</h3>
 <p>A fejléc a változó: teljes hivatkozás (<code>oldal.komponens.attribútum</code>), <code>variables.json</code>-beli címke, vagy egyedi név. Minden sor egy lépés. Speciális oszlopok: <code>t_ms</code> (abszolút idő) vagy <code>wait_ms</code>, <code>say</code> (felirat), <code>goto</code> (oldal), <code>cmd</code> (Nextion-utasítás).</p>
-<pre>t_ms,pageMainAuto.charge_level.val,Töltés alatt,say
-0,100,0,Lemerülés
-800,90,0,
-1600,80,0,</pre>
+<pre>t_ms,{c['ex_ref']},say
+0,100,Kezdet
+800,90,
+1600,80,Csökken</pre>
 <p>Az eredmény mint bármely forgatókönyv lépegethető/lejátszható; a <b>JSON letöltése</b> gombbal menthető. A generált név és feliratok kétnyelvűek.</p>
 
 <h2 id="valtozok">Változók, napló, MCU-parancs <span class="tag">expert</span></h2>
 <ul>
 <li><b>Aktuális oldal változói:</b> az éppen látható oldal számai és szövegei; átírva azonnal érvénybe lépnek, és ha rögzítesz, bekerülnek a felvételbe. A helyi változók oldalbetöltéskor visszaállnak.</li>
 <li><b>Globális változók:</b> a <code>Program.s</code>-ben deklarált (<code>int</code>) és rendszerváltozók (<code>sys0…</code>, <code>dim</code>, <code>baud</code>…); alapból összecsukva.</li>
-<li><b>Soros kimenet / napló:</b> a kijelző <code>print</code>/<code>prints</code>/<code>printh</code> kimenete („TX: …”), az időzítő-ugrás tiltásának jelzése, hibák. Alatta az <b>MCU-parancs</b> mező: ide Nextion-utasítást írhatsz (<code>page pageStat1</code>, <code>pageMainAuto.charge_level.val=40</code>), <kbd>Enter</kbd> vagy <b>Küld</b> – ahogy az MCU küldené. Rögzítéskor <code>cmd</code> lépésként mentődik.</li>
+<li><b>Soros kimenet / napló:</b> a kijelző <code>print</code>/<code>prints</code>/<code>printh</code> kimenete („TX: …”), az időzítő-ugrás tiltásának jelzése, hibák. Alatta az <b>MCU-parancs</b> mező: ide Nextion-utasítást írhatsz (<code>page {c['ex_other']}</code>, <code>{c['ex_ref']}=40</code>), <kbd>Enter</kbd> vagy <b>Küld</b> – ahogy az MCU küldené. Rögzítéskor <code>cmd</code> lépésként mentődik.</li>
 <li>Minden blokk fejlécére kattintva ki-/becsukható; az állapotot a böngésző megjegyzi.</li>
 </ul>
 
 <h2 id="formatum">Forgatókönyv-formátum (JSON)</h2>
 <pre>{{
-  "name": {{"hu": "Alacsony akku", "en": "Low battery"}},
-  "description": "Mit mutat a kijelző 12%-os töltöttségnél?",
-  "page": "pageMainAuto",
+  "name": {{"hu": "Példa forgatókönyv", "en": "Example scenario"}},
+  "description": "Mit mutat a kijelző, ha az érték 12?",
+  "page": "{c['ex_page']}",
   "steps": [
-    {{"say": {{"hu": "Az MCU 12%-ot jelent", "en": "The MCU reports 12 %"}}, "set": {{"pageMainAuto.charge_level.val": 12}}}},
+    {{"say": {{"hu": "Az MCU 12-re állítja az értéket", "en": "The MCU sets the value to 12"}}, "set": {{"{c['ex_ref']}": 12}}}},
     {{"wait": 1500}},
-    {{"say": "START", "click": "bstart"}},
-    {{"cmd": "page pageMainAuto"}},
-    {{"ramp": {{"ref": "pageMainAuto.charge_level.val", "from": 100, "to": 0, "step": 10, "every": 500}}}},
-    {{"wave": {{"ref": "pageStat2.s0", "fn": "sine", "n": 300, "min": 40, "max": 200}}}}
+    {{"say": "START", "click": "{c['ex_btn']}"}},
+    {{"cmd": "page {c['ex_page']}"}},
+    {{"ramp": {{"ref": "{c['ex_ref']}", "from": 100, "to": 0, "step": 10, "every": 500}}}}{c['ex_wave_step']}
   ]
 }}</pre>
 <p>A <code>name</code>, <code>description</code> és <code>say</code> mező lehet egyszerű szöveg vagy <code>{{"hu": "…", "en": "…"}}</code> – a felület a kiválasztott nyelven mutatja (hiányzó nyelvnél a másikat). A <code>variables.json</code> <code>label</code>/<code>unit</code>/<code>group</code>/<code>description</code> mezői is így adhatók meg.</p>
@@ -198,11 +197,11 @@ Az emulátor <b>nem a valódi kijelző</b>: a betűtípusok rendszerfontok, az i
 <tr><td><code>goto</code></td><td>Oldalra ugrás (név).</td></tr>
 <tr><td><code>cmd</code></td><td>Nyers Nextion-utasítás (string vagy lista), mintha az MCU küldené.</td></tr>
 <tr><td><code>wait</code></td><td>Várakozás ezredmásodpercben (az időzítők közben ketyegnek).</td></tr>
-<tr><td><code>ramp</code></td><td>Egy változó léptetése: <code>ref, from, to, step, every</code> (ms). Pl. akku-lemerülés.</td></tr>
+<tr><td><code>ramp</code></td><td>Egy változó léptetése: <code>ref, from, to, step, every</code> (ms). Pl. egy érték fokozatos csökkenése.</td></tr>
 <tr><td><code>wave</code></td><td>Waveform nyers adatsor: <code>ref</code> (<code>oldal.obj</code>), <code>ch</code>, és <code>data</code> (tömb) <i>vagy</i> <code>fn</code> (sine, ramp, square, noise, step) + <code>n, min, max, periods, noise</code>.</td></tr>
 <tr><td><code>repeat</code></td><td><code>{{"repeat": 3, "steps": [...]}}</code> – ismétlés.</td></tr></table>
 <div class="note warn"><b>Fontos:</b> a <code>set</code> a változót közvetlenül írja. Ha a HMI kódja az értéket máshonnan tölti vissza (pl. a nyelv a főoldal betöltésekor az EEPROM-ból), akkor a <i>valódi felhasználói utat</i> kell követni (gombnyomások), nem közvetlenül állítani.</div>
-<p><b>Hivatkozások:</b> <code>oldal.komponens.attribútum</code> (pl. <code>pageStat1.xmean.val</code>); az aktuális oldal komponense <code>komponens.attribútum</code>-mal is elérhető. A helyi (nem globális) változók oldalbetöltéskor visszaállnak, ezért oldalváltás <u>után</u> állítsd őket.</p>
+<p><b>Hivatkozások:</b> <code>oldal.komponens.attribútum</code> (pl. <code>{c['ex_ref']}</code>); az aktuális oldal komponense <code>komponens.attribútum</code>-mal is elérhető. A helyi (nem globális) változók oldalbetöltéskor visszaállnak, ezért oldalváltás <u>után</u> állítsd őket.</p>
 <p>Fájlok a <code>scenarios/</code> mappában: <code>*.json</code> (forgatókönyvek; egy fájl egy forgatókönyv vagy <code>{{"scenarios": [...]}}</code>), <code>variables.json</code> (címkék, egységek a feliratokhoz és a CSV-hez), <code>csv_profiles.json</code> (a CSV-statisztika célváltozói).</p>
 
 <h2 id="nyelv">Nyelv (HU/EN)</h2>
@@ -281,7 +280,7 @@ The emulator is <b>not the real display</b>: fonts are system fonts, timing is a
 <h2 id="display">The display</h2>
 <ul>
 <li><b>Operation:</b> clicking buttons runs the HMI's <code>down</code>/<code>up</code> events, as on the device. On a page change the new page's <code>load</code>/<code>loadend</code> code runs too.</li>
-<li><b>Tooltip (expert):</b> hovering over an element shows its name and type (e.g. <code>bstart</code> · button). For overlapping elements the topmost is shown, with a "+N below" hint.</li>
+<li><b>Tooltip (expert):</b> hovering over an element shows its name and type (e.g. <code>{c['ex_btn']}</code> · button). For overlapping elements the topmost is shown, with a "+N below" hint.</li>
 <li><b>Page</b> list (in the header, expert): always shows the current page; selecting another one jumps there. <b>Restart</b>: back to the project's start page from a clean state.</li>
 <li><b>Display controls</b> block (expert, collapsed by default) – all display settings in one place:
 <ul><li><b>Screen W×H</b> and <b>Zoom</b>: size of the emulated canvas and the magnification ("fit" adapts to the free space and recalculates on window resize). {b("↺ Default size")} resets the project resolution and the fit zoom.</li>
@@ -344,32 +343,31 @@ The emulator is <b>not the real display</b>: fonts are system fonts, timing is a
 <p>From one <b>value column</b> (optionally split by a <b>group column</b>) it computes the count, mean, <b>sample SD</b> (n−1) and CV, writes them into the target variables, and also draws the raw values as a <b>waveform</b>. The target variables and the navigation that leads there come from the <code>scenarios/csv_profiles.json</code> profile and can be edited in the dialog. It scales automatically to the decimals of an <code>xfloat</code> component; the precision visible on the display is limited by the component's decimals.</p>
 <h3>Time series (values per row)</h3>
 <p>The header is the variable: a full reference (<code>page.component.attribute</code>), a label from <code>variables.json</code>, or a unique name. Each row is one step. Special columns: <code>t_ms</code> (absolute time) or <code>wait_ms</code>, <code>say</code> (caption), <code>goto</code> (page), <code>cmd</code> (Nextion instruction).</p>
-<pre>t_ms,pageMainAuto.charge_level.val,Charging,say
-0,100,0,Discharging
-800,90,0,
-1600,80,0,</pre>
+<pre>t_ms,{c['ex_ref']},say
+0,100,Start
+800,90,
+1600,80,Decreasing</pre>
 <p>The result can be stepped through / played like any scenario; it can be saved with the <b>Download JSON</b> button. The generated name and captions are bilingual.</p>
 
 <h2 id="variables">Variables, log, MCU command <span class="tag">expert</span></h2>
 <ul>
 <li><b>Current page variables:</b> the numbers and texts of the page currently shown; edited values take effect immediately and, while recording, are added to the recording. Local variables are reset on page load.</li>
 <li><b>Global variables:</b> declared in <code>Program.s</code> (<code>int</code>) and system variables (<code>sys0…</code>, <code>dim</code>, <code>baud</code>…); collapsed by default.</li>
-<li><b>Serial output / log:</b> the display's <code>print</code>/<code>prints</code>/<code>printh</code> output ("TX: …"), the note about blocked timer jumps, errors. Below it is the <b>MCU command</b> field: type a Nextion instruction here (<code>page pageStat1</code>, <code>pageMainAuto.charge_level.val=40</code>) and press <kbd>Enter</kbd> or <b>Send</b> – as the MCU would send it. While recording it is saved as a <code>cmd</code> step.</li>
+<li><b>Serial output / log:</b> the display's <code>print</code>/<code>prints</code>/<code>printh</code> output ("TX: …"), the note about blocked timer jumps, errors. Below it is the <b>MCU command</b> field: type a Nextion instruction here (<code>page {c['ex_other']}</code>, <code>{c['ex_ref']}=40</code>) and press <kbd>Enter</kbd> or <b>Send</b> – as the MCU would send it. While recording it is saved as a <code>cmd</code> step.</li>
 <li>Click the header of any block to collapse / expand it; the browser remembers the state.</li>
 </ul>
 
 <h2 id="format">Scenario format (JSON)</h2>
 <pre>{{
-  "name": {{"hu": "Alacsony akku", "en": "Low battery"}},
-  "description": "What does the display show at 12 % charge?",
-  "page": "pageMainAuto",
+  "name": {{"hu": "Példa forgatókönyv", "en": "Example scenario"}},
+  "description": "What does the display show when the value is 12?",
+  "page": "{c['ex_page']}",
   "steps": [
-    {{"say": {{"hu": "Az MCU 12%-ot jelent", "en": "The MCU reports 12 %"}}, "set": {{"pageMainAuto.charge_level.val": 12}}}},
+    {{"say": {{"hu": "Az MCU 12-re állítja az értéket", "en": "The MCU sets the value to 12"}}, "set": {{"{c['ex_ref']}": 12}}}},
     {{"wait": 1500}},
-    {{"say": "START", "click": "bstart"}},
-    {{"cmd": "page pageMainAuto"}},
-    {{"ramp": {{"ref": "pageMainAuto.charge_level.val", "from": 100, "to": 0, "step": 10, "every": 500}}}},
-    {{"wave": {{"ref": "pageStat2.s0", "fn": "sine", "n": 300, "min": 40, "max": 200}}}}
+    {{"say": "START", "click": "{c['ex_btn']}"}},
+    {{"cmd": "page {c['ex_page']}"}},
+    {{"ramp": {{"ref": "{c['ex_ref']}", "from": 100, "to": 0, "step": 10, "every": 500}}}}{c['ex_wave_step']}
   ]
 }}</pre>
 <p><code>name</code>, <code>description</code> and <code>say</code> can be plain text or <code>{{"hu": "…", "en": "…"}}</code> – the GUI shows the selected language (falling back to the other one). The <code>label</code>/<code>unit</code>/<code>group</code>/<code>description</code> fields of <code>variables.json</code> can be given the same way.</p>
@@ -380,11 +378,11 @@ The emulator is <b>not the real display</b>: fonts are system fonts, timing is a
 <tr><td><code>goto</code></td><td>Jump to a page (name).</td></tr>
 <tr><td><code>cmd</code></td><td>Raw Nextion instruction (string or list), as if the MCU sent it.</td></tr>
 <tr><td><code>wait</code></td><td>Wait in milliseconds (timers keep ticking).</td></tr>
-<tr><td><code>ramp</code></td><td>Step a variable: <code>ref, from, to, step, every</code> (ms). E.g. battery discharge.</td></tr>
+<tr><td><code>ramp</code></td><td>Step a variable: <code>ref, from, to, step, every</code> (ms). E.g. a value decreasing step by step.</td></tr>
 <tr><td><code>wave</code></td><td>Raw data series for a waveform: <code>ref</code> (<code>page.obj</code>), <code>ch</code>, and <code>data</code> (array) <i>or</i> <code>fn</code> (sine, ramp, square, noise, step) + <code>n, min, max, periods, noise</code>.</td></tr>
 <tr><td><code>repeat</code></td><td><code>{{"repeat": 3, "steps": [...]}}</code> – repetition.</td></tr></table>
 <div class="note warn"><b>Important:</b> <code>set</code> writes the variable directly. If the HMI code reloads the value from elsewhere (e.g. the language from EEPROM when the main page loads) you have to follow the <i>real user path</i> (button presses) instead of setting it directly.</div>
-<p><b>References:</b> <code>page.component.attribute</code> (e.g. <code>pageStat1.xmean.val</code>); a component of the current page can also be addressed as <code>component.attribute</code>. Local (non-global) variables are reset on page load, so set them <u>after</u> the page change.</p>
+<p><b>References:</b> <code>page.component.attribute</code> (e.g. <code>{c['ex_ref']}</code>); a component of the current page can also be addressed as <code>component.attribute</code>. Local (non-global) variables are reset on page load, so set them <u>after</u> the page change.</p>
 <p>Files in the <code>scenarios/</code> folder: <code>*.json</code> (scenarios; one file is one scenario or <code>{{"scenarios": [...]}}</code>), <code>variables.json</code> (labels, units for captions and CSV), <code>csv_profiles.json</code> (target variables of the CSV statistics).</p>
 
 <h2 id="language">Language (HU/EN)</h2>
@@ -441,7 +439,12 @@ def _ctx(project, data: dict, lang: str) -> dict:
         for s in scns) or f'<tr><td colspan="4" class="mut">{E(empty)}</td></tr>'
     page_rows = "".join(f"<tr><td>{p['index']}</td><td><code>{E(p['name'])}</code></td><td>{len(p['comps'])}</td></tr>" for p in pages)
     reports = ", ".join(E(REPORT_LABELS[r["key"]][lang]) for r in data.get("reports", []) if r["key"] in REPORT_LABELS) or none
-    return {"project": E(project.name), "w": w, "h": h, "start": E(data.get("start", "")), "version": E(__version__),
+    ex = data.get("examples", {})
+    wave = ex.get("wave")
+    wave_step = (',\n    {{"wave": {{"ref": "' + E(wave) + '", "fn": "sine", "n": 300, "min": 40, "max": 200}}}}') if wave else ""
+    return {"ex_page": E(ex.get("page", "")), "ex_other": E(ex.get("other_page", "")), "ex_ref": E(ex.get("ref", "")),
+            "ex_btn": E(ex.get("btn", "")), "ex_wave_step": wave_step,
+            "project": E(project.name), "w": w, "h": h, "start": E(data.get("start", "")), "version": E(__version__),
             "scn_rows": scn_rows, "page_rows": page_rows, "reports": reports}
 
 

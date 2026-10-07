@@ -15,6 +15,7 @@ from ..analysis import discover, scenario
 from ..parser import Project
 from . import help as helpdoc
 from . import ui
+from .examples import pick_examples
 from .model import EmulatorData, ReportLink, Screen
 from .portable import PORTABLE_README, add_updater
 
@@ -68,7 +69,7 @@ class EmulatorBuilder:
         prof = sdir / "csv_profiles.json" if sdir else None
         scenarios = [] if self.portable else [
             s.to_dict() for s in scenario.load_dir(p, sdir) if not any("JSON" in i for i in s.issues)]
-        return EmulatorData(
+        data = EmulatorData(
             pages=pages,
             picmap={str(i): f"img/{i}.{im.ext}" for i, im in p.images.items()},
             fonts={str(i): {"height": f.height, "name": f.name} for i, f in p.fonts.items()},
@@ -76,6 +77,8 @@ class EmulatorBuilder:
             variables=discover.merge(discover.build(p), discover.load_overrides(sdir)),
             csv_profiles=json.loads(prof.read_text(encoding="utf-8")) if prof and prof.is_file() else {},
             scenarios=scenarios, portable=self.portable, zoom=self.zoom)
+        data.examples = pick_examples(p, {"start": start, "variables": data.variables})
+        return data
 
     # ---- the files
     def write(self, out_dir: str | Path) -> Path:
