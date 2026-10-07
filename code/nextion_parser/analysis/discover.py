@@ -13,8 +13,8 @@ import re
 from collections import defaultdict
 from pathlib import Path
 
-from .codeutil import statements as _statements
-from .hmi import Project
+from ..parser import Project
+from ..parser.codeutil import statements as _statements
 
 _REF = re.compile(r"(?<![\w.\"])([A-Za-z_]\w*(?:\.[A-Za-z_]\w*){1,2})(?![\w(])")
 _PB = re.compile(r"p\[[^\]]*\]\.b\[[^\]]*\]\.\w+")
@@ -223,10 +223,3 @@ def load_overrides(scenario_dir: Path | None) -> dict:
     if scenario_dir and (scenario_dir / "variables.json").is_file():
         return json.loads((scenario_dir / "variables.json").read_text(encoding="utf-8"))
     return {}
-
-
-def write(project: Project, out_dir: Path) -> Path:
-    out_dir.mkdir(parents=True, exist_ok=True)
-    p = out_dir / "variables.discovered.json"
-    p.write_text(json.dumps({"project": project.name, "variables": build(project)}, ensure_ascii=False, indent=1), encoding="utf-8")
-    return p

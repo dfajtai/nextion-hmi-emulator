@@ -9,8 +9,8 @@ from __future__ import annotations
 import html as _html
 from pathlib import Path
 
-from . import __version__
-from .i18n import loc
+from .. import __version__
+from ..i18n import loc
 
 E = _html.escape
 

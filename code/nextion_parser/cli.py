@@ -4,7 +4,12 @@ import argparse
 import sys
 from pathlib import Path
 
-from . import coverage, discover, emulator, hmi, scenario, serve, summary, unused
+from . import emulator, parser
+from .analysis import discover, scenario, unused
+from .emulator import serve
+from .reports import coverage, summary
+from .reports import discover as discover_report
+from .reports import unused as unused_report
 
 
 def _out(args, hmi_path: Path, sub: str) -> Path:
@@ -50,7 +55,7 @@ def main(argv: list[str] | None = None) -> int:
     if not path.is_file():
         print(f"Not found: {path}", file=sys.stderr)
         return 2
-    project = hmi.load(path)
+    project = parser.load(path)
     print(f"{project.name}: {len(project.pages)} pages, "
           f"{sum(len(p.comps) for p in project.pages)} components, {len(project.images)} images")
 
@@ -66,14 +71,14 @@ def main(argv: list[str] | None = None) -> int:
         for f in summary.write_all(project, sub("summary")):
             print("  ", f)
     if args.cmd in ("unused", "all"):
-        up = unused.write(project, sub("unused"))
+        up = unused_report.write(project, sub("unused"))
         rep = unused.analyze(project)["summary"]
         print("  ", up["html"])
         print("  ", up["csv"])
         print(f"   unused: {rep['images_unused']}/{rep['images_total']} images, "
               f"{rep['fonts_unused']}/{rep['fonts_total']} fonts, {rep['pages_unreferenced']} unreferenced pages")
     if args.cmd in ("discover", "all"):
-        f = discover.write(project, sub("discover"))
+        f = discover_report.write(project, sub("discover"))
         n = len(discover.build(project))
         print("  ", f, f"({n} variables)")
     if args.cmd in ("coverage", "all"):

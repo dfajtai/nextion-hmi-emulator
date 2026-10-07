@@ -7,21 +7,27 @@ from pathlib import Path
 
 import pytest
 
-from nextion_parser import coverage, discover, emulator, hmi, scenario, summary, unused
+from nextion_parser import emulator, parser
+from nextion_parser.analysis import coverage as cov_a
+from nextion_parser.analysis import discover, navigation, scenario, unused
+from nextion_parser.emulator import smoke
+from nextion_parser.reports import coverage as cov_r
+from nextion_parser.reports import summary
+from nextion_parser.reports import unused as unused_r
 from nextion_parser.cli import main
 from nextion_parser.i18n import loc
 
 SAMPLE = Path(__file__).resolve().parents[2] / "sample" / "bioscale_research.HMI"
 SCN = Path(__file__).parent / "fixtures" / "scenarios"
 DATA_DIR = SAMPLE.parent / "data"
-TEMPLATES = Path(coverage.__file__).parent / "templates"
+TEMPLATES = Path(emulator.__file__).parent / "assets"
 pytestmark = pytest.mark.skipif(not SAMPLE.exists(), reason="no sample HMI")
 needs_node = pytest.mark.skipif(not shutil.which("node"), reason="node is not installed")
 
 
 @pytest.fixture(scope="module")
 def project():
-    return hmi.load(SAMPLE)
+    return parser.load(SAMPLE)
 
 
 def gen(project, tmp_path, **kw):
@@ -45,14 +51,14 @@ def test_directory_and_pages(project):
 
 def test_images_follow_resource_order(project):
     # the pic id is the position in the main.HMI resource list; the sizes confirm it (>95 % match)
-    rs = coverage.static_resources(project)
+    rs = cov_a.static_resources(project)
     assert rs["image_dim_percent"] > 95
     assert not rs["images_missing"] and not rs["fonts_missing"]
     assert all(im.data[:4] == b"\x89PNG" for im in project.images.values())
 
 
 def test_navigation_edge(project):
-    edges, _ = summary.navigation(project)
+    edges, _ = navigation.navigation(project)
     assert "bcalibration.down" in edges[("pageMenu", "pageCal")]
 
 
@@ -64,26 +70,26 @@ def test_invalid_file_is_rejected(tmp_path):
     bad = tmp_path / "bad.HMI"
     bad.write_bytes(b"\x00" * 64)
     with pytest.raises(ValueError, match="Not a valid"):
-        hmi.load(bad)
+        parser.load(bad)
 
 
 # ------------------------------------------------------------------ coverage / classification
 def test_classify():
-    assert coverage.classify("page pageMenu") == ("supported", "page")
-    assert coverage.classify("if(a.val==1)") == ("supported", "if")
-    assert coverage.classify("t0.txt=\"x\"") == ("supported", "assign")
-    assert coverage.classify("delay 100")[0] == "ignored"
-    assert coverage.classify("cls 0")[0] == "unknown"
+    assert cov_a.classify("page pageMenu") == ("supported", "page")
+    assert cov_a.classify("if(a.val==1)") == ("supported", "if")
+    assert cov_a.classify("t0.txt=\"x\"") == ("supported", "assign")
+    assert cov_a.classify("delay 100")[0] == "ignored"
+    assert cov_a.classify("cls 0")[0] == "unknown"
 
 
 def test_support_tables_match_core():
     core = (TEMPLATES / "nextion_core.js").read_text(encoding="utf-8")
-    for cmd in coverage.SUPPORTED_CMDS | coverage.IGNORED_CMDS:
+    for cmd in cov_a.SUPPORTED_CMDS | cov_a.IGNORED_CMDS:
         assert cmd in core, f"{cmd} is not handled by the interpreter"
 
 
 def test_coverage_report(project, tmp_path):
-    j, h, cov = coverage.write(project, tmp_path)
+    j, h, cov = cov_r.write(project, tmp_path)
     assert j.exists() and h.exists() and "<html" in h.read_text()
     assert cov["code"]["unknown"] == 0
     assert 0 < cov["overall_percent"] <= 100
@@ -92,8 +98,8 @@ def test_coverage_report(project, tmp_path):
 
 
 def test_reports_are_english(project, tmp_path):
-    coverage.write(project, tmp_path / "c", SCN)
-    unused.write(project, tmp_path / "u")
+    cov_r.write(project, tmp_path / "c", SCN)
+    unused_r.write(project, tmp_path / "u")
     summary.write_all(project, tmp_path / "s")
     hu_chars = re.compile("[áéíóöőúüűÁÉÍÓÖŐÚÜŰ]")
     for f in ("c/coverage.html", "u/unused.html", "u/unused.csv", "s/summary.html", "s/navigation.html", "s/navigation.mmd"):
@@ -193,7 +199,7 @@ def test_sample_scenarios_are_bilingual(project):
 @needs_node
 @pytest.mark.skipif(not SCN.is_dir(), reason="no test scenarios")
 def test_scenarios_run_headless(project, tmp_path):
-    cov = coverage.build(project, tmp_path / "w", SCN)["scenarios"]
+    cov = cov_a.build(project, SCN, smoke.runtime(project, tmp_path / "w", SCN))["scenarios"]
     assert cov["count"] >= 10 and cov["percent"] == 100.0
     assert "pageStat2" in cov["pages_visited"]
 
@@ -214,7 +220,7 @@ def test_unused_report(project, tmp_path):
     # images assigned literally in the code (pbattery.pic=23..34) count as used
     used = {x["id"] for x in rep["images"] if x["status"] == "used"}
     assert {23, 25, 27, 29, 31, 34} <= used
-    paths = unused.write(project, tmp_path)
+    paths = unused_r.write(project, tmp_path)
     assert all(p.exists() for p in paths.values())
     assert "unused" in paths["html"].read_text()
     assert (tmp_path / "img").is_dir()
@@ -475,7 +481,7 @@ def test_serve_api_lists_and_saves_scenarios(tmp_path):
     from functools import partial
     from http.server import ThreadingHTTPServer
 
-    from nextion_parser import serve
+    from nextion_parser.emulator import serve
     root = tmp_path / "r"
     (root / "scenarios").mkdir(parents=True)
     (root / "scenarios" / "a.json").write_text('{"name":"A","steps":[]}', encoding="utf-8")
@@ -532,7 +538,7 @@ def test_update_scenarios_script_bundles_and_imports(tmp_path):
 
 def test_resources_block_agrees_with_unused_report(project):
     ua = unused.analyze(project)["summary"]
-    rs = coverage.static_resources(project)
+    rs = cov_a.static_resources(project)
     assert rs["images_available"] == ua["images_total"] and rs["images_unused"] == ua["images_unused"]
     assert rs["images_used"] + rs["images_unused"] + rs["images_uncertain"] == ua["images_total"]
     assert "(oldal)" not in json.dumps(unused.analyze(project))

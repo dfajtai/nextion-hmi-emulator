@@ -174,24 +174,29 @@ observations on the sample file.
 ## Project layout
 
 ```
-scripts/                           setup.sh, run.sh (+ .bat): venv, dependencies, run, tests
-code/nextion_parser/hmi.py         .HMI reader
-code/nextion_parser/summary.py     JSON / Mermaid / HTML summaries
-code/nextion_parser/emulator.py    emulator generator (templates/)
-code/nextion_parser/helpdoc.py     bilingual help.html
-code/nextion_parser/coverage.py    coverage report
-code/nextion_parser/unused.py      unused-resource report
-code/nextion_parser/discover.py    MCU input discovery, variables.json merge
-code/nextion_parser/scenario.py    scenario loading and validation
-code/nextion_parser/i18n.py        localized-field helper (loc)
-code/nextion_parser/cli.py         command line
-code/nextion_parser/templates/     nextion_core.js (interpreter), nextion_tools.js (CSV/statistics), i18n.js (GUI texts),
-                                   emulator.html, smoke.js (headless smoke test)
-code/tests/                        pytest (+ fixtures/scenarios used by the tests)
-sample/                            sample HMI, scenarios, CSV data
+scripts/                              setup.sh, run.sh (+ .bat): venv, dependencies, run, tests
+code/nextion_parser/
+  parser/                             REPLACEABLE input layer: anything producing a Project works
+    model.py                          Project / Page / Component / Image / Font dataclasses (the contract)
+    hmi.py                            .HMI reader (format notes in its docstring); codeutil.py: Nextion code statements
+  analysis/                           pure functions Project -> plain data, no HTML, no files
+    scenario.py  discover.py  unused.py  coverage.py  navigation.py
+  reports/                            renders analysis results (HTML / CSV / JSON): coverage, unused, summary, discover, help
+  emulator/                           the emulator generator
+    model.py                          EmulatorData (typed content of data.js)
+    builder.py                        EmulatorBuilder (data model + files), launcher.py, portable.py (scripts, start files)
+    smoke.py                          headless runtime smoke test (Node); serve.py, update_scenarios.py (also shipped in packages)
+    assets/                           nextion_core.js (interpreter), nextion_tools.js (CSV/statistics), i18n.js (GUI texts),
+                                      emulator.html, smoke.js
+  i18n.py                             localized-field helper (loc);  cli.py: command line
+code/tests/                           pytest (+ fixtures/scenarios used by the tests)
+sample/                               sample configs and CSV data (sample HMI is git-ignored)
 ```
 
-To add GUI text, put the key in **both** languages of `templates/i18n.js` (a test checks that the two dictionaries have the same keys and
+Dependency direction: `cli` → `reports` → `analysis` → `parser`; `emulator` uses `parser` and `analysis`. Nothing below `reports`
+produces HTML, and only `parser/hmi.py` knows the .HMI file format.
+
+To add GUI text, put the key in **both** languages of `code/nextion_parser/emulator/assets/i18n.js` (a test checks that the two dictionaries have the same keys and
 that every key used in the template exists).
 
 ## Known limitations

@@ -29,7 +29,7 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .hmi import Project
+from ..parser import Project
 
 RESERVED = {"variables.json", "variables.discovered.json", "csv_profiles.json"}
 STEP_KEYS = {"set", "cmd", "click", "goto", "wait", "say", "ramp", "repeat", "steps", "wave"}
