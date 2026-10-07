@@ -590,3 +590,21 @@ def test_coverage_tables_for_mismatches_and_unreachable(project, tmp_path):
     if rt.get("available") and rt["unreachable"]:
         assert "<th>Why it was not reached</th>" in html
         assert {x["page"] for x in rt["unreachable_info"]} == set(rt["unreachable"])
+
+
+def test_easy_generator_single_file(tmp_path):
+    import zipapp
+    stage = tmp_path / "stage"
+    shutil.copytree(Path(emulator.__file__).parents[1], stage / "nextion_parser", ignore=shutil.ignore_patterns("__pycache__"))
+    pyz = tmp_path / "work" / "nextion-generator.pyz"
+    pyz.parent.mkdir()
+    zipapp.create_archive(stage, pyz, main="nextion_parser.easy:run")
+    r = subprocess.run(["python3", str(pyz)], cwd=tmp_path, capture_output=True, text=True, stdin=subprocess.DEVNULL)
+    assert r.returncode == 2 and "No .HMI file found" in r.stderr                       # nothing next to it
+    shutil.copy(SAMPLE, pyz.parent / "device.HMI")
+    r = subprocess.run(["python3", str(pyz)], cwd=tmp_path, capture_output=True, text=True, stdin=subprocess.DEVNULL)
+    assert r.returncode == 0, r.stderr
+    out = pyz.parent / "output" / "device"
+    for f in ("index.html", "emulator/index.html", "portable/index.html", "coverage/coverage.html", "portable/start.bat"):
+        assert (out / f).is_file(), f
+    assert "device.HMI" in (out / "index.html").read_text(encoding="utf-8")

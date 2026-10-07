@@ -11,6 +11,16 @@ coverage report and for part of the test-suite.
 
 ## Quick start
 
+### Easy generator (for users, no setup)
+
+One file, `nextion-generator.pyz`, needs only Python 3.9+. Put it **next to your `.HMI` file** and run it (double-click, or
+`python3 nextion-generator.pyz`). Everything is generated into `output/<name>/` next to it and the launcher page opens in the
+browser. Several `.HMI` files in the folder are all processed. An optional `scenarios/` folder next to the HMI supplies
+`variables.json` / `csv_profiles.json` / scenarios. Build the file with `./scripts/build_easy.sh` (or `scripts\build_easy.bat`);
+it appears in `dist/` (git-ignored) – hand that one file to the user.
+
+### From the repository (developers)
+
 Needs only Python 3.9+. Clone the repo and run – the first run creates the virtual environment by itself:
 
 ```bash
@@ -204,10 +214,38 @@ share one scope on purpose (no ES modules: they cannot be loaded from `file://`)
 To add GUI text, put the key in **both** languages of `code/nextion_parser/emulator/assets/i18n.js` (a test checks that the two dictionaries have the same keys and
 that every key used in the template exists).
 
+## What it works with
+
+The `.HMI` file does not name the display model in a form we read; the emulator uses what is in the file (resolution, pages, components,
+images, fonts, code). "Verified" means: exercised on a real project file with the tests and a manual check of the emulator.
+
+| | Status |
+|---|---|
+| **Verified** | One real project: **480×272** (landscape), 33 pages, 566 components, 46 images, 6 fonts, saved by the Nextion Editor (version not recorded in the file) |
+| **Other resolutions / orientations** | Implemented generically (the screen size comes from the file, `--screen` overrides it), **not verified** on a real file |
+| **Other Nextion families** (Basic / Enhanced / Intelligent / Discovery, other Editor versions) | **Not verified.** The container format is read from observations of one file plus public notes; a different format revision may fail to parse or show up as warnings in the coverage report |
+| **Only the `.HMI` project file** | Not the compiled `.tft`, not a live device |
+
+Component types (type id in brackets). "In the sample" = present in the verified project:
+
+| Component | Support | In the sample |
+|---|---|---|
+| Page (121), button (98), text (116), number (54), xfloat (59), picture (112), hotspot (109), timer (51), variable (52) | full | yes (all) |
+| Slider (1), waveform (0), radio button (57) | partial: slider only the fill and not draggable; waveform grid + series from `add`/`wave` (no scrolling/`addt`); radio not clickable | yes |
+| Checkbox (56), progress bar (106) | partial (progress bar: simple fill; checkbox not clickable) | no – implemented, **never exercised on a real file** |
+| Any other type | **not supported**: not drawn, reported as "unsupported" in the coverage report | – |
+
+Code commands: `page`, `int`, `cov`, `covx`, `substr`, `btlen`, `strlen`, `wepo`, `repo`, `add`, `cle`, `click`, `vis`, `print`, `prints`,
+`printh` are interpreted; `addt`, `bkcmd`, `delay`, `doevents`, `get`, `ref`, `rest`, `sleep`, `thsp`, `thup`, `tsw` are accepted and
+ignored; everything else is reported as unknown. The serial (MCU) side is
+only simulated by scenarios.
+
+**How to check a new HMI quickly:** run the generator and open the *coverage* report – it lists the component types and commands the
+emulator does not know, the pages it could not reach, and the unreadable parts of the file.
+
 ## Known limitations
 
-* Only one sample project (480×272) has been tried; other Nextion families / Editor versions may differ. The coverage report lists the
-  components and commands the emulator does not know.
+* See "What it works with" above: only one real project has been verified.
 * The initial visibility of components (`vis`) is not stored in the file; `.zi` fonts cannot be rendered (system font, glyph height from the file).
 * Slider, checkbox and radio button are drawn roughly; waveform data only comes from `wave` / `add` steps; the serial protocol is not
   modelled; the duration of a long press is not recorded.
