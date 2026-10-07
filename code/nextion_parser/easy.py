@@ -10,7 +10,9 @@ With command-line arguments it behaves exactly like the normal command line (``c
 """
 from __future__ import annotations
 
+import os
 import sys
+import traceback
 import webbrowser
 from pathlib import Path
 
@@ -28,17 +30,19 @@ def find_hmi(folder: Path) -> list[Path]:
 
 
 def _pause(interactive: bool) -> None:
-    if interactive:
+    """Keep the window open until a key is pressed (not when a wrapper script does that itself: NX_NO_PAUSE)."""
+    if interactive and not os.environ.get("NX_NO_PAUSE"):
         try:
             input("\nPress Enter to close...")
         except EOFError:
             pass
 
 
-def easy(folder: Path | None = None) -> int:
-    folder = folder or base_dir()
+def easy(folder: Path | None = None, files: list[Path] | None = None) -> int:
+    """Process every .HMI in `folder` (default: next to the .pyz / the current folder), or the explicitly given `files`."""
+    folder = folder or (Path.cwd() if files else base_dir())
     interactive = sys.stdout.isatty()           # double-clicked / run in a terminal: open the browser and keep the window
-    hmis = find_hmi(folder)
+    hmis = files if files else find_hmi(folder)
     if not hmis:
         print(f"No .HMI file found in {folder}\nPut your .HMI file next to this file and run it again.", file=sys.stderr)
         _pause(interactive)
@@ -47,7 +51,14 @@ def easy(folder: Path | None = None) -> int:
     for hmi in hmis:
         out = folder / "output" / hmi.stem
         print(f"\n=== {hmi.name} -> {out}")
-        r = cli.main(["all", str(hmi), "-o", str(out)])
+        try:
+            r = cli.main(["all", str(hmi), "-o", str(out)])
+        except SystemExit as e:                                  # argparse and friends
+            r = int(e.code or 1)
+        except Exception as e:                                   # a bug must not close the window without a word
+            print(f"\nUNEXPECTED ERROR while processing {hmi.name}: {type(e).__name__}: {e}", file=sys.stderr)
+            traceback.print_exc()
+            r = 1
         rc = rc or r
         if (out / "index.html").is_file():
             launchers.append(out / "index.html")
@@ -55,6 +66,8 @@ def easy(folder: Path | None = None) -> int:
         print(f"\nDone. Open: {launchers[0]}" + (f"  (+{len(launchers) - 1} more)" if len(launchers) > 1 else ""))
         if interactive:
             webbrowser.open(launchers[0].as_uri())
+    if rc not in (0, 4) and not os.environ.get("NX_NO_PAUSE"):     # (generate.sh/.bat print their own message)
+        print("\nSomething went wrong - see the messages above.", file=sys.stderr)
     if rc == 4:
         print("Note: some scenarios do not match this HMI (see the messages above); everything was generated anyway.")
     _pause(interactive)
@@ -71,6 +84,12 @@ def main(argv: list[str] | None = None) -> int:
                   file=sys.stderr)
             return 2
         return gui_main(argv[1:])
+    if argv and all(a.lower().endswith(".hmi") for a in argv):      # `generate.sh my.HMI` / `nextion-generator.pyz my.HMI`
+        missing = [a for a in argv if not Path(a).is_file()]
+        if missing:
+            print(f"Not found: {', '.join(missing)}", file=sys.stderr)
+            return 2
+        return easy(files=[Path(a) for a in argv])
     return cli.main(argv) if argv else easy()
 
 

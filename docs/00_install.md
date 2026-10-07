@@ -29,7 +29,9 @@ cp /path/to/YOUR.HMI .           # next to generate.sh
 ./generate.sh                    # Windows: double-click generate.bat
 ```
 
-`.HMI` files in the repository root are git-ignored. The first run creates the private virtual environment (`.venv`).
+`.HMI` files in the repository root are git-ignored. The first run creates the private virtual environment (`.venv`). You can also name the files:
+`./generate.sh a.HMI b.HMI` (output goes to `output/` in the current folder). Errors are caught and explained, and the window waits for a key press
+at the end, so a double-click never closes before you can read the result.
 
 | Script | Purpose |
 |---|---|
@@ -52,3 +54,16 @@ your own Python's PySide6: `pip install PySide6-Essentials`, then `python3 nexti
 installed by the user; it is not bundled here.
 
 The layout is a Qt Designer file (`code/nextion_parser/builder_gui/main.ui`, edit it with `pyside6-designer main.ui`).
+
+## Troubleshooting
+
+| Symptom | Likely cause and fix |
+|---|---|
+| `Permission denied` when starting `./generate.sh` or `./scripts/*.sh` (e.g. after downloading a zip, or on a share that drops file modes) | Make the scripts executable: `chmod u+x generate.sh scripts/*.sh` (or run them as `bash generate.sh`) |
+| `python3: command not found`, or the scripts say Python 3 was not found | Install Python 3.9+ (Windows: python.org installer, tick *Add to PATH*; the `py` launcher is used on Windows) |
+| The window does not open, the console mentions `Could not load the Qt platform plugin "xcb"` (Linux) | A system library is missing. On Debian/Ubuntu: `sudo apt install libxcb-cursor0` (and, if needed, `libxkbcommon-x11-0 libxcb-icccm4 libxcb-keysyms1 libxcb-shape0`). Under Wayland you can try `QT_QPA_PLATFORM=wayland ./scripts/gui.sh` |
+| The window opens but the file dialog (*Browse…*) does nothing or crashes | Usually the same Qt/desktop-integration problem. Type or paste the paths into the fields instead, or use `./generate.sh YOUR.HMI`, which needs no window |
+| `gui.sh` wants to download PySide6 and fails | No internet / proxy. Install it yourself: `pip install PySide6-Essentials` (into the venv: `.venv/bin/pip`) |
+| Creating the virtual environment fails (network drive, restricted folder) | Put it on a local disk: `NEXTION_VENV=$HOME/.nxvenv ./generate.sh` |
+| The scenarios of the basic package do not show up | Open it through `start.bat` / `start.sh` (or run `update_scenarios`) so that `scenarios.js` is refreshed; see [04](04_scenarios.md) |
+| Strange results after updating the repository | Remove the old environment (`rm -rf .venv`) and the stale `output/` folder, then run again |

@@ -55,7 +55,11 @@ def main(argv: list[str] | None = None) -> int:
     if not path.is_file():
         print(f"Not found: {path}", file=sys.stderr)
         return 2
-    project = parser.load(path)
+    try:
+        project = parser.load(path)
+    except ValueError as e:                    # not a readable .HMI file: a message, not a traceback
+        print(f"Error: {path.name}: {e}", file=sys.stderr)
+        return 2
     print(f"{project.name}: {len(project.pages)} pages, "
           f"{sum(len(p.comps) for p in project.pages)} components, {len(project.images)} images")
 

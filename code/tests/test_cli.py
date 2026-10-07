@@ -72,3 +72,19 @@ def test_easy_generator_single_file(tmp_path):
     for f in ("index.html", "emulator/index.html", "portable/index.html", "coverage/coverage.html", "portable/start.bat"):
         assert (out / f).is_file(), f
     assert "device.HMI" in (out / "index.html").read_text(encoding="utf-8")
+
+
+def test_easy_generator_with_explicit_files_and_missing_file(tmp_path, monkeypatch, capsys):
+    from nextion_parser import easy
+    monkeypatch.chdir(tmp_path)
+    assert easy.main(["nope.HMI"]) == 2 and "Not found" in capsys.readouterr().err
+    assert easy.main([str(SAMPLE)]) == 0
+    assert (tmp_path / "output" / SAMPLE.stem / "index.html").is_file()           # output next to where it is run
+
+
+def test_unreadable_hmi_gives_a_message_and_exit_code_2(tmp_path, capsys):
+    bad = tmp_path / "bad.HMI"
+    bad.write_bytes(b"garbage")
+    assert main(["all", str(bad), "-o", str(tmp_path / "o")]) == 2
+    err = capsys.readouterr().err
+    assert "bad.HMI" in err and "Traceback" not in err
