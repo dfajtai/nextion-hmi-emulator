@@ -76,9 +76,12 @@ def build_doc(cov: dict) -> Doc:
     b.append(Heading("4.2 Is the picture-id mapping trustworthy?", 3))
     b.append(Para("The file stores only a number for each picture. We map it to the right image by its position in the resource list. "
                   "As a cross-check, a picture component should have about the size of its image.", note=True))
-    mism = (" A few differences are normal: the designer may stretch or crop an image. Different here: "
-            + code("; ".join(rs["image_dim_mismatch"][:10]))) if rs["image_dim_mismatch"] else ""
-    b.append(Para(f"<b>{rs['image_dim_percent']}%</b> of {rs['image_dim_checked']} checked references match in size (±2 px).{mism}"))
+    b.append(Para(f"<b>{rs['image_dim_percent']}%</b> of {rs['image_dim_checked']} checked references match in size (±2 px)."))
+    if rs["image_dim_mismatch"]:
+        b.append(Para("A few differences are normal: the designer may stretch or crop an image. The ones that differ here:", note=True))
+        b.append(Table(["Page", "Component", "Attribute", "Component size", "Image id", "Image size"], [
+            [esc(m["page"]), code(m["component"]), code(m["attr"]), m["component_size"], str(m["image_id"]), m["image_size"]]
+            for m in rs["image_dim_mismatch"]]))
     b.append(Heading("4.3 Fonts", 3))
     b.append(Para(esc(rs["fonts_note"]), note=True))
 
@@ -88,8 +91,11 @@ def build_doc(cov: dict) -> Doc:
     else:
         b.append(Para(" ".join(tag(k, f"{k}: {v}") for k, v in rt["by_status"].items())))
         if rt["unreachable"]:
-            b.append(Para(f"Pages not reachable by clicking from the start page: {code(', '.join(rt['unreachable']))} "
-                          "<span class='note'>(keyboard pages usually open from the calling page through a variable)</span>"))
+            b.append(Para(f"{len(rt['unreachable'])} page(s) were not reached by the automatic clicking from the start page. "
+                          "This is not necessarily an error: keyboard and settings pages usually open through a variable or from the MCU.", note=True))
+            b.append(Table(["Page", "Components", "Referenced from (code)", "Why it was not reached"], [
+                [code(x["page"]), str(x["components"]), "<br>".join(code(r) for r in x["referenced_from"]) or "–", esc(x["hint"])]
+                for x in rt["unreachable_info"]]))
         if rt["problems"]:
             rows = [[code(f"{x['page']}.{x['comp']}.{x['event']}"), tag(x["status"]), esc(x["detail"])[:300]] for x in rt["problems"][:300]]
             b.append(Details("Problematic events", [Table(["Where", "Status", "Detail"], rows)], open=True))

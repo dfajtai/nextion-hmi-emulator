@@ -177,7 +177,8 @@ def static_resources(project: Project) -> dict:
                 chk += 1
                 if abs(im.width - c.attrs["w"]) > 2 or abs(im.height - c.attrs["h"]) > 2:
                     bad_dim += 1
-                    mism.append(f"{p.name}.{c.name}.{k}: component {c.attrs['w']}x{c.attrs['h']}, image {im.width}x{im.height}")
+                    mism.append({"page": p.name, "component": c.name, "attr": k,
+                                 "component_size": f"{c.attrs['w']}x{c.attrs['h']}", "image_size": f"{im.width}x{im.height}", "image_id": v})
     miss_font = {i: n for i, n in font_refs.items() if i not in project.fonts}
     return {
         "image_dim_checked": chk, "image_dim_mismatch": mism,
@@ -253,6 +254,20 @@ def scenario_coverage(project: Project, scenario_dir: Path | None, run: dict) ->
 
 
 # ---------------------------------------------------------------- assembly + HTML
+def _unreachable_info(project: Project, names: list[str]) -> list[dict]:
+    """For pages the click simulation did not reach: size, who refers to them in code, and a plain-language hint."""
+    refs = {x["name"]: x["referenced_from"] for x in unused.analyze(project)["pages"]}
+    out = []
+    for n in names:
+        pg = project.page(n)
+        src = refs.get(n, [])
+        out.append({"page": n, "components": len(pg.comps) if pg else 0, "referenced_from": src[:5],
+                    "hint": ("a jump to it exists in the code, but the automatic clicking never triggered it "
+                             "(it depends on a condition, a timer or an input value)") if src else
+                            "no jump to it in the code: it is probably opened through a variable or by the MCU"})
+    return out
+
+
 def build(project: Project, scenario_dir: Path | None = None, run: dict | None = None) -> dict:
     """Coverage numbers. `run` is the result of the headless runtime smoke test (see emulator.smoke), if it was run."""
     st = structure(project)
@@ -260,6 +275,8 @@ def build(project: Project, scenario_dir: Path | None = None, run: dict | None =
     code = static_code(project)
     res = static_resources(project)
     run = run or {"available": False, "reason": "the runtime smoke test was not run"}
+    if run.get("available"):
+        run = {**run, "unreachable_info": _unreachable_info(project, run["unreachable"])}
     scn = scenario_coverage(project, scenario_dir, run)
     parts = [st["percent"], comps["percent"], comps["attr_percent"], code["percent"]] + ([run["percent"]] if run.get("available") else [])
     if scn["count"]:

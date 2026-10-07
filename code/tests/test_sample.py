@@ -577,3 +577,16 @@ def test_restart_resets_the_scenario_too(project, tmp_path):
     html = gen(project, tmp_path)
     handler = re.search(r"\$\('reset'\)\.onclick=\(\)=>\{(.*?)\n\};", html, re.S).group(1)
     assert "stopScn()" in handler and "boot()" in handler and "play.scn&&!rec.on" in handler
+
+
+def test_coverage_tables_for_mismatches_and_unreachable(project, tmp_path):
+    j, h, cov = cov_r.write(project, tmp_path / "c", SCN)
+    html = h.read_text(encoding="utf-8")
+    rs = cov["resources"]
+    assert all({"page", "component", "attr", "component_size", "image_size"} <= set(m) for m in rs["image_dim_mismatch"])
+    if rs["image_dim_mismatch"]:
+        assert "<th>Component size</th>" in html and "<th>Image size</th>" in html
+    rt = cov["runtime"]
+    if rt.get("available") and rt["unreachable"]:
+        assert "<th>Why it was not reached</th>" in html
+        assert {x["page"] for x in rt["unreachable_info"]} == set(rt["unreachable"])
