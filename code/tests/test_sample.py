@@ -725,3 +725,10 @@ def test_example_picker_has_generic_fallbacks():
     p.pages = []
     assert pick_examples(p, {"start": "p1", "variables": []}) == {
         "page": "p1", "other_page": "p1", "ref": "p1.component.val", "btn": "button", "wave": None}
+
+
+def test_help_example_json_is_valid(project, tmp_path):
+    gen(project, tmp_path)
+    for lang_block in re.findall(r'<pre>(\{\s*"name".*?)</pre>', (tmp_path / "help.html").read_text(encoding="utf-8"), re.S):
+        scn = json.loads(re.sub(r"&quot;", '"', lang_block).replace("&amp;", "&"))            # the example must be real JSON
+        assert scn["steps"] and "{{" not in lang_block

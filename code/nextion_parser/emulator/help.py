@@ -441,7 +441,7 @@ def _ctx(project, data: dict, lang: str) -> dict:
     reports = ", ".join(E(REPORT_LABELS[r["key"]][lang]) for r in data.get("reports", []) if r["key"] in REPORT_LABELS) or none
     ex = data.get("examples", {})
     wave = ex.get("wave")
-    wave_step = (',\n    {{"wave": {{"ref": "' + E(wave) + '", "fn": "sine", "n": 300, "min": 40, "max": 200}}}}') if wave else ""
+    wave_step = (',\n    {"wave": {"ref": "' + E(wave) + '", "fn": "sine", "n": 300, "min": 40, "max": 200}}') if wave else ""
     return {"ex_page": E(ex.get("page", "")), "ex_other": E(ex.get("other_page", "")), "ex_ref": E(ex.get("ref", "")),
             "ex_btn": E(ex.get("btn", "")), "ex_wave_step": wave_step,
             "project": E(project.name), "w": w, "h": h, "start": E(data.get("start", "")), "version": E(__version__),
