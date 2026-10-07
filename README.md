@@ -19,6 +19,12 @@ browser. Several `.HMI` files in the folder are all processed. An optional `scen
 `variables.json` / `csv_profiles.json` / scenarios. Build the file with `./scripts/build_easy.sh` (or `scripts\build_easy.bat`);
 it appears in `dist/` (git-ignored) – hand that one file to the user.
 
+### From the repository: `generate.sh` / `generate.bat`
+
+Put your `.HMI` file(s) **next to `generate.sh`** (Windows: `generate.bat`) in the repository folder and run it (double-click or
+`./generate.sh`). It does the same as the easy generator – everything into `output/<name>/`, then opens the launcher page – using the
+repository code; the first run creates the Python environment. `.HMI` files in the repository root are git-ignored.
+
 ### From the repository (developers)
 
 Needs only Python 3.9+. Clone the repo and run – the first run creates the virtual environment by itself:

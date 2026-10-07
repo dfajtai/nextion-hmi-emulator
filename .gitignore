@@ -16,3 +16,6 @@ sample/*.HMI
 /flow.mmd
 /pages.json
 dist/
+# HMI files dropped next to generate.sh/.bat
+/*.HMI
+/*.hmi
