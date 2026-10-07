@@ -26,7 +26,7 @@ async function loadFiles(files){
   let last=null,total=0,errs=[];
   for(const f of files){
     try{
-      if(/^(variables|csv_profiles)(\.discovered)?\.json$/i.test(f.name))continue;
+      if(/^(variables|csv_profiles)(\.discovered|\.template)?\.json$/i.test(f.name))continue;
       if(DATA.portable&&!/\.json$/i.test(f.name))continue;      // basic variant: scenarios only
       if(/\.(csv|txt)$/i.test(f.name)){openCsv(f.name,await f.text());continue;}
       const raw=JSON.parse(await f.text());
