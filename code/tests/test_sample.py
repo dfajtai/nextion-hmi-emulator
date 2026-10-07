@@ -571,3 +571,9 @@ def test_report_document_model_escapes_and_renders():
     assert "T &lt;x&gt;" in html and "a&lt;b" in html and "s&amp;s" in html and "<code>&lt;i&gt;</code>" in html
     assert "<tr class='unused'>" in html and "<table id='t'>" in html and "<details open>" in html and 'class="bar"' in html
     assert esc({"k": 1}) == "{&#x27;k&#x27;: 1}"
+
+
+def test_restart_resets_the_scenario_too(project, tmp_path):
+    html = gen(project, tmp_path)
+    handler = re.search(r"\$\('reset'\)\.onclick=\(\)=>\{(.*?)\n\};", html, re.S).group(1)
+    assert "stopScn()" in handler and "boot()" in handler and "play.scn&&!rec.on" in handler

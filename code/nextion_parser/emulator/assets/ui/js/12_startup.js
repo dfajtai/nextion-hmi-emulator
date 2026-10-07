@@ -41,7 +41,11 @@ if(DATA.portable){   // basic variant: locked to simple mode, scenarios come fro
   }
 }
 $('goto').onchange=()=>{markDirty();nx.goto($('goto').value);recPush({goto:$('goto').value});};
-$('reset').onclick=()=>{pauseScn();cancelPending();clearFx();markDirty();boot();};
+$('reset').onclick=()=>{
+  pauseScn();cancelPending();clearFx();
+  if(play.scn&&!rec.on)stopScn();           // a scenario is loaded: reset it too (back to its own initial state, step 0, empty history)
+  else{markDirty();boot();}                 // no scenario (or recording): just restart the display from the project's start page
+};
 $('dbg').onchange=e=>document.body.classList.toggle('dbg',e.target.checked);
 ['sw','sh','zoom'].forEach(id=>$(id).onchange=applySize);
 nx.options.timerPageJumps=$('timerjump').checked;
