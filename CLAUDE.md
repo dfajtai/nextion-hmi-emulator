@@ -20,6 +20,7 @@ Standard library only; `node` is optional (smoke test, some tests). User-facing 
 - `serve.py` – stdlib server with `api/scenarios` (GET list / POST save); copied into portable packages as `serve.py`. The emulator syncs with it only over http(s) (`syncServer`); `file://` must keep working.
 - `update_scenarios.py` – standalone; bundles `scenarios/*.json` into `scenarios.js` (`window.NX_SCENARIOS`) that every emulator page loads, so no server is needed. The scenarios folder is `<out>/portable/scenarios/`. Generated into `<out>/scripts/` and into portable packages (with `start.bat/.sh`).
 - `all` writes `<out>/index.html` (launcher), `emulator/`, `portable/` and the reports.
+- Docs: `README.md` is a short entry point (summary, quick start, TOC, one-line 'tested on'); the details are numbered topic pages in `docs/` (00 install → 07 development). Keep that structure; a test checks links and that the README stays short. Update `docs/06_compatibility.md` whenever something new is verified.
 - `sample/README.md` explains the committed sample files; `sample/generated/` is the output of `discover` (regenerate it when the discovery or the templates change). `analysis/csvprofile.py` only GUESSES a `csv_profiles.json` skeleton from component names.
 - `code/tests/fixtures/scenarios/` – scenarios used only by tests; `sample/scenarios/` holds only `variables.json` and `csv_profiles.json`.
 

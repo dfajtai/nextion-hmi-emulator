@@ -1,7 +1,7 @@
 """Reader for Nextion .HMI project files.
 
-Format notes (reverse-engineered; see https://github.com/newmatik/nextion-hmi-writer and our own
-observations on the sample file):
+Format notes (reverse-engineered; format references: https://github.com/newmatik/nextion-hmi-writer (MIT) and
+https://github.com/UNUF/nxt-doc, plus our own observations of real project files; this reader is an independent implementation):
 
 Container
     u32 section count, then 28-byte directory records:
