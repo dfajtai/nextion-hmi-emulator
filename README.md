@@ -221,9 +221,10 @@ images, fonts, code). "Verified" means: exercised on a real project file with th
 
 | | Status |
 |---|---|
-| **Verified** | One real project: **480×272** (landscape), 33 pages, 566 components, 46 images, 6 fonts, saved by the Nextion Editor (version not recorded in the file) |
+| **Verified** | One real project: **480×272** (landscape), 33 pages, 566 components, 46 images, 6 fonts, saved by **Nextion Editor 1.6.8.1** (the version is not recorded in the file; the project was also re-saved with **1.6.8.2** and parses identically) |
 | **Other resolutions / orientations** | Implemented generically (the screen size comes from the file, `--screen` overrides it), **not verified** on a real file |
-| **Other Nextion families** (Basic / Enhanced / Intelligent / Discovery, other Editor versions) | **Not verified.** The container format is read from observations of one file plus public notes; a different format revision may fail to parse or show up as warnings in the coverage report |
+| **Other Nextion Editor versions** | **1.6.8.1 and 1.6.8.2 verified** (identical model and output; 1.6.8.2 just drops the old deleted sections: 54.7 → 47.5 MB). Other Editor versions are **not verified**: compare page/component/image/font counts and the coverage report warnings against the project in the Editor |
+| **Other Nextion families** (Basic / Enhanced / Intelligent / Discovery) | **Not verified.** The container format is read from observations of one file plus public notes; a different format revision may fail to parse or show up as warnings in the coverage report |
 | **Only the `.HMI` project file** | Not the compiled `.tft`, not a live device |
 
 Component types (type id in brackets). "In the sample" = present in the verified project:

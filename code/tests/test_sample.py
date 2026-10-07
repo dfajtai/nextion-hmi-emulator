@@ -1,4 +1,4 @@
-"""Tests that run against the sample project (sample/bioscale_research.HMI)."""
+"""Tests that run against the sample project (sample/bioscale_research_old.HMI, saved by Nextion Editor 1.6.8.1)."""
 import json
 import re
 import shutil
@@ -17,7 +17,9 @@ from nextion_parser.reports import unused as unused_r
 from nextion_parser.cli import main
 from nextion_parser.i18n import loc
 
-SAMPLE = Path(__file__).resolve().parents[2] / "sample" / "bioscale_research.HMI"
+SAMPLE_DIR = Path(__file__).resolve().parents[2] / "sample"
+SAMPLE = SAMPLE_DIR / "bioscale_research_old.HMI"
+SAMPLE_NEW = SAMPLE_DIR / "bioscale_research_new.HMI"           # the same project re-saved by Editor 1.6.8.2
 SCN = Path(__file__).parent / "fixtures" / "scenarios"
 DATA_DIR = SAMPLE.parent / "data"
 TEMPLATES = Path(emulator.__file__).parent / "assets"
@@ -608,3 +610,17 @@ def test_easy_generator_single_file(tmp_path):
     for f in ("index.html", "emulator/index.html", "portable/index.html", "coverage/coverage.html", "portable/start.bat"):
         assert (out / f).is_file(), f
     assert "device.HMI" in (out / "index.html").read_text(encoding="utf-8")
+
+
+@pytest.mark.skipif(not SAMPLE_NEW.exists(), reason="no sample saved by the newer Editor")
+def test_editor_1_6_8_2_file_is_read_identically(project):
+    """The same project saved by Editor 1.6.8.1 and 1.6.8.2 must give the same model (only the dead sections differ)."""
+    new = parser.load(SAMPLE_NEW)
+    assert (new.width, new.height, new.start_page) == (project.width, project.height, project.start_page)
+    assert [p.name for p in new.pages] == [p.name for p in project.pages]
+    for a, b in zip(project.pages, new.pages):
+        assert a.page.attrs == b.page.attrs and a.code == b.code
+        assert [(c.attrs, c.code) for c in a.comps] == [(c.attrs, c.code) for c in b.comps]
+    assert {i: im.data for i, im in project.images.items()} == {i: im.data for i, im in new.images.items()}
+    assert new.program == project.program and not new.warnings
+    assert emulator.build_data(new)["pages"] == emulator.build_data(project)["pages"]
