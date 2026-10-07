@@ -201,6 +201,23 @@ def build(project: Project) -> list[dict]:
     return out
 
 
+def variables_template(discovered: list[dict]) -> dict:
+    """An editable ``variables.json`` skeleton from the discovered list: every input variable with a placeholder label
+    (the object name), its page as the group, the initial value and the probe values found in the code as presets.
+    Fill in real labels / units / min / max / descriptions (hu and en) and save it as ``scenarios/variables.json``."""
+    out: dict = {}
+    for v in discovered:
+        item: dict = {"label": {"hu": v["obj"], "en": v["obj"]}, "group": {"hu": v["page"], "en": v["page"]}}
+        if v.get("min") is not None and v.get("max") is not None:
+            item["min"], item["max"] = v["min"], v["max"]
+        if v["attr"] == "txt" and v.get("initial"):
+            item["initial"] = v["initial"]
+        if v.get("test_values"):
+            item["presets"] = {str(x): x for x in v["test_values"]}
+        out[v["ref"]] = item
+    return out
+
+
 def merge(discovered: list[dict], overrides: dict | None) -> list[dict]:
     """Overlay the hand-edited variables.json on the discovered list; new (undiscovered) references may be added too."""
     ov = dict(overrides or {})

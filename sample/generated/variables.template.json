@@ -1,0 +1,755 @@
+{
+ "pageIndividual.t0.txt": {
+  "label": {
+   "hu": "t0",
+   "en": "t0"
+  },
+  "group": {
+   "hu": "pageIndividual",
+   "en": "pageIndividual"
+  },
+  "initial": "0000"
+ },
+ "pageMainAuto.charge_level.val": {
+  "label": {
+   "hu": "charge_level",
+   "en": "charge_level"
+  },
+  "group": {
+   "hu": "pageMainAuto",
+   "en": "pageMainAuto"
+  },
+  "presets": {
+   "80": 80,
+   "81": 81
+  }
+ },
+ "pageMainAuto.charging.val": {
+  "label": {
+   "hu": "charging",
+   "en": "charging"
+  },
+  "group": {
+   "hu": "pageMainAuto",
+   "en": "pageMainAuto"
+  },
+  "presets": {
+   "0": 0,
+   "1": 1
+  }
+ },
+ "pageMainAuto.maxlang.val": {
+  "label": {
+   "hu": "maxlang",
+   "en": "maxlang"
+  },
+  "group": {
+   "hu": "pageMainAuto",
+   "en": "pageMainAuto"
+  }
+ },
+ "pageSettings2.n0.val": {
+  "label": {
+   "hu": "n0",
+   "en": "n0"
+  },
+  "group": {
+   "hu": "pageSettings2",
+   "en": "pageSettings2"
+  }
+ },
+ "pageSettings2.n1.val": {
+  "label": {
+   "hu": "n1",
+   "en": "n1"
+  },
+  "group": {
+   "hu": "pageSettings2",
+   "en": "pageSettings2"
+  }
+ },
+ "pageEDate.from.txt": {
+  "label": {
+   "hu": "from",
+   "en": "from"
+  },
+  "group": {
+   "hu": "pageEDate",
+   "en": "pageEDate"
+  },
+  "initial": "newtxt"
+ },
+ "pageEDate.to.txt": {
+  "label": {
+   "hu": "to",
+   "en": "to"
+  },
+  "group": {
+   "hu": "pageEDate",
+   "en": "pageEDate"
+  },
+  "initial": "newtxt"
+ },
+ "pageEGD.from.txt": {
+  "label": {
+   "hu": "from",
+   "en": "from"
+  },
+  "group": {
+   "hu": "pageEGD",
+   "en": "pageEGD"
+  },
+  "initial": "newtxt"
+ },
+ "pageEGD.to.txt": {
+  "label": {
+   "hu": "to",
+   "en": "to"
+  },
+  "group": {
+   "hu": "pageEGD",
+   "en": "pageEGD"
+  },
+  "initial": "newtxt"
+ },
+ "keybdA.loadcmpid.val": {
+  "label": {
+   "hu": "loadcmpid",
+   "en": "loadcmpid"
+  },
+  "group": {
+   "hu": "keybdA",
+   "en": "keybdA"
+  }
+ },
+ "keybdA.loadpageid.val": {
+  "label": {
+   "hu": "loadpageid",
+   "en": "loadpageid"
+  },
+  "group": {
+   "hu": "keybdA",
+   "en": "keybdA"
+  }
+ },
+ "keybdB.loadcmpid.val": {
+  "label": {
+   "hu": "loadcmpid",
+   "en": "loadcmpid"
+  },
+  "group": {
+   "hu": "keybdB",
+   "en": "keybdB"
+  }
+ },
+ "keybdB.loadpageid.val": {
+  "label": {
+   "hu": "loadpageid",
+   "en": "loadpageid"
+  },
+  "group": {
+   "hu": "keybdB",
+   "en": "keybdB"
+  }
+ },
+ "keybnewg.loadcmpid.val": {
+  "label": {
+   "hu": "loadcmpid",
+   "en": "loadcmpid"
+  },
+  "group": {
+   "hu": "keybnewg",
+   "en": "keybnewg"
+  }
+ },
+ "keybnewg.loadpageid.val": {
+  "label": {
+   "hu": "loadpageid",
+   "en": "loadpageid"
+  },
+  "group": {
+   "hu": "keybnewg",
+   "en": "keybnewg"
+  }
+ },
+ "keybnewh.loadcmpid.val": {
+  "label": {
+   "hu": "loadcmpid",
+   "en": "loadcmpid"
+  },
+  "group": {
+   "hu": "keybnewh",
+   "en": "keybnewh"
+  }
+ },
+ "keybnewh.loadpageid.val": {
+  "label": {
+   "hu": "loadpageid",
+   "en": "loadpageid"
+  },
+  "group": {
+   "hu": "keybnewh",
+   "en": "keybnewh"
+  }
+ },
+ "keybrenameg.loadcmpid.val": {
+  "label": {
+   "hu": "loadcmpid",
+   "en": "loadcmpid"
+  },
+  "group": {
+   "hu": "keybrenameg",
+   "en": "keybrenameg"
+  }
+ },
+ "keybrenameg.loadpageid.val": {
+  "label": {
+   "hu": "loadpageid",
+   "en": "loadpageid"
+  },
+  "group": {
+   "hu": "keybrenameg",
+   "en": "keybrenameg"
+  }
+ },
+ "keybrenameh.loadcmpid.val": {
+  "label": {
+   "hu": "loadcmpid",
+   "en": "loadcmpid"
+  },
+  "group": {
+   "hu": "keybrenameh",
+   "en": "keybrenameh"
+  }
+ },
+ "keybrenameh.loadpageid.val": {
+  "label": {
+   "hu": "loadpageid",
+   "en": "loadpageid"
+  },
+  "group": {
+   "hu": "keybrenameh",
+   "en": "keybrenameh"
+  }
+ },
+ "pageMainAuto.group.val": {
+  "label": {
+   "hu": "group",
+   "en": "group"
+  },
+  "group": {
+   "hu": "pageMainAuto",
+   "en": "pageMainAuto"
+  }
+ },
+ "pageMainAuto.house.val": {
+  "label": {
+   "hu": "house",
+   "en": "house"
+  },
+  "group": {
+   "hu": "pageMainAuto",
+   "en": "pageMainAuto"
+  }
+ },
+ "pageMainAuto.resp.val": {
+  "label": {
+   "hu": "resp",
+   "en": "resp"
+  },
+  "group": {
+   "hu": "pageMainAuto",
+   "en": "pageMainAuto"
+  }
+ },
+ "keybdA.input.val": {
+  "label": {
+   "hu": "input",
+   "en": "input"
+  },
+  "group": {
+   "hu": "keybdA",
+   "en": "keybdA"
+  }
+ },
+ "keybdA.tempstr.val": {
+  "label": {
+   "hu": "tempstr",
+   "en": "tempstr"
+  },
+  "group": {
+   "hu": "keybdA",
+   "en": "keybdA"
+  }
+ },
+ "keybdB.input.val": {
+  "label": {
+   "hu": "input",
+   "en": "input"
+  },
+  "group": {
+   "hu": "keybdB",
+   "en": "keybdB"
+  }
+ },
+ "keybdB.tempstr.val": {
+  "label": {
+   "hu": "tempstr",
+   "en": "tempstr"
+  },
+  "group": {
+   "hu": "keybdB",
+   "en": "keybdB"
+  }
+ },
+ "keybnewg.input.val": {
+  "label": {
+   "hu": "input",
+   "en": "input"
+  },
+  "group": {
+   "hu": "keybnewg",
+   "en": "keybnewg"
+  }
+ },
+ "keybnewg.tempstr.val": {
+  "label": {
+   "hu": "tempstr",
+   "en": "tempstr"
+  },
+  "group": {
+   "hu": "keybnewg",
+   "en": "keybnewg"
+  }
+ },
+ "keybnewh.input.val": {
+  "label": {
+   "hu": "input",
+   "en": "input"
+  },
+  "group": {
+   "hu": "keybnewh",
+   "en": "keybnewh"
+  }
+ },
+ "keybnewh.tempstr.val": {
+  "label": {
+   "hu": "tempstr",
+   "en": "tempstr"
+  },
+  "group": {
+   "hu": "keybnewh",
+   "en": "keybnewh"
+  }
+ },
+ "keybrenameg.input.val": {
+  "label": {
+   "hu": "input",
+   "en": "input"
+  },
+  "group": {
+   "hu": "keybrenameg",
+   "en": "keybrenameg"
+  }
+ },
+ "keybrenameg.tempstr.val": {
+  "label": {
+   "hu": "tempstr",
+   "en": "tempstr"
+  },
+  "group": {
+   "hu": "keybrenameg",
+   "en": "keybrenameg"
+  }
+ },
+ "keybrenameh.input.val": {
+  "label": {
+   "hu": "input",
+   "en": "input"
+  },
+  "group": {
+   "hu": "keybrenameh",
+   "en": "keybrenameh"
+  }
+ },
+ "keybrenameh.tempstr.val": {
+  "label": {
+   "hu": "tempstr",
+   "en": "tempstr"
+  },
+  "group": {
+   "hu": "keybrenameh",
+   "en": "keybrenameh"
+  }
+ },
+ "pageDelLast.tostr.val": {
+  "label": {
+   "hu": "tostr",
+   "en": "tostr"
+  },
+  "group": {
+   "hu": "pageDelLast",
+   "en": "pageDelLast"
+  }
+ },
+ "pageEDate.from.val": {
+  "label": {
+   "hu": "from",
+   "en": "from"
+  },
+  "group": {
+   "hu": "pageEDate",
+   "en": "pageEDate"
+  }
+ },
+ "pageEDate.nEDay.val": {
+  "label": {
+   "hu": "nEDay",
+   "en": "nEDay"
+  },
+  "group": {
+   "hu": "pageEDate",
+   "en": "pageEDate"
+  }
+ },
+ "pageEDate.nEMonth.val": {
+  "label": {
+   "hu": "nEMonth",
+   "en": "nEMonth"
+  },
+  "group": {
+   "hu": "pageEDate",
+   "en": "pageEDate"
+  }
+ },
+ "pageEDate.nEYear.val": {
+  "label": {
+   "hu": "nEYear",
+   "en": "nEYear"
+  },
+  "group": {
+   "hu": "pageEDate",
+   "en": "pageEDate"
+  }
+ },
+ "pageEDate.nSDay.val": {
+  "label": {
+   "hu": "nSDay",
+   "en": "nSDay"
+  },
+  "group": {
+   "hu": "pageEDate",
+   "en": "pageEDate"
+  }
+ },
+ "pageEDate.nSMonth.val": {
+  "label": {
+   "hu": "nSMonth",
+   "en": "nSMonth"
+  },
+  "group": {
+   "hu": "pageEDate",
+   "en": "pageEDate"
+  }
+ },
+ "pageEDate.nSYear.val": {
+  "label": {
+   "hu": "nSYear",
+   "en": "nSYear"
+  },
+  "group": {
+   "hu": "pageEDate",
+   "en": "pageEDate"
+  }
+ },
+ "pageEDate.to.val": {
+  "label": {
+   "hu": "to",
+   "en": "to"
+  },
+  "group": {
+   "hu": "pageEDate",
+   "en": "pageEDate"
+  }
+ },
+ "pageEGD.from.val": {
+  "label": {
+   "hu": "from",
+   "en": "from"
+  },
+  "group": {
+   "hu": "pageEGD",
+   "en": "pageEGD"
+  }
+ },
+ "pageEGD.nEDay.val": {
+  "label": {
+   "hu": "nEDay",
+   "en": "nEDay"
+  },
+  "group": {
+   "hu": "pageEGD",
+   "en": "pageEGD"
+  }
+ },
+ "pageEGD.nEMonth.val": {
+  "label": {
+   "hu": "nEMonth",
+   "en": "nEMonth"
+  },
+  "group": {
+   "hu": "pageEGD",
+   "en": "pageEGD"
+  }
+ },
+ "pageEGD.nEYear.val": {
+  "label": {
+   "hu": "nEYear",
+   "en": "nEYear"
+  },
+  "group": {
+   "hu": "pageEGD",
+   "en": "pageEGD"
+  }
+ },
+ "pageEGD.nSDay.val": {
+  "label": {
+   "hu": "nSDay",
+   "en": "nSDay"
+  },
+  "group": {
+   "hu": "pageEGD",
+   "en": "pageEGD"
+  }
+ },
+ "pageEGD.nSMonth.val": {
+  "label": {
+   "hu": "nSMonth",
+   "en": "nSMonth"
+  },
+  "group": {
+   "hu": "pageEGD",
+   "en": "pageEGD"
+  }
+ },
+ "pageEGD.nSYear.val": {
+  "label": {
+   "hu": "nSYear",
+   "en": "nSYear"
+  },
+  "group": {
+   "hu": "pageEGD",
+   "en": "pageEGD"
+  }
+ },
+ "pageEGD.to.val": {
+  "label": {
+   "hu": "to",
+   "en": "to"
+  },
+  "group": {
+   "hu": "pageEGD",
+   "en": "pageEGD"
+  }
+ },
+ "pageIndividual.imp.val": {
+  "label": {
+   "hu": "imp",
+   "en": "imp"
+  },
+  "group": {
+   "hu": "pageIndividual",
+   "en": "pageIndividual"
+  }
+ },
+ "pageIndividual.tostr.val": {
+  "label": {
+   "hu": "tostr",
+   "en": "tostr"
+  },
+  "group": {
+   "hu": "pageIndividual",
+   "en": "pageIndividual"
+  }
+ },
+ "pageIndividual.va0.val": {
+  "label": {
+   "hu": "va0",
+   "en": "va0"
+  },
+  "group": {
+   "hu": "pageIndividual",
+   "en": "pageIndividual"
+  }
+ },
+ "pageIndividual.va1.val": {
+  "label": {
+   "hu": "va1",
+   "en": "va1"
+  },
+  "group": {
+   "hu": "pageIndividual",
+   "en": "pageIndividual"
+  }
+ },
+ "pageIndividual.weight.val": {
+  "label": {
+   "hu": "weight",
+   "en": "weight"
+  },
+  "group": {
+   "hu": "pageIndividual",
+   "en": "pageIndividual"
+  }
+ },
+ "pageMainAuto.imp.val": {
+  "label": {
+   "hu": "imp",
+   "en": "imp"
+  },
+  "group": {
+   "hu": "pageMainAuto",
+   "en": "pageMainAuto"
+  }
+ },
+ "pageMainAuto.t0_help.val": {
+  "label": {
+   "hu": "t0_help",
+   "en": "t0_help"
+  },
+  "group": {
+   "hu": "pageMainAuto",
+   "en": "pageMainAuto"
+  }
+ },
+ "pageMainAuto.tostr.val": {
+  "label": {
+   "hu": "tostr",
+   "en": "tostr"
+  },
+  "group": {
+   "hu": "pageMainAuto",
+   "en": "pageMainAuto"
+  }
+ },
+ "pageMainAuto.va0.val": {
+  "label": {
+   "hu": "va0",
+   "en": "va0"
+  },
+  "group": {
+   "hu": "pageMainAuto",
+   "en": "pageMainAuto"
+  }
+ },
+ "pageMainAuto.va1.val": {
+  "label": {
+   "hu": "va1",
+   "en": "va1"
+  },
+  "group": {
+   "hu": "pageMainAuto",
+   "en": "pageMainAuto"
+  }
+ },
+ "pageMainAuto.valID.val": {
+  "label": {
+   "hu": "valID",
+   "en": "valID"
+  },
+  "group": {
+   "hu": "pageMainAuto",
+   "en": "pageMainAuto"
+  }
+ },
+ "pageMainAuto.weight.val": {
+  "label": {
+   "hu": "weight",
+   "en": "weight"
+  },
+  "group": {
+   "hu": "pageMainAuto",
+   "en": "pageMainAuto"
+  }
+ },
+ "pagePowerOff.tostr.val": {
+  "label": {
+   "hu": "tostr",
+   "en": "tostr"
+  },
+  "group": {
+   "hu": "pagePowerOff",
+   "en": "pagePowerOff"
+  }
+ },
+ "pageSettings3.langstr.val": {
+  "label": {
+   "hu": "langstr",
+   "en": "langstr"
+  },
+  "group": {
+   "hu": "pageSettings3",
+   "en": "pageSettings3"
+  }
+ },
+ "pageStat1.xcv.val": {
+  "label": {
+   "hu": "xcv",
+   "en": "xcv"
+  },
+  "group": {
+   "hu": "pageStat1",
+   "en": "pageStat1"
+  }
+ },
+ "pageStat1.xmean.val": {
+  "label": {
+   "hu": "xmean",
+   "en": "xmean"
+  },
+  "group": {
+   "hu": "pageStat1",
+   "en": "pageStat1"
+  }
+ },
+ "pageStat1.xquantity.val": {
+  "label": {
+   "hu": "xquantity",
+   "en": "xquantity"
+  },
+  "group": {
+   "hu": "pageStat1",
+   "en": "pageStat1"
+  }
+ },
+ "pageStat1.xsd.val": {
+  "label": {
+   "hu": "xsd",
+   "en": "xsd"
+  },
+  "group": {
+   "hu": "pageStat1",
+   "en": "pageStat1"
+  }
+ },
+ "keybdB.t0.txt": {
+  "label": {
+   "hu": "t0",
+   "en": "t0"
+  },
+  "group": {
+   "hu": "keybdB",
+   "en": "keybdB"
+  }
+ },
+ "keybdB.t2.txt": {
+  "label": {
+   "hu": "t2",
+   "en": "t2"
+  },
+  "group": {
+   "hu": "keybdB",
+   "en": "keybdB"
+  }
+ }
+}

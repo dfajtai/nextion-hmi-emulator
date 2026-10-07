@@ -78,9 +78,10 @@ def main(argv: list[str] | None = None) -> int:
         print(f"   unused: {rep['images_unused']}/{rep['images_total']} images, "
               f"{rep['fonts_unused']}/{rep['fonts_total']} fonts, {rep['pages_unreferenced']} unreferenced pages")
     if args.cmd in ("discover", "all"):
-        f = discover_report.write(project, sub("discover"))
-        n = len(discover.build(project))
-        print("  ", f, f"({n} variables)")
+        files = discover_report.write(project, sub("discover"))
+        for f in files:
+            print("  ", f)
+        print(f"   discover: {len(discover.build(project))} input variables; the *.template.json files are editable skeletons")
     if args.cmd in ("coverage", "all"):
         j, h, cov = coverage.write(project, sub("coverage"), sdir)
         print("  ", h)

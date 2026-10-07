@@ -1,0 +1,19 @@
+{
+ "_note": "GUESSED from component names and navigation - check every entry before use",
+ "stats": {
+  "page": "pageStat1",
+  "path": [
+   "bmenu",
+   "bstat"
+  ],
+  "quantity": "pageStat1.xquantity.val",
+  "mean": "pageStat1.xmean.val",
+  "sd": "pageStat1.xsd.val",
+  "cv": "pageStat1.xcv.val",
+  "wave": {
+   "ref": "pageStat2.s0",
+   "points": 400,
+   "click": "bhl"
+  }
+ }
+}

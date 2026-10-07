@@ -31,7 +31,7 @@ from pathlib import Path
 
 from ..parser import Project
 
-RESERVED = {"variables.json", "variables.discovered.json", "csv_profiles.json"}
+RESERVED = {"variables.json", "variables.discovered.json", "variables.template.json", "csv_profiles.json", "csv_profiles.template.json"}
 STEP_KEYS = {"set", "cmd", "click", "goto", "wait", "say", "ramp", "repeat", "steps", "wave"}
 
 

@@ -14,7 +14,7 @@ import shutil
 import sys
 from pathlib import Path
 
-RESERVED = {"variables.json", "variables.discovered.json", "csv_profiles.json"}
+RESERVED = {"variables.json", "variables.discovered.json", "variables.template.json", "csv_profiles.json", "csv_profiles.template.json"}
 
 
 def is_scenario(data) -> bool:

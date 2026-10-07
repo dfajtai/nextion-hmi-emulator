@@ -726,3 +726,28 @@ def test_help_example_json_is_valid(project, tmp_path):
     for lang_block in re.findall(r'<pre>(\{\s*"name".*?)</pre>', (tmp_path / "help.html").read_text(encoding="utf-8"), re.S):
         scn = json.loads(re.sub(r"&quot;", '"', lang_block).replace("&amp;", "&"))            # the example must be real JSON
         assert scn["steps"] and "{{" not in lang_block
+
+
+def test_variables_template_and_csv_profile_guess(project, tmp_path):
+    from nextion_parser.analysis import csvprofile
+    from nextion_parser.reports import discover as discover_report
+    found = discover.build(project)
+    tpl = discover.variables_template(found)
+    assert set(tpl) == {v["ref"] for v in found} and all(t["label"]["en"] and t["group"]["en"] for t in tpl.values())
+    assert tpl["pageMainAuto.charge_level.val"]["presets"]                       # probe values from the code become presets
+    merged = {v["ref"]: v for v in discover.merge(found, tpl)}                    # a template is a valid variables.json overlay
+    assert set(merged) == set(tpl)
+    prof = csvprofile.guess_profile(project)["stats"]
+    hand = json.loads((SAMPLE.parent / "scenarios" / "csv_profiles.json").read_text(encoding="utf-8"))["stats"]
+    assert {k: prof[k] for k in ("page", "path", "quantity", "mean", "sd", "cv")} == {k: hand[k] for k in ("page", "path", "quantity", "mean", "sd", "cv")}
+    assert prof["wave"]["ref"] == hand["wave"]["ref"]
+    files = discover_report.write(project, tmp_path)
+    assert {f.name for f in files} == {"variables.discovered.json", "variables.template.json", "csv_profiles.template.json"}
+
+
+def test_csv_profile_guess_gives_up_without_a_statistics_page():
+    from nextion_parser.analysis import csvprofile
+    from nextion_parser.parser import Page, Project
+    p = Project.__new__(Project)
+    p.pages, p.start_page = [], None
+    assert csvprofile.guess_profile(p) is None

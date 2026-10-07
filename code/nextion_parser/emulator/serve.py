@@ -15,7 +15,7 @@ from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-RESERVED = {"variables.json", "variables.discovered.json", "csv_profiles.json"}
+RESERVED = {"variables.json", "variables.discovered.json", "variables.template.json", "csv_profiles.json", "csv_profiles.template.json"}
 API = re.compile(r"^(?:/.*)?/api/scenarios(?:/([^/]+\.json))?$")
 SAFE = re.compile(r"^[\w.\-]+\.json$")
 

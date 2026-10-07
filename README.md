@@ -67,7 +67,7 @@ Output goes to `./output/<file name>/` (or to `-o DIR`).
 | `emulator FILE` | standalone browser emulator + help | `emulator/index.html`, `help.html`, `data.js`, `nextion_core.js`, `nextion_tools.js`, `i18n.js`, `img/` |
 | `coverage FILE` | simulator coverage report | `coverage/coverage.html`, `coverage.json` |
 | `unused FILE` | unused images / fonts / pages / components | `unused/unused.html`, `unused.csv`, `unused.json`, `img/` |
-| `discover FILE` | simulation input variables found by static analysis | `discover/variables.discovered.json` |
+| `discover FILE` | simulation input variables found by static analysis, plus editable skeletons of `variables.json` and a guessed `csv_profiles.json` | `discover/variables.discovered.json`, `variables.template.json`, `csv_profiles.template.json` |
 | `portable FILE` | **basic** variant for end users (trainer cells): simple mode only (cannot be switched to expert), no built-in scenarios, no reports/help, empty `scenarios/` folder next to `index.html` | `<out>/index.html`, `data.js`, `*.js`, `img/`, `scenarios/` |
 | `serve [DIR]` | local server for a generated folder (default port 8765, opens the browser): the scenarios folder is shared – recordings saved in the expert emulator appear in the basic emulator automatically | – |
 | `all FILE` | everything above + the portable package + a launcher `index.html` (stamped with the source HMI's name, date and hash) (the emulator is generated last so that it can link the reports) | all of the above |
@@ -180,6 +180,14 @@ object `{"hu": "...", "en": "..."}`; the GUI shows the selected language. Step t
 elsewhere (e.g. the language from EEPROM when the main page loads), follow the real user path with `click` steps instead.
 
 `sample/scenarios/` contains no scenarios, only `variables.json` and `csv_profiles.json`; scenarios are recorded in the expert emulator.
+
+## Sample files and templates
+
+`variables.json` (labels, units, ranges of the input variables) and `csv_profiles.json` (targets of the CSV statistics) are **not**
+produced by the parser: they are hand-written configuration, optional but they make the emulator much friendlier. To get started,
+`discover` writes skeletons – `variables.template.json` (every input variable with placeholder labels) and a *guessed*
+`csv_profiles.template.json` – that you copy into your `scenarios/` folder and edit. The sample's finished files, and the generated
+skeletons for the sample, are committed in [`sample/`](sample/README.md) (see its README for the workflow).
 
 ## Reports
 
