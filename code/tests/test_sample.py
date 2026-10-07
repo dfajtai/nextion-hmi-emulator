@@ -560,3 +560,14 @@ def test_launcher_stamps_the_source_hmi(tmp_path):
     assert main(["all", str(SAMPLE), "-o", str(out), "--scenarios", str(SCN)]) == 0
     idx = (out / "index.html").read_text(encoding="utf-8")
     assert SAMPLE.name in idx and "sha256" in idx and "Generated" in idx
+
+
+def test_report_document_model_escapes_and_renders():
+    from nextion_parser.reports.doc import Card, Cards, Details, Doc, Heading, Para, Table, code, esc, render, tag
+    doc = Doc("T <x>", [Cards([Card("a<b", "90%", "s&s", 90)]), Heading("H"), Para("p", note=True),
+                        Table(["h"], [[code("<i>")], [tag("ok")]], id="t", row_classes=["unused", None]),
+                        Details("d", [Para("in")], open=True)])
+    html = render(doc)
+    assert "T &lt;x&gt;" in html and "a&lt;b" in html and "s&amp;s" in html and "<code>&lt;i&gt;</code>" in html
+    assert "<tr class='unused'>" in html and "<table id='t'>" in html and "<details open>" in html and 'class="bar"' in html
+    assert esc({"k": 1}) == "{&#x27;k&#x27;: 1}"

@@ -181,7 +181,8 @@ code/nextion_parser/
     hmi.py                            .HMI reader (format notes in its docstring); codeutil.py: Nextion code statements
   analysis/                           pure functions Project -> plain data, no HTML, no files
     scenario.py  discover.py  unused.py  coverage.py  navigation.py
-  reports/                            renders analysis results (HTML / CSV / JSON): coverage, unused, summary, discover
+  reports/                            renders analysis results (HTML / CSV / JSON): coverage, unused, summary, discover;
+                                      doc.py = document model (Card/Table/Section...) + one shared HTML renderer and theme
   emulator/                           the emulator generator
     model.py                          EmulatorData (typed content of data.js); help.py: the bilingual help.html
     builder.py                        EmulatorBuilder (data model + files), launcher.py, portable.py (scripts, start files)
