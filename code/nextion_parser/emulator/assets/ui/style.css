@@ -8,6 +8,13 @@ header h1{font-size:16px;margin:0}
 #helplink{color:var(--fg);text-decoration:none;padding:4px 10px;border:1px solid var(--line);border-radius:6px;background:var(--card)}
 #helplink:hover{background:rgba(125,125,125,.18)}
 #repmenu{position:relative}
+.hmenu{position:relative}
+.hmenu summary{cursor:pointer;list-style:none;padding:4px 10px;border:1px solid var(--line);border-radius:6px;background:var(--card);user-select:none}
+.hmenu summary::-webkit-details-marker{display:none}
+.hmenu .menubox.left{left:0;right:auto}
+#shotbox{position:absolute;top:calc(100% + 4px);z-index:60;min-width:230px;background:var(--card);border:1px solid var(--line);border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.35);padding:4px;display:flex;flex-direction:column}
+#shotbox button{text-align:left;border:0;background:transparent;color:var(--fg);padding:6px 10px;border-radius:6px;font-size:13px;cursor:pointer}
+#shotbox button:hover{background:rgba(125,125,125,.18)}
 #repmenu summary{cursor:pointer;list-style:none;padding:4px 10px;border:1px solid var(--line);border-radius:6px;background:var(--card);user-select:none}
 #repmenu summary::-webkit-details-marker{display:none}
 #repmenu .menubox{position:absolute;right:0;top:calc(100% + 4px);z-index:60;min-width:230px;background:var(--card);border:1px solid var(--line);border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.35);padding:4px;display:flex;flex-direction:column}

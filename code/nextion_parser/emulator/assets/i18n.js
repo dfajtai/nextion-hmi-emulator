@@ -86,6 +86,9 @@ const I18N = {
     "vars.title": "Aktuális oldal változói", "glob.title": "Globális változók", "log.title": "Soros kimenet / napló",
     "rx.ph": "MCU-parancs (Nextion utasítás, pl. page {page} vagy {ref}=40)", "rx.send": "Küld",
     "log.mcu": "MCU → kijelző: {v}",
+    "shot.menu": "📷 Képernyőkép ▾", "shot.save": "💾 Mentés másként…", "shot.title": "a kijelző képének mentése PNG-ként (mentés ablak)",
+    "shot.copy": "📋 Másolás a vágólapra", "shot.copy.title": "a kijelző képe a vágólapra (beilleszthető dokumentumba, levélbe)", "shot.copied": "A kép a vágólapra került.",
+    "shot.saved": "Kép mentve: {name}", "shot.err": "A képernyőkép nem sikerült: {x}", "shot.noimg": "a képek nincsenek beágyazva (images.js hiányzik)",
     "card.toggle": "kattints a ki-/becsukáshoz",
 
     "step.title": "Lépés szerkesztése (JSON)",
@@ -194,6 +197,9 @@ const I18N = {
     "vars.title": "Current page variables", "glob.title": "Global variables", "log.title": "Serial output / log",
     "rx.ph": "MCU command (Nextion instruction, e.g. page {page} or {ref}=40)", "rx.send": "Send",
     "log.mcu": "MCU → display: {v}",
+    "shot.menu": "📷 Screenshot ▾", "shot.save": "💾 Save as…", "shot.title": "save the picture of the display as a PNG (opens a save dialog)",
+    "shot.copy": "📋 Copy to clipboard", "shot.copy.title": "copy the picture of the display to the clipboard (paste it into a document or mail)", "shot.copied": "The picture is on the clipboard.",
+    "shot.saved": "Screenshot saved: {name}", "shot.err": "The screenshot failed: {x}", "shot.noimg": "the images are not embedded (images.js is missing)",
     "card.toggle": "click to expand / collapse",
 
     "step.title": "Edit step (JSON)",

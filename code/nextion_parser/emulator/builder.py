@@ -5,6 +5,7 @@ Output: ``index.html`` + ``help.html`` + ``nextion_core.js`` + ``nextion_tools.j
 """
 from __future__ import annotations
 
+import base64
 import json
 import re
 import shutil
@@ -29,6 +30,7 @@ REPORTS = [
 ]
 _SIZE = re.compile(r"^(\d{2,4})[xX×](\d{2,4})$")
 ASSET_FILES = ("nextion_core.js", "nextion_tools.js", "i18n.js")
+MIME = {"png": "image/png", "bmp": "image/bmp", "jpg": "image/jpeg", "jpeg": "image/jpeg", "gif": "image/gif"}
 
 
 def parse_size(text: str) -> tuple[int, int]:
@@ -94,6 +96,10 @@ class EmulatorBuilder:
         if not self.portable:
             data.reports = [ReportLink(k, href) for k, href in REPORTS if (out / href).resolve().is_file()]
         (out / "data.js").write_text(data.to_js(), encoding="utf-8")
+        # the same pictures as data URIs: lets the page draw the display into a PNG (screenshot) even from file://
+        uris = {f"img/{i}.{im.ext}": f"data:{MIME.get(im.ext, 'application/octet-stream')};base64,{base64.b64encode(im.data).decode()}"
+                for i, im in self.project.images.items()}
+        (out / "images.js").write_text("window.NX_IMG=" + json.dumps(uris, separators=(",", ":")) + ";\n", encoding="utf-8")
         src = assets()
         for name in ASSET_FILES:
             (out / name).write_text(src.joinpath(name).read_text(encoding="utf-8"), encoding="utf-8")

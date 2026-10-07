@@ -12,7 +12,7 @@ stamped with the source HMI's name, date and hash. Output goes to `./output/<fil
 | Command | What it does | Output |
 |---|---|---|
 | `summary FILE` | pages, components, event code, navigation | `summary/pages.json`, `navigation.mmd`, `navigation.html`, `summary.html` |
-| `emulator FILE` | standalone browser emulator + help | `emulator/index.html`, `help.html`, `data.js`, `nextion_core.js`, `nextion_tools.js`, `i18n.js`, `img/` |
+| `emulator FILE` | standalone browser emulator + help | `emulator/index.html`, `help.html`, `data.js`, `nextion_core.js`, `nextion_tools.js`, `i18n.js`, `images.js` (the pictures as data URIs, for the screenshot), `img/` |
 | `coverage FILE` | simulator coverage report | `coverage/coverage.html`, `coverage.json` |
 | `unused FILE` | unused images / fonts / pages / components | `unused/unused.html`, `unused.csv`, `unused.json`, `img/` |
 | `discover FILE` | input variables found by static analysis, plus editable skeletons of `variables.json` and a guessed `csv_profiles.json` | `discover/variables.discovered.json`, `variables.template.json`, `csv_profiles.template.json` |

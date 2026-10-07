@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 import re
+import shutil
 import subprocess
 
 import pytest
@@ -262,3 +263,37 @@ def test_help_example_json_is_valid(project, tmp_path):
     for lang_block in re.findall(r'<pre>(\{\s*"name".*?)</pre>', (tmp_path / "help.html").read_text(encoding="utf-8"), re.S):
         scn = json.loads(re.sub(r"&quot;", '"', lang_block).replace("&amp;", "&"))            # the example must be real JSON
         assert scn["steps"] and "{{" not in lang_block
+
+
+def test_screenshot_button_and_embedded_images(project, tmp_path):
+    html = gen(project, tmp_path)
+    assert 'id="shot"' in html and "saveScreenshot" in html and "showSaveFilePicker" in html
+    assert '<script src="images.js"></script>' in html
+    assert 'id="shotcopy"' in html and "copyScreenshot" in html and "new ClipboardItem" in html     # clipboard variant
+    btn = re.search(r'<button id="shot"[^>]*>', html).group(0)
+    assert "expert" not in btn                                       # available in the simple/basic mode too
+    imgs = (tmp_path / "images.js").read_text(encoding="utf-8")
+    assert imgs.startswith("window.NX_IMG=") and '"img/0.png":"data:image/png;base64,' in imgs
+    assert len(json.loads(imgs[len("window.NX_IMG="):].rstrip(";\n"))) == len(project.images)
+
+
+def test_screenshot_renders_a_png_in_headless_chrome(project, tmp_path):
+    """End to end from file:// (the hard case: pictures must be embedded): the display is drawn into a native-size PNG."""
+    import base64
+    import struct
+    chrome = next((shutil.which(c) for c in ("google-chrome", "google-chrome-stable", "chromium", "chromium-browser") if shutil.which(c)), None)
+    if not chrome:
+        pytest.skip("no Chrome/Chromium for the headless screenshot test")
+    gen(project, tmp_path)
+    page = tmp_path / "index.html"
+    page.write_text(page.read_text(encoding="utf-8").replace("</body>", """<script>addEventListener('load',()=>setTimeout(async()=>{
+      try{const b=await shotCanvas();const f=new FileReader();f.onload=()=>{document.body.setAttribute('data-shot',f.result);document.title='DONE'};f.readAsDataURL(b);}
+      catch(e){document.title='ERR '+e.message}},1500));</script></body>""", 1), encoding="utf-8")
+    r = subprocess.run([chrome, "--headless=new", "--disable-gpu", "--no-sandbox", "--virtual-time-budget=12000", "--dump-dom",
+                        page.as_uri() + "?lang=en"], capture_output=True, text=True, timeout=90)
+    m = re.search(r'data-shot="data:image/png;base64,([^"]+)"', r.stdout)
+    assert m, re.search(r"<title>([^<]*)", r.stdout)
+    png = base64.b64decode(m.group(1))
+    assert png[:8] == b"\x89PNG\r\n\x1a\n"
+    w, h = struct.unpack(">II", png[16:24])
+    assert (w, h) == (project.width, project.height)                  # native display resolution

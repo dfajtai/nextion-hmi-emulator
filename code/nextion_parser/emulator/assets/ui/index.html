@@ -7,12 +7,13 @@
 </style></head>
 <body>
 <header><h1 id="apptitle">Nextion emulator – __PROJECT__</h1>
+<details id="shotmenu" class="hmenu"><summary data-i="shot.menu">📷 Screenshot ▾</summary><div class="menubox left" id="shotbox"><button id="shotcopy" data-i="shot.copy" data-it="shot.copy.title">📋 Copy to clipboard</button><button id="shot" data-i="shot.save" data-it="shot.title">💾 Save as…</button></div></details>
 <label><span data-i="hdr.mode">Mode</span> <select id="mode"><option value="simple" data-i="mode.simple">Simple</option><option value="expert" data-i="mode.expert">Expert</option></select></label>
 <label class="adv" data-it="hdr.page.title"><span data-i="hdr.page">Page</span> <select id="goto"></select></label>
 <button id="reset" data-i="hdr.reset">Restart</button>
 <div id="hright"><select id="lang" data-it="lang.title"><option value="hu">Magyar</option><option value="en">English</option></select>
 <a id="helplink" href="help.html" target="_blank" rel="noopener" data-i="hdr.help" data-it="hdr.help.title">? Help</a>
-<details id="repmenu" class="adv" hidden><summary data-i="hdr.reports">Reports ▾</summary><div class="menubox" id="replist"></div></details></div>
+<details id="repmenu" class="adv hmenu" hidden><summary data-i="hdr.reports">Reports ▾</summary><div class="menubox" id="replist"></div></details></div>
 </header>
 <main>
 <div id="left"><div id="wrap"><div id="screenbox"><div id="screen"></div><div id="fx"></div></div></div>
@@ -94,6 +95,7 @@
 <script src="nextion_core.js"></script>
 <script src="nextion_tools.js"></script>
 <script src="scenarios.js"></script>
+<script src="images.js"></script>
 <script>
 /*__JS__*/
 </script>

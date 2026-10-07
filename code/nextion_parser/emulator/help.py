@@ -101,6 +101,7 @@ Az emulátor <b>nem a valódi kijelző</b>: a betűtípusok rendszerfontok, az i
 <li><b>Kezelés:</b> a gombokra kattintva a HMI <code>down</code>/<code>up</code> eseményei futnak, mint az eszközön. Oldalváltásnál az új oldal <code>load</code>/<code>loadend</code> kódja is lefut.</li>
 <li><b>Tooltip (expert):</b> az elem fölé víve megjelenik a neve és típusa (pl. <code>{c['ex_btn']}</code> · gomb). Átfedő elemeknél a legfelsőt mutatja, a „+N alatta” jelzéssel.</li>
 <li><b>Oldal</b> lista (a fejlécben, expert): mindig az aktuális oldalt mutatja; másikat választva odaugrik. <b>Újraindítás</b>: a projekt indulóoldalára, tiszta állapotból.</li>
+<li><b>📷 Képernyőkép…</b> (a kijelző alatt, egyszerű és expert módban is): a kijelző aktuális képét menti PNG-ként, eredeti felbontásban, a kiemelő keretek és hitboxok nélkül. Chrome/Edge alatt valódi „Mentés másként” ablak nyílik, más böngészőben a szokásos letöltés. A mellette lévő <b>📋 Másolás</b> ugyanezt a képet a vágólapra teszi (beilleszthető dokumentumba, levélbe). Lemezről megnyitva is működik.</li>
 <li><b>Kijelző vezérlés</b> blokk (expert, alapból összecsukva) – minden kijelzőbeállítás egy helyen:
 <ul><li><b>Képernyő W×H</b> és <b>Nagyítás</b>: az emulált vászon mérete és a nagyítás („illeszkedő” = a szabad helyhez igazodik, ablakátméretezéskor újraszámol). {b("↺ Alap méret")} visszaállítja a projekt felbontását és az illeszkedő nagyítást.</li>
 <li><b>hitbox-ok</b>: minden komponens körvonalát megmutatja (a láthatatlan hotspotokét is).</li>
@@ -282,6 +283,7 @@ The emulator is <b>not the real display</b>: fonts are system fonts, timing is a
 <li><b>Operation:</b> clicking buttons runs the HMI's <code>down</code>/<code>up</code> events, as on the device. On a page change the new page's <code>load</code>/<code>loadend</code> code runs too.</li>
 <li><b>Tooltip (expert):</b> hovering over an element shows its name and type (e.g. <code>{c['ex_btn']}</code> · button). For overlapping elements the topmost is shown, with a "+N below" hint.</li>
 <li><b>Page</b> list (in the header, expert): always shows the current page; selecting another one jumps there. <b>Restart</b>: back to the project's start page from a clean state.</li>
+<li><b>📷 Screenshot…</b> (under the display, in simple and expert mode): saves the current picture of the display as a PNG in its native resolution, without highlight frames or hitboxes. Chrome/Edge open a real "Save as" window, other browsers use the normal download. The <b>📋 Copy</b> next to it puts the same picture on the clipboard (paste it into a document or mail). It also works when opened from disk.</li>
 <li><b>Display controls</b> block (expert, collapsed by default) – all display settings in one place:
 <ul><li><b>Screen W×H</b> and <b>Zoom</b>: size of the emulated canvas and the magnification ("fit" adapts to the free space and recalculates on window resize). {b("↺ Default size")} resets the project resolution and the fit zoom.</li>
 <li><b>hitboxes</b>: outlines every component (invisible hotspots too).</li>

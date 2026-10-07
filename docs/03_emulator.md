@@ -45,6 +45,13 @@ loaded back into the recorder (`✎ Edit in the recorder`) and extended (`➕ Co
 
 Samples: `sample/data/meresek.csv`, `sample/data/akku_idosor.csv`.
 
+## Screenshot (both modes)
+
+The **📷 Screenshot…** button under the display saves the current picture of the display as a PNG in its native resolution (e.g. 480×272),
+without the highlight frames or hitboxes. Chromium-based browsers open a real *Save as* window; other browsers use their normal download.
+**📋 Copy** puts the same picture on the clipboard (paste it into a document or mail; hidden in browsers without clipboard-image support).
+It also works when the page is opened from disk (the pictures are embedded in `images.js` for this purpose).
+
 ## Display controls (expert)
 
 Screen size, zoom (`fit` adapts to the available space), hitboxes, and "idle return jump": the HMI timers jump back to the main page
