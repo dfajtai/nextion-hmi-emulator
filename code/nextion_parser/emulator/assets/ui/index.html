@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="hu"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>__PROJECT__ – emulator</title>
+<style>
+/*__CSS__*/
+</style></head>
+<body>
+<header><h1 id="apptitle">Nextion emulator – __PROJECT__</h1>
+<label><span data-i="hdr.mode">Mode</span> <select id="mode"><option value="simple" data-i="mode.simple">Simple</option><option value="expert" data-i="mode.expert">Expert</option></select></label>
+<label class="adv" data-it="hdr.page.title"><span data-i="hdr.page">Page</span> <select id="goto"></select></label>
+<button id="reset" data-i="hdr.reset">Restart</button>
+<div id="hright"><select id="lang" data-it="lang.title"><option value="hu">Magyar</option><option value="en">English</option></select>
+<a id="helplink" href="help.html" target="_blank" rel="noopener" data-i="hdr.help" data-it="hdr.help.title">? Help</a>
+<details id="repmenu" class="adv" hidden><summary data-i="hdr.reports">Reports ▾</summary><div class="menubox" id="replist"></div></details></div>
+</header>
+<main>
+<div id="left"><div id="wrap"><div id="screenbox"><div id="screen"></div><div id="fx"></div></div></div>
+<div id="caption">
+<div id="caphead"><span id="capbadge" class="info">STATUS</span><span id="capstep"></span><button id="capexp" data-it="cap.hist.title">▾ History</button></div>
+<div id="captext" class="cap-info"></div>
+<div id="prog"><i></i></div>
+<div id="capwarn" class="bubble" hidden data-it="cap.warn.title"></div>
+<ol id="caphist" hidden></ol></div>
+</div>
+<aside>
+<div class="card" id="scncard"><h2 data-i="scn.title">Scenarios</h2>
+<div class="row" id="loadrow"><button id="loadbtn" data-i="scn.load" data-it="scn.load.title">Load scenario / CSV…</button><button id="folderbtn" hidden data-i="scn.folder" data-it="scn.folder.title">Open folder…</button><input type="file" id="scnfile" accept=".json,.csv,.txt,application/json,text/csv" multiple hidden><span class="note" id="loadhint"></span></div>
+<div class="row" id="playrow"><select id="scn"></select></div>
+<div class="transport" id="transport"><button id="first" data-i="scn.btn.first" data-it="scn.first">↺ From start</button><button id="prev" data-i="scn.btn.prev" data-it="scn.prev">◀ Previous</button><button id="play" class="primary" data-it="scn.play">▶ Play</button><button id="next" data-i="scn.btn.next" data-it="scn.next">Next ▶</button></div>
+<div class="row" id="pacerow"><label><span data-i="scn.pace">Pace</span> <select id="speed" data-it="scn.pace.title"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option><option value="fixed" data-i="scn.pace.fixed">Even pause</option></select></label><label id="fixwrap" hidden data-it="scn.pace.fixed.title"><input id="fixsec" type="number" min="0.5" step="0.5" value="2" style="width:64px"> <span data-i="rec.sec">s</span></label></div>
+<div class="row expert"><button id="scnedit" data-i="scn.edit" data-it="scn.edit.title">✎ Edit in the recorder</button></div>
+<div id="scndesc" class="note"></div><div id="stepno" class="note"></div><ol id="outline"></ol></div>
+<div class="card expert" id="reccard"><h2><span data-i="rec.title">Recorder (macro)</span> <span id="recbadge"></span></h2>
+<ol class="flow"><li id="rf1" data-i="rec.f1">1. Record</li><li id="rf2" data-i="rec.f2">2. Edit</li><li id="rf3" data-i="rec.f3">3. Save</li></ol>
+<div class="row"><button id="recstart" class="primary"></button><button id="recappend" disabled data-i="rec.append" data-it="rec.append.title">➕ Continue from the end</button><button id="recdiscard" disabled data-i="rec.discard">Clear</button><span id="recstate" class="note"></span></div>
+<div id="recedit" class="note" hidden></div>
+<div class="note" id="rechint"></div>
+<div class="row"><label><span data-i="rec.page">Start page</span> <select id="recpage" data-it="rec.page.title"></select></label></div>
+<div class="row"><input id="recname" type="text" data-ip="rec.name.ph" style="flex:1"><input id="recdesc" type="text" data-ip="rec.desc.ph" style="flex:2"></div>
+<div class="row"><label><input type="checkbox" id="recreal"> <span data-i="rec.real">record real time as delays</span></label></div>
+<div class="row"><b data-i="rec.delay">+ Delay</b><input id="recdelay" type="number" min="0.1" step="0.5" value="1" style="width:70px"> <span data-i="rec.sec">s</span>
+<input id="recdelaycap" type="text" data-ip="rec.cap.ph" style="flex:1;min-width:120px"><button id="recdelaybtn" disabled data-i="rec.delay.add">Add</button></div>
+<div class="row"><input id="recsay" type="text" data-ip="rec.say.ph" style="flex:1"><button id="recsaybtn" disabled data-i="rec.say.btn">Caption step</button></div>
+<ol id="recsteps"></ol>
+<div class="row"><button id="recsave" disabled data-i="rec.save">Save (download + list)</button><span id="recinfo" class="note"></span></div></div>
+<div class="card expert" id="dispcard" data-collapsed="1"><h2 data-i="disp.title">Display controls</h2>
+<div class="row"><label><span data-i="disp.screen">Screen</span> <input id="sw" class="n" type="number" min="64" max="2000" data-it="disp.w"> × <input id="sh" class="n" type="number" min="64" max="2000" data-it="disp.h"> px</label>
+<button id="sizereset" data-i="disp.reset" data-it="disp.reset.title">↺ Default size</button></div>
+<div class="row"><label><span data-i="disp.zoom">Zoom</span> <select id="zoom"><option value="fit" data-i="disp.fit">fit</option><option>1</option><option>1.5</option><option>2</option><option>3</option></select></label></div>
+<div class="row"><label><input type="checkbox" id="dbg"> <span data-i="disp.hitbox">hitboxes</span></label></div>
+<div class="row"><label data-it="disp.idle.title"><input type="checkbox" id="timerjump"> <span data-i="disp.idle">idle return jump</span></label></div>
+</div>
+</aside>
+<div id="below">
+<div class="card dbgcard" id="varcard"><h2 data-i="vars.title">Current page variables</h2><div id="vars"></div></div>
+<div class="card dbgcard" id="globcard" data-collapsed="1"><h2 data-i="glob.title">Global variables</h2><div id="globvars"></div></div>
+<div class="card dbgcard" id="logcard" data-collapsed="1"><h2 data-i="log.title">Serial output / log</h2><div id="log"></div>
+<div style="margin-top:6px;display:flex;gap:6px"><input id="rx" data-ip="rx.ph" style="flex:1"><button id="rxb" data-i="rx.send">Send</button></div></div>
+</div>
+</main>
+<dialog id="stepdlg"><form method="dialog"><h3 style="margin-top:0" data-i="step.title">Edit step (JSON)</h3>
+<div class="note" data-i="step.hint"></div>
+<textarea id="stepjson" rows="9" style="width:100%;font:12px ui-monospace,monospace;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:8px"></textarea>
+<div id="stepmsg" class="note" style="color:#c2410c"></div>
+<div class="row" style="justify-content:flex-end"><button value="cancel" id="stepcancel" data-i="step.cancel">Cancel</button><button id="stepok" type="button" class="primary" data-i="step.ok">Apply</button></div></form></dialog>
+<dialog id="csvdlg"><form method="dialog" id="csvform">
+<h3 style="margin-top:0"><span data-i="csv.title">CSV import – </span><span id="csvfile"></span></h3>
+<div class="grid2">
+<label><span data-i="csv.mode">Mode</span> <select id="csvmode"><option value="stats" data-i="csv.mode.stats">Statistics</option><option value="series" data-i="csv.mode.series">Time series</option></select></label>
+<label><span data-i="csv.name">Scenario name</span> <input id="csvname" type="text"></label>
+</div>
+<div id="csvstats">
+<div class="grid2"><label><span data-i="csv.col">Value column</span> <select id="csvcol"></select></label>
+<label><span data-i="csv.grp">Group column</span> <select id="csvgrp"></select></label></div>
+<div class="note" data-i="csv.targets"></div>
+<div class="grid2">
+<label><span data-i="pf.page">Page</span> <input id="pf_page" type="text" list="reflist"></label><label><span data-i="pf.path">Path</span> <input id="pf_path" type="text"></label>
+<label><span data-i="pf.quantity">Count</span> <input id="pf_quantity" type="text" list="reflist"></label><label><span data-i="pf.mean">Mean</span> <input id="pf_mean" type="text" list="reflist"></label>
+<label><span data-i="pf.sd">SD</span> <input id="pf_sd" type="text" list="reflist"></label><label><span data-i="pf.cv">CV (%)</span> <input id="pf_cv" type="text" list="reflist"></label>
+<label><span data-i="pf.group">Group name</span> <input id="pf_group" type="text" list="reflist"></label><label><span data-i="pf.wave">Waveform</span> <input id="pf_wave" type="text" list="reflist"></label>
+<label><span data-i="pf.waveclick">Waveform button</span> <input id="pf_waveclick" type="text"></label><label><span data-i="pf.wait">Wait per group (ms)</span> <input id="pf_wait" type="text" value="4000"></label>
+</div></div>
+<div id="csvseries"><div class="grid2"><label><span data-i="sr.wait">Default wait (ms)</span> <input id="sr_wait" type="text" value="1000"></label>
+<label><span data-i="sr.page">Start page</span> <input id="sr_page" type="text" list="reflist"></label></div>
+<div class="note" data-ih="sr.hint"></div></div>
+<datalist id="reflist"></datalist>
+<div id="csvprev"></div><div id="csvmsg" class="note"></div>
+<div class="row" style="justify-content:flex-end"><button value="cancel" id="csvcancel" data-i="csv.cancel">Cancel</button><button id="csvjson" type="button" data-i="csv.json">Download JSON</button><button id="csvok" type="button" data-i="csv.ok">Create</button></div>
+</form></dialog>
+<div id="tip"></div>
+<script src="data.js"></script>
+<script src="i18n.js"></script>
+<script src="nextion_core.js"></script>
+<script src="nextion_tools.js"></script>
+<script src="scenarios.js"></script>
+<script>
+/*__JS__*/
+</script>
+</body></html>

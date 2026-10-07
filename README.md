@@ -187,8 +187,9 @@ code/nextion_parser/
     model.py                          EmulatorData (typed content of data.js); help.py: the bilingual help.html
     builder.py                        EmulatorBuilder (data model + files), launcher.py, portable.py (scripts, start files)
     smoke.py                          headless runtime smoke test (Node); serve.py, update_scenarios.py (also shipped in packages)
-    assets/                           nextion_core.js (interpreter), nextion_tools.js (CSV/statistics), i18n.js (GUI texts),
-                                      emulator.html, smoke.js
+    assets/                           nextion_core.js (interpreter), nextion_tools.js (CSV/statistics), i18n.js (GUI texts), smoke.js
+    assets/ui/                        the emulator page SOURCE: index.html (markup), style.css, js/NN_*.js (one file per concern,
+                                      concatenated in name order); ui.py assembles them into the single index.html
   i18n.py                             localized-field helper (loc);  cli.py: command line
 code/tests/                           pytest (+ fixtures/scenarios used by the tests)
 sample/                               sample configs and CSV data (sample HMI is git-ignored)
@@ -196,6 +197,9 @@ sample/                               sample configs and CSV data (sample HMI is
 
 Dependency direction: `cli` → `reports` → `analysis` → `parser`; `emulator` uses `parser` and `analysis`. Nothing below `reports`
 produces HTML, and only `parser/hmi.py` knows the .HMI file format.
+
+The page is assembled from `assets/ui/` at generation time – edit those files, never the generated `index.html`. The scripts
+share one scope on purpose (no ES modules: they cannot be loaded from `file://`); new concerns get a new `NN_name.js`.
 
 To add GUI text, put the key in **both** languages of `code/nextion_parser/emulator/assets/i18n.js` (a test checks that the two dictionaries have the same keys and
 that every key used in the template exists).

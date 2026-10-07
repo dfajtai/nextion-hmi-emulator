@@ -14,6 +14,7 @@ from pathlib import Path
 from ..analysis import discover, scenario
 from ..parser import Project
 from . import help as helpdoc
+from . import ui
 from .model import EmulatorData, ReportLink, Screen
 from .portable import PORTABLE_README, add_updater
 
@@ -105,8 +106,7 @@ class EmulatorBuilder:
         sj = out / "scenarios.js"
         if not sj.exists():
             sj.write_text("window.NX_SCENARIOS=[];\n", encoding="utf-8")
-        (out / "index.html").write_text(
-            src.joinpath("emulator.html").read_text(encoding="utf-8").replace("__PROJECT__", self.project.name), encoding="utf-8")
+        (out / "index.html").write_text(ui.assemble(self.project.name), encoding="utf-8")
         return out / "index.html"
 
 

@@ -4,7 +4,7 @@ Three layers:
   1. structure  - what could be read from the file (pages, object counts, images, fonts)
   2. static     - does the emulator support the component types, attributes and commands
   3. runtime (Node) - does the emulator core really run every event of every page
-The static support tables mirror the behaviour of ``emulator/assets/nextion_core.js`` / ``emulator.html``;
+The static support tables mirror the behaviour of ``emulator/assets/nextion_core.js`` / ``emulator/assets/ui/``;
 the tests make sure they do not drift apart.
 """
 from __future__ import annotations
