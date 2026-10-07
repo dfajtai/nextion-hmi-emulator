@@ -8,13 +8,9 @@ output/
 # machine-local Claude Code settings
 .claude/settings.local.json
 
-# sample HMI is kept out of the repo until its licensing/size is decided
+# HMI files stay out of the repo, except the committed sample (saved by Nextion Editor 1.6.8.2, 47 MB)
 sample/*.HMI
-# early experiment leftovers
-/emulator/
-/flow.html
-/flow.mmd
-/pages.json
+!sample/bioscale_research_new.HMI
 dist/
 # HMI files dropped next to generate.sh/.bat
 /*.HMI

@@ -1,7 +1,8 @@
 # Sample files
 
-The sample project is a Nextion HMI that is **not** part of the repository (it is git-ignored: `sample/*.HMI`). What is committed are the
-configuration files that belong to it, so you can see what a finished setup looks like.
+`bioscale_research_new.HMI` is the sample project (480×272, saved by Nextion Editor 1.6.8.2, 47 MB); the tests and the examples use it. An
+older save of the same project (Editor 1.6.8.1, `*_old.HMI`) is git-ignored and only used by one optional parity test. Next to the HMI the
+repo has the configuration files that belong to it, so you can see what a finished setup looks like.
 
 | Path | What it is | How it was made |
 |---|---|---|

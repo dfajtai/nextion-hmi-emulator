@@ -5,8 +5,8 @@ Standard library only; `node` is optional (smoke test, some tests). User-facing 
 
 ## Commands
 - Run: `./scripts/run.sh <summary|emulator|portable|coverage|unused|discover|all> FILE.HMI [-o DIR] [--scenarios DIR] [--lang hu|en]`
-- Tests: `./scripts/run.sh --test` (pytest; HMI-based tests are skipped when `sample/*.HMI` is missing)
-- Regenerate sample output: `./scripts/run.sh all sample/bioscale_research_old.HMI` (`output/` is git-ignored)
+- Tests: `./scripts/run.sh --test` (pytest; tests live in `code/tests/test_*.py` by topic, shared helpers in `helpers.py`, the `project` fixture in `conftest.py`; HMI-based tests are skipped when the sample HMI is missing)
+- Regenerate sample output: `./scripts/run.sh all sample/bioscale_research_new.HMI` (`output/` is git-ignored)
 
 ## Layout
 - Layers (dependency direction `cli` → `reports` → `analysis` → `parser`; `emulator` uses `parser` + `analysis`):
