@@ -1,0 +1,32 @@
+{
+  "window": {"hu": "Nextion emulátor generátor", "en": "Nextion emulator generator"},
+  "labels": {
+    "labelHmi": {"hu": "HMI fájl", "en": "HMI file"},
+    "labelOut": {"hu": "Kimeneti mappa", "en": "Output folder"},
+    "labelScn": {"hu": "Forgatókönyv-mappa (nem kötelező)", "en": "Scenarios folder (optional)"},
+    "labelScreen": {"hu": "Kijelzőméret (üres = a projekté)", "en": "Screen size (empty = project's)"},
+    "labelLang": {"hu": "Nyelv", "en": "Language"},
+    "labelLog": {"hu": "Napló", "en": "Log"},
+    "btnBrowseHmi": {"hu": "Tallózás…", "en": "Browse…"},
+    "btnBrowseOut": {"hu": "Tallózás…", "en": "Browse…"},
+    "btnBrowseScn": {"hu": "Tallózás…", "en": "Browse…"},
+    "btnGenerate": {"hu": "▶ Generálás", "en": "▶ Generate"},
+    "btnOpenResult": {"hu": "Eredmény megnyitása", "en": "Open result"},
+    "btnOpenFolder": {"hu": "Mappa megnyitása", "en": "Open folder"}
+  },
+  "placeholders": {
+    "editScreen": {"hu": "pl. 800x480", "en": "e.g. 800x480"}
+  },
+  "messages": {
+    "choose_hmi": {"hu": "Válassz egy .HMI fájlt.", "en": "Choose a .HMI file."},
+    "ready": {"hu": "Kész a generálásra.", "en": "Ready to generate."},
+    "running": {"hu": "Generálás folyamatban…", "en": "Generating…"},
+    "done": {"hu": "Kész. Az eredmény: {path}", "en": "Done. Result: {path}"},
+    "done_warn": {"hu": "Kész, de néhány forgatókönyv nem illik ehhez a HMI-hez (lásd a naplót). Eredmény: {path}", "en": "Done, but some scenarios do not match this HMI (see the log). Result: {path}"},
+    "failed": {"hu": "Hiba – részletek a naplóban.", "en": "Failed – see the log for details."},
+    "file_types": {"hu": "Nextion HMI (*.HMI *.hmi);;Minden fájl (*)", "en": "Nextion HMI (*.HMI *.hmi);;All files (*)"},
+    "pick_hmi": {"hu": "HMI fájl kiválasztása", "en": "Choose the HMI file"},
+    "pick_out": {"hu": "Kimeneti mappa kiválasztása", "en": "Choose the output folder"},
+    "pick_scn": {"hu": "Forgatókönyv-mappa kiválasztása", "en": "Choose the scenarios folder"}
+  }
+}

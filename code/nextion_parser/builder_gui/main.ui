@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Qt Designer file. Open it with `designer main.ui` (pyqt6-tools / Qt Designer) to edit the layout visually.
+     Object names are the contract with app.py and texts.json: do not rename them without updating both. -->
+<ui version="4.0">
+ <class>BuilderWindow</class>
+ <widget class="QWidget" name="BuilderWindow">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>760</width><height>600</height></rect>
+  </property>
+  <property name="windowTitle"><string>Nextion emulator generator</string></property>
+  <layout class="QVBoxLayout" name="mainLayout">
+   <item>
+    <layout class="QGridLayout" name="formLayout" columnstretch="0,1,0">
+     <item row="0" column="0"><widget class="QLabel" name="labelHmi"><property name="text"><string>HMI file</string></property></widget></item>
+     <item row="0" column="1"><widget class="QLineEdit" name="editHmi"/></item>
+     <item row="0" column="2"><widget class="QPushButton" name="btnBrowseHmi"><property name="text"><string>Browse…</string></property></widget></item>
+     <item row="1" column="0"><widget class="QLabel" name="labelOut"><property name="text"><string>Output folder</string></property></widget></item>
+     <item row="1" column="1"><widget class="QLineEdit" name="editOut"/></item>
+     <item row="1" column="2"><widget class="QPushButton" name="btnBrowseOut"><property name="text"><string>Browse…</string></property></widget></item>
+     <item row="2" column="0"><widget class="QLabel" name="labelScn"><property name="text"><string>Scenarios folder (optional)</string></property></widget></item>
+     <item row="2" column="1"><widget class="QLineEdit" name="editScn"/></item>
+     <item row="2" column="2"><widget class="QPushButton" name="btnBrowseScn"><property name="text"><string>Browse…</string></property></widget></item>
+     <item row="3" column="0"><widget class="QLabel" name="labelScreen"><property name="text"><string>Screen size (optional)</string></property></widget></item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="editScreen">
+       <property name="maximumSize"><size><width>140</width><height>16777215</height></size></property>
+       <property name="placeholderText"><string>800x480</string></property>
+      </widget>
+     </item>
+     <item row="4" column="0"><widget class="QLabel" name="labelLang"><property name="text"><string>Language</string></property></widget></item>
+     <item row="4" column="1">
+      <widget class="QComboBox" name="comboLang">
+       <property name="maximumSize"><size><width>160</width><height>16777215</height></size></property>
+       <item><property name="text"><string>Magyar</string></property></item>
+       <item><property name="text"><string>English</string></property></item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="buttonRow">
+     <item><widget class="QPushButton" name="btnGenerate"><property name="text"><string>▶ Generate</string></property><property name="default"><bool>true</bool></property></widget></item>
+     <item><widget class="QPushButton" name="btnOpenResult"><property name="enabled"><bool>false</bool></property><property name="text"><string>Open result</string></property></widget></item>
+     <item><widget class="QPushButton" name="btnOpenFolder"><property name="enabled"><bool>false</bool></property><property name="text"><string>Open folder</string></property></widget></item>
+     <item><spacer name="buttonSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+    </layout>
+   </item>
+   <item><widget class="QLabel" name="labelStatus"><property name="text"><string/></property><property name="wordWrap"><bool>true</bool></property></widget></item>
+   <item><widget class="QLabel" name="labelLog"><property name="text"><string>Log</string></property></widget></item>
+   <item>
+    <widget class="QPlainTextEdit" name="textLog">
+     <property name="readOnly"><bool>true</bool></property>
+     <property name="lineWrapMode"><enum>QPlainTextEdit::NoWrap</enum></property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

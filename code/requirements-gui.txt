@@ -1,0 +1,3 @@
+# Only needed for the optional window (scripts/gui.sh | gui.bat | `nextion_parser gui`). The rest of the tool needs no third-party package.
+# PySide6 is LGPL licensed (the Qt for Python binding); it is installed separately by the user and not bundled with this repository.
+PySide6-Essentials>=6.5

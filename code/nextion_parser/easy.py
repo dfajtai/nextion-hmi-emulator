@@ -5,7 +5,8 @@ Put the generator (``nextion-generator.pyz``) next to one or more ``.HMI`` files
 launcher page opens in the browser. A ``scenarios/`` folder next to the HMI (optional) is used as the source of
 ``variables.json`` / ``csv_profiles.json`` / scenarios.
 
-With command-line arguments it behaves exactly like the normal command line (``cli.main``).
+With command-line arguments it behaves exactly like the normal command line (``cli.main``); ``gui`` opens the Qt window
+(``builder_gui``).
 """
 from __future__ import annotations
 
@@ -62,6 +63,14 @@ def easy(folder: Path | None = None) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     argv = sys.argv[1:] if argv is None else argv
+    if argv and argv[0] == "gui":
+        try:
+            from .builder_gui.app import main as gui_main
+        except ImportError as e:                       # the GUI is optional: PySide6 is not part of the standard library
+            print(f"The GUI needs PySide6 ({e}).  Install it with: pip install -r code/requirements-gui.txt  (scripts/gui.sh does it)",
+                  file=sys.stderr)
+            return 2
+        return gui_main(argv[1:])
     return cli.main(argv) if argv else easy()
 
 

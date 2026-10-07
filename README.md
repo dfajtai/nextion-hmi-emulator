@@ -25,6 +25,21 @@ Put your `.HMI` file(s) **next to `generate.sh`** (Windows: `generate.bat`) in t
 `./generate.sh`). It does the same as the easy generator – everything into `output/<name>/`, then opens the launcher page – using the
 repository code; the first run creates the Python environment. `.HMI` files in the repository root are git-ignored.
 
+### Window (PySide6 GUI)
+
+`./scripts/gui.sh` (Windows: `scripts\gui.bat`, you can drag a `.HMI` onto it) opens a small window: choose the HMI file (preselected when
+one lies next to the script), output folder, optional scenarios folder and screen size, language, then **Generate**; the log streams
+into the window, **Open result** opens the launcher page.
+
+The script looks for PySide6 and installs only when it finds none: **1.** the project's private venv, **2.** the system Python,
+**3.** otherwise it asks (about 80 MB, `code/requirements-gui.txt`) and installs `PySide6-Essentials` into the private venv. The
+command-line tool itself still needs no third-party package. With the single-file generator use your own Python's PySide6:
+`pip install PySide6-Essentials`, then `python3 nextion-generator.pyz gui`. PySide6 is LGPL licensed and is installed by the user, it is
+not bundled here.
+
+The layout is a Qt Designer file (`code/nextion_parser/builder_gui/main.ui`, edit it with `pyside6-designer main.ui`); the hu/en texts are in
+`texts.json` keyed by the object names.
+
 ### From the repository (developers)
 
 Needs only Python 3.9+. Clone the repo and run – the first run creates the virtual environment by itself:
@@ -192,6 +207,8 @@ observations on the sample file.
 ```
 scripts/                              setup.sh, run.sh (+ .bat): venv, dependencies, run, tests
 code/nextion_parser/
+  builder_gui/                        PySide6 window, ALL GUI code lives here: main.ui (Qt Designer layout), texts.json (hu/en texts by
+                                      object name), app.py (actions), jobs.py (runs a generation, no Qt)
   parser/                             REPLACEABLE input layer: anything producing a Project works
     model.py                          Project / Page / Component / Image / Font dataclasses (the contract)
     hmi.py                            .HMI reader (format notes in its docstring); codeutil.py: Nextion code statements
