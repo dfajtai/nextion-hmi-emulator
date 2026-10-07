@@ -12,8 +12,8 @@ Standard library only; `node` is optional (smoke test, some tests). User-facing 
 - Layers (dependency direction `cli` → `reports` → `analysis` → `parser`; `emulator` uses `parser` + `analysis`):
   - `code/nextion_parser/parser/` – replaceable input layer. `model.py` is the contract (`Project`...), `hmi.py` the .HMI reader (format notes in its docstring; resource ids `pic`, `font`, `page N` are positions in the `main.HMI` lists). Only this layer knows the file format.
   - `analysis/` – pure functions Project → plain data (scenario validation, discovery, unused, coverage, navigation). No HTML, no file writing.
-  - `reports/` – turns analysis results into HTML/CSV/JSON files (and the help page).
-  - `emulator/` – `EmulatorBuilder` (+ `EmulatorData` model) writes the emulator; `assets/` holds the static front-end (`emulator.html`, `nextion_core.js` interpreter, `nextion_tools.js` CSV/stats, `i18n.js` GUI dictionaries); `data.js` is the only generated front-end file.
+  - `reports/` – turns analysis results into HTML/CSV/JSON files.
+  - `emulator/` – `EmulatorBuilder` (+ `EmulatorData` model) writes the emulator and its `help.html`; `assets/` holds the static front-end (`emulator.html`, `nextion_core.js` interpreter, `nextion_tools.js` CSV/stats, `i18n.js` GUI dictionaries); `data.js` is the only generated front-end file.
 - `portable` command = basic variant: `DATA.portable`, locked to simple mode, no built-in scenarios, empty `scenarios/` folder, no help/reports.
 - `serve.py` – stdlib server with `api/scenarios` (GET list / POST save); copied into portable packages as `serve.py`. The emulator syncs with it only over http(s) (`syncServer`); `file://` must keep working.
 - `update_scenarios.py` – standalone; bundles `scenarios/*.json` into `scenarios.js` (`window.NX_SCENARIOS`) that every emulator page loads, so no server is needed. The scenarios folder is `<out>/portable/scenarios/`. Generated into `<out>/scripts/` and into portable packages (with `start.bat/.sh`).

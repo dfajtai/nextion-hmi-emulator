@@ -13,7 +13,7 @@ from pathlib import Path
 
 from ..analysis import discover, scenario
 from ..parser import Project
-from ..reports import help as helpdoc
+from . import help as helpdoc
 from .model import EmulatorData, ReportLink, Screen
 from .portable import PORTABLE_README, add_updater
 
