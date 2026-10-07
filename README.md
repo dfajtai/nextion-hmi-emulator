@@ -37,8 +37,8 @@ command-line tool itself still needs no third-party package. With the single-fil
 `pip install PySide6-Essentials`, then `python3 nextion-generator.pyz gui`. PySide6 is LGPL licensed and is installed by the user, it is
 not bundled here.
 
-The layout is a Qt Designer file (`code/nextion_parser/builder_gui/main.ui`, edit it with `pyside6-designer main.ui`); the hu/en texts are in
-`texts.json` keyed by the object names.
+The window is English only. The layout and texts are in a Qt Designer file (`code/nextion_parser/builder_gui/main.ui`, edit it with
+`pyside6-designer main.ui`); the *Emulator language* selector only sets the default language of the generated emulator.
 
 ### From the repository (developers)
 
@@ -207,8 +207,8 @@ observations on the sample file.
 ```
 scripts/                              setup.sh, run.sh (+ .bat): venv, dependencies, run, tests
 code/nextion_parser/
-  builder_gui/                        PySide6 window, ALL GUI code lives here: main.ui (Qt Designer layout), texts.json (hu/en texts by
-                                      object name), app.py (actions), jobs.py (runs a generation, no Qt)
+  builder_gui/                        PySide6 window, ALL GUI code lives here: main.ui (Qt Designer layout and the English texts),
+                                      app.py (actions), jobs.py (runs a generation, no Qt)
   parser/                             REPLACEABLE input layer: anything producing a Project works
     model.py                          Project / Page / Component / Image / Font dataclasses (the contract)
     hmi.py                            .HMI reader (format notes in its docstring); codeutil.py: Nextion code statements

@@ -1,11 +1,9 @@
-"""The Qt window (PySide6): loads ``main.ui`` (Qt Designer) and binds it to the generator (``jobs``).
+"""The Qt window (PySide6): loads ``main.ui`` (Qt Designer, English) and binds it to the generator (``jobs``).
 
-All widget names and texts come from the UI files: ``main.ui`` (layout) and ``texts.json`` (hu/en texts by object name).
+The window itself is English only. The language selector chooses the *default language of the generated emulator*.
 """
 from __future__ import annotations
 
-import json
-import locale
 import sys
 import threading
 from importlib import resources
@@ -16,26 +14,23 @@ from PySide6 import QtCore, QtGui, QtUiTools, QtWidgets
 from .. import easy
 from . import jobs
 
-LANGS = ["hu", "en"]                   # same order as the items of comboLang in main.ui
+LANGS = ["hu", "en"]                   # emulator default language; same order as the items of comboLang in main.ui
+MESSAGES = {
+    "choose_hmi": "Choose a .HMI file.",
+    "ready": "Ready to generate.",
+    "running": "Generating…",
+    "done": "Done. Result: {path}",
+    "done_warn": "Done, but some scenarios do not match this HMI (see the log). Result: {path}",
+    "failed": "Failed – see the log for details.",
+    "file_types": "Nextion HMI (*.HMI *.hmi);;All files (*)",
+    "pick_hmi": "Choose the HMI file",
+    "pick_out": "Choose the output folder",
+    "pick_scn": "Choose the scenarios folder",
+}
 
 
 def _res(name: str) -> str:
     return resources.files("nextion_parser.builder_gui").joinpath(name).read_text(encoding="utf-8")
-
-
-def load_texts() -> dict:
-    return json.loads(_res("texts.json"))
-
-
-def tx(spec: dict, lang: str) -> str:
-    return spec.get(lang) or spec.get("en") or next(iter(spec.values()), "")
-
-
-def _default_lang() -> str:
-    try:
-        return "hu" if (locale.getdefaultlocale()[0] or "").lower().startswith("hu") else "en"
-    except Exception:
-        return "en"
 
 
 def load_ui(xml: str) -> QtWidgets.QWidget:
@@ -57,14 +52,12 @@ class Signals(QtCore.QObject):
 
 
 class BuilderWindow:
-    def __init__(self, initial_hmi: Path | None = None, lang: str | None = None):
-        self.texts = load_texts()
+    def __init__(self, initial_hmi: Path | None = None, lang: str = "hu"):
         self.w: QtWidgets.QWidget = load_ui(_res("main.ui"))
-        self.lang = lang or _default_lang()
+        self.lang = lang                              # default language of the generated emulator
         self.launcher: Path | None = None
         self.busy = False
         self._auto_out = ""
-        self._status: tuple[str, dict] = ("choose_hmi", {})
         self.signals = Signals()
         self.signals.log.connect(self.log)
         self.signals.done.connect(self._finished)
@@ -78,33 +71,18 @@ class BuilderWindow:
         w.btnOpenFolder.clicked.connect(self.open_folder)
         w.editHmi.textChanged.connect(self._hmi_changed)
         w.comboLang.setCurrentIndex(LANGS.index(self.lang))
-        w.comboLang.currentIndexChanged.connect(self._lang_changed)
+        w.comboLang.currentIndexChanged.connect(lambda i: setattr(self, "lang", LANGS[i]))
 
         found = initial_hmi or next(iter(easy.find_hmi(easy.base_dir())), None)
-        self.apply_language()
         w.editHmi.setText(str(found) if found else "")
         self.set_status("ready" if found else "choose_hmi")
 
-    # ---- texts
+    # ---- status
     def msg(self, key: str, **kw) -> str:
-        return tx(self.texts["messages"][key], self.lang).format(**kw)
-
-    def apply_language(self) -> None:
-        w = self.w
-        w.setWindowTitle(tx(self.texts["window"], self.lang))
-        for name, spec in self.texts["labels"].items():
-            getattr(w, name).setText(tx(spec, self.lang))
-        for name, spec in self.texts["placeholders"].items():
-            getattr(w, name).setPlaceholderText(tx(spec, self.lang))
-        self.set_status(*[self._status[0]], **self._status[1])
+        return MESSAGES[key].format(**kw)
 
     def set_status(self, key: str, **kw) -> None:
-        self._status = (key, kw)
         self.w.labelStatus.setText(self.msg(key, **kw))
-
-    def _lang_changed(self, index: int) -> None:
-        self.lang = LANGS[index]
-        self.apply_language()
 
     # ---- helpers
     def log(self, text: str) -> None:

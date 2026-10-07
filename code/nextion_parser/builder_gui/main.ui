@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Qt Designer file. Open it with `designer main.ui` (pyqt6-tools / Qt Designer) to edit the layout visually.
-     Object names are the contract with app.py and texts.json: do not rename them without updating both. -->
+     Object names are the contract with app.py: do not rename them without updating it. The window is English only. -->
 <ui version="4.0">
  <class>BuilderWindow</class>
  <widget class="QWidget" name="BuilderWindow">
@@ -20,14 +20,14 @@
      <item row="2" column="0"><widget class="QLabel" name="labelScn"><property name="text"><string>Scenarios folder (optional)</string></property></widget></item>
      <item row="2" column="1"><widget class="QLineEdit" name="editScn"/></item>
      <item row="2" column="2"><widget class="QPushButton" name="btnBrowseScn"><property name="text"><string>Browse…</string></property></widget></item>
-     <item row="3" column="0"><widget class="QLabel" name="labelScreen"><property name="text"><string>Screen size (optional)</string></property></widget></item>
+     <item row="3" column="0"><widget class="QLabel" name="labelScreen"><property name="text"><string>Screen size (empty = project's)</string></property></widget></item>
      <item row="3" column="1">
       <widget class="QLineEdit" name="editScreen">
        <property name="maximumSize"><size><width>140</width><height>16777215</height></size></property>
-       <property name="placeholderText"><string>800x480</string></property>
+       <property name="placeholderText"><string>e.g. 800x480</string></property>
       </widget>
      </item>
-     <item row="4" column="0"><widget class="QLabel" name="labelLang"><property name="text"><string>Language</string></property></widget></item>
+     <item row="4" column="0"><widget class="QLabel" name="labelLang"><property name="text"><string>Emulator language</string></property></widget></item>
      <item row="4" column="1">
       <widget class="QComboBox" name="comboLang">
        <property name="maximumSize"><size><width>160</width><height>16777215</height></size></property>

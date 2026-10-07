@@ -630,25 +630,19 @@ def test_editor_1_6_8_2_file_is_read_identically(project):
 GUI_DIR = Path(emulator.__file__).parents[1] / "builder_gui"
 
 
-def test_gui_ui_file_and_texts_are_consistent():
-    """main.ui (Qt Designer) and texts.json agree: every text targets an existing widget and exists in both languages."""
+def test_gui_ui_file_has_the_objects_app_py_uses():
+    """main.ui (Qt Designer, English) defines every object app.py touches, with unique names."""
     import xml.etree.ElementTree as ET
     root = ET.parse(GUI_DIR / "main.ui").getroot()
     names = [w.get("name") for w in root.iter("widget")] + [l.get("name") for l in root.iter("layout")]
     assert len(names) == len(set(names)), "duplicate object names in main.ui"
-    widgets = {w.get("name"): w.get("class") for w in root.iter("widget")}
-    texts = json.loads((GUI_DIR / "texts.json").read_text(encoding="utf-8"))
-    for group in ("labels", "placeholders"):
-        for name, spec in texts[group].items():
-            assert name in widgets, f"{group}: {name} is not a widget of main.ui"
-            assert spec.get("hu") and spec.get("en"), name
-    for name, spec in list(texts["messages"].items()) + [("window", texts["window"])]:
-        assert spec.get("hu") and spec.get("en"), name
-    for w in ("editHmi", "editOut", "editScn", "editScreen", "comboLang", "btnGenerate", "btnOpenResult", "btnOpenFolder",
-              "btnBrowseHmi", "btnBrowseOut", "btnBrowseScn", "labelStatus", "textLog"):
-        assert w in widgets, w                                       # the object names app.py relies on
+    widgets = {w.get("name") for w in root.iter("widget")}
+    app_src = (GUI_DIR / "app.py").read_text(encoding="utf-8")
+    used = set(re.findall(r"\bw\.((?:edit|btn|label|combo|text)\w+)", app_src))
+    assert used and used <= widgets, used - widgets
     langs = [i.find("property/string").text for i in root.find(".//widget[@name='comboLang']").findall("item")]
     assert langs == ["Magyar", "English"]                            # same order as app.LANGS
+    assert not (GUI_DIR / "texts.json").exists()                     # the window is English only: texts live in main.ui
 
 
 def test_gui_has_no_tk_leftovers():
@@ -678,12 +672,11 @@ def test_gui_window_builds_and_generates(tmp_path, monkeypatch):
     from nextion_parser.builder_gui.app import BuilderWindow
     app = QtWidgets.QApplication.instance() or QtWidgets.QApplication([])
     shutil.copy(SAMPLE, tmp_path / "w.HMI")
-    win = BuilderWindow(lang="en")
+    win = BuilderWindow()
     assert win.w.windowTitle() == "Nextion emulator generator" and win.w.btnGenerate.text() == "▶ Generate"
-    win.w.comboLang.setCurrentIndex(0)                               # Magyar
-    assert win.w.windowTitle() == "Nextion emulátor generátor" and "Generálás" in win.w.btnGenerate.text()
     win.w.editHmi.setText(str(tmp_path / "w.HMI"))
     assert win.w.editOut.text() == str(tmp_path / "output" / "w")    # output follows the chosen file
+    win.w.comboLang.setCurrentIndex(1)                               # English: default language of the generated emulator
     win.generate()
     end = time.time() + 120
     while win.busy and time.time() < end:
@@ -692,14 +685,15 @@ def test_gui_window_builds_and_generates(tmp_path, monkeypatch):
     app.processEvents()
     assert (tmp_path / "output" / "w" / "index.html").is_file() and win.w.btnOpenResult.isEnabled()
     assert "coverage: overall" in win.w.textLog.toPlainText()
+    assert '"lang": "en"' in (tmp_path / "output" / "w" / "emulator" / "data.js").read_text(encoding="utf-8")
     win.w.editScreen.setText("bogus")                                # a failed run is reported and nothing can be opened
     win.generate()
     while win.busy and time.time() < end:
         app.processEvents()
         time.sleep(0.05)
     app.processEvents()
-    assert "Failed" in win.w.labelStatus.text() or "Hiba" in win.w.labelStatus.text()
-    assert not win.w.btnOpenResult.isEnabled()
+    assert win.w.labelStatus.text().startswith("Failed") and not win.w.btnOpenResult.isEnabled()
+
 
 
 def test_front_end_and_help_contain_no_project_specific_names(project, tmp_path):
